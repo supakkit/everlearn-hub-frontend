@@ -1,19 +1,21 @@
 import { createTheme, responsiveFontSizes } from "@mui/material/styles";
 import { baseThemeOptions } from "./baseTheme";
 import { deepmerge } from "@mui/utils";
-import { blue, green } from "@mui/material/colors";
+import { blue, green, grey } from "@mui/material/colors";
 import { ThemeOptions } from "@mui/material/styles";
 
 const darkThemeOptions: ThemeOptions = {
   palette: {
     mode: "dark",
     primary: {
-      main: green[700],
-      contrastText: "white",
+      main: '#283593',
+    },
+    secondary: {
+      main: '#c51162',
     },
     background: {
-      default: "#363636",
-      paper: "#121212",
+      default: '#292929',
+      paper: '#002884',
     },
   },
 };
@@ -21,3 +23,4 @@ const darkThemeOptions: ThemeOptions = {
 export const darkTheme = responsiveFontSizes(
   createTheme(deepmerge(baseThemeOptions, darkThemeOptions))
 );
+

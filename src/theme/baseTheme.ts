@@ -4,7 +4,7 @@ import {
   responsiveFontSizes,
   ThemeOptions,
 } from "@mui/material/styles";
-import { green } from "@mui/material/colors";
+import { blue, deepPurple, green, grey, indigo, purple } from "@mui/material/colors";
 
 declare module "@mui/material/Button" {
   interface ButtonPropsVariantOverrides {
@@ -23,15 +23,16 @@ export const baseThemeOptions: ThemeOptions = {
   },
   palette: {
     mode: "light",
-    primary: {
-      light: green[100],
-      main: green[700],
-      dark: green[900],
-      contrastText: "white",
+    primary: indigo,
+    secondary: {
+      main: '#e91e63',
+    },
+    background: {
+      paper: grey['A100'],
     },
   },
   shape: {
-    borderRadius: 8,
+    borderRadius: 12,
   },
   components: {
     MuiButton: {
