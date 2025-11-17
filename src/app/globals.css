@@ -297,6 +297,12 @@
     font: var(--mui-font-body2);
     letter-spacing: 0.01071em;
   }
+  .top-bar-height {
+    height: 4rem;
+  }
+  .offset-top-bar {
+    margin-top: -4rem;
+  }
 }
 
 /* Material UI typography utilities */

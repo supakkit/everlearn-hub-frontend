@@ -1,10 +1,10 @@
-import { Anuphan } from "next/font/google";
+import { Inter } from "next/font/google";
 import {
   createTheme,
   responsiveFontSizes,
   ThemeOptions,
 } from "@mui/material/styles";
-import { blue } from "@mui/material/colors";
+import { green } from "@mui/material/colors";
 
 declare module "@mui/material/Button" {
   interface ButtonPropsVariantOverrides {
@@ -12,21 +12,21 @@ declare module "@mui/material/Button" {
   }
 }
 
-const anuphan = Anuphan({
-  subsets: ["latin", "thai"],
+const inter = Inter({
+  subsets: ["latin"],
   display: "swap",
 });
 
 export const baseThemeOptions: ThemeOptions = {
   typography: {
-    fontFamily: anuphan.style.fontFamily,
+    fontFamily: inter.style.fontFamily,
   },
   palette: {
     mode: "light",
     primary: {
-      light: blue["A100"],
-      main: blue["A400"],
-      dark: blue[700],
+      light: green[100],
+      main: green[700],
+      dark: green[900],
       contrastText: "white",
     },
   },

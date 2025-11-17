@@ -1,4 +1,4 @@
-'use client'
+"use client";
 
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
@@ -19,11 +19,15 @@ import MenuItem from "@mui/material/MenuItem";
 import MenuIcon from "@mui/icons-material/Menu";
 import { ModeSwitch } from "./ModeSwitch";
 import { useState } from "react";
-import SchoolRoundedIcon from '@mui/icons-material/SchoolRounded';
+import SchoolRoundedIcon from "@mui/icons-material/SchoolRounded";
 import { Container } from "@mui/material";
+import Link from "next/link";
 
-const pages = ["Courses", "Categories", "Blog"]; 
-const settings = ["Profile", "Account", "Dashboard", "Logout"]; 
+const pages: { label: string; href: string }[] = [
+  { label: "Courses", href: "/courses" },
+  { label: "Contact Us", href: "/contact" },
+];
+const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
 export function TopAppBar() {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -44,9 +48,7 @@ export function TopAppBar() {
   // Mobile Sidebar Drawer
   const drawer = (
     <Box sx={{ width: 260 }} role="presentation" onClick={handleDrawerToggle}>
-      <Box
-        sx={{ display: "flex", alignItems: "center", p: 2, gap: 1 }}
-      >
+      <Box sx={{ display: "flex", alignItems: "center", p: 2, gap: 1 }}>
         <SchoolRoundedIcon />
         <Typography variant="h6" sx={{ fontWeight: 700 }}>
           EverLearn Hub
@@ -56,9 +58,11 @@ export function TopAppBar() {
       <Divider />
       <List>
         {pages.map((page) => (
-          <ListItem key={page} disablePadding>
+          <ListItem key={page.label} disablePadding>
             <ListItemButton>
-              <ListItemText primary={page} />
+              <Link href={page.href}>
+                <ListItemText primary={page.label} />
+              </Link>
             </ListItemButton>
           </ListItem>
         ))}
@@ -66,15 +70,19 @@ export function TopAppBar() {
       <Divider />
 
       <Box sx={{ p: 2 }}>
-        <Button fullWidth variant="contained" sx={{ mb: 1 }}>Login</Button>
-        <Button fullWidth variant="outlined">Sign Up</Button>
+        <Button fullWidth variant="contained" sx={{ mb: 1 }}>
+          Login
+        </Button>
+        <Button fullWidth variant="outlined">
+          Sign Up
+        </Button>
       </Box>
     </Box>
   );
 
   return (
     <AppBar position="sticky" color="primary" elevation={2}>
-      <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
+      <Toolbar sx={{ display: "flex", justifyContent: "space-between" }} className="top-bar-height"  >
         {/* Mobile menu button */}
         <IconButton
           sx={{ display: { xs: "flex", md: "none" } }}
@@ -84,52 +92,61 @@ export function TopAppBar() {
           <MenuIcon />
         </IconButton>
 
-        <Container sx={{ display: 'flex', alignItems: 'center', gap: 4, }}>
-        {/* Logo */}
-        <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-          <SchoolRoundedIcon sx={{ display: { xs: "none", md: "flex" } }} />
-          <Typography
-            variant="h6"
-            noWrap
-            sx={{ fontWeight: 700, cursor: "pointer" }}
-            >
-            EverLearn Hub
-          </Typography>
-        </Box>
+        <Container sx={{ display: "flex", alignItems: "center", gap: 4 }}>
+          {/* Logo */}
+          <Link href="/">
+            <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+              <SchoolRoundedIcon sx={{ display: { xs: "none", md: "flex" } }} />
+              <Typography
+                variant="h6"
+                noWrap
+                sx={{ fontWeight: 700, cursor: "pointer" }}
+              >
+                EverLearn Hub
+              </Typography>
+            </Box>
+          </Link>
 
-        {/* Desktop Navigation */}
-        <Box sx={{ display: { xs: "none", md: "flex" }, gap: 2 }}>
-          {pages.map((page) => (
-            <Button key={page} color="inherit">
-              {page}
-            </Button>
-          ))}
-        </Box>
-          </Container>
-
-        <Container sx={{ display: 'flex', alignItems: 'center', gap: 4, justifyContent: 'end' }}>
-        <ModeSwitch />
-
-        {/* User Menu */}
-        <Box>
-          <Tooltip title="User menu">
-            <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-              <Avatar alt="User" src="/static/avatar.png" />
-            </IconButton>
-          </Tooltip>
-          <Menu
-            anchorEl={anchorElUser}
-            open={Boolean(anchorElUser)}
-            onClose={handleCloseUserMenu}
-            >
-            {settings.map((setting) => (
-              <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                <Typography>{setting}</Typography>
-              </MenuItem>
+          {/* Desktop Navigation */}
+          <Box sx={{ display: { xs: "none", md: "flex" }, gap: 2 }}>
+            {pages.map((page) => (
+              <Link key={page.label} href={page.href}>
+                <Button color="inherit">{page.label}</Button>
+              </Link>
             ))}
-          </Menu>
-        </Box>
-            </Container>
+          </Box>
+        </Container>
+
+        <Container
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            gap: 4,
+            justifyContent: "end",
+          }}
+        >
+          <ModeSwitch />
+
+          {/* User Menu */}
+          <Box>
+            <Tooltip title="User menu">
+              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                <Avatar alt="User" src="/static/avatar.png" />
+              </IconButton>
+            </Tooltip>
+            <Menu
+              anchorEl={anchorElUser}
+              open={Boolean(anchorElUser)}
+              onClose={handleCloseUserMenu}
+            >
+              {settings.map((setting) => (
+                <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                  <Typography>{setting}</Typography>
+                </MenuItem>
+              ))}
+            </Menu>
+          </Box>
+        </Container>
       </Toolbar>
 
       {/* Mobile Sidebar Drawer */}

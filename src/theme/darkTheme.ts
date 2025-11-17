@@ -1,18 +1,19 @@
 import { createTheme, responsiveFontSizes } from "@mui/material/styles";
 import { baseThemeOptions } from "./baseTheme";
 import { deepmerge } from "@mui/utils";
-import { blue } from "@mui/material/colors";
+import { blue, green } from "@mui/material/colors";
 import { ThemeOptions } from "@mui/material/styles";
 
 const darkThemeOptions: ThemeOptions = {
   palette: {
     mode: "dark",
     primary: {
-      main: blue["A400"],
+      main: green[700],
       contrastText: "white",
     },
     background: {
-      default: "#292929",
+      default: "#363636",
+      paper: "#121212",
     },
   },
 };

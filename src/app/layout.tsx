@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { Providers } from "@/providers/Providers";
 import Script from "next/script";
+import { TopAppBar } from "@/components/navigation/TopAppBar";
 
 export const metadata: Metadata = {
   title: "EverLearn Hub",
@@ -43,7 +44,12 @@ export default function RootLayout({
         </Script>
       </head>
       <body>
-        <Providers>{children}</Providers>
+        <Providers>
+          <main className="min-h-screen">
+            <TopAppBar />
+            {children}
+          </main>
+        </Providers>
       </body>
     </html>
   );
