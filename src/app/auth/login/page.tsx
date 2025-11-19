@@ -1,7 +1,11 @@
-export default function Login() {
+
+
+export default function LoginPage({ searchParams }: { searchParams: { redirect: string } }) {
+  const redirectTo = searchParams.redirect || "/";
+
   return (
-    <div>
-      <p>This is Login page.</p>
+    <div style={{ display: "flex", justifyContent: "center", marginTop: 60 }}>
+      {/* <LoginForm redirectTo={redirectTo} /> */}
     </div>
   );
 }

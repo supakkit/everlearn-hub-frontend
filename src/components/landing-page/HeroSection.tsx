@@ -1,7 +1,9 @@
 import { Box, Button, Container, Typography } from "@mui/material";
 import { motion } from "motion/react";
+import Link from "next/link";
 
 export function HeroSection() {
+  const isLoggedIn = false; // test auth
   return (
     <motion.div
       initial={{ opacity: 0, y: -40 }}
@@ -24,17 +26,21 @@ export function HeroSection() {
           <Typography variant="h6" mb={4}>
             Micro-learning courses designed for busy people like you.
           </Typography>
+          <Link href={isLoggedIn ? '/learn' : '/auth/signup'}>
           <Button
             variant="contained"
             size="large"
             color="secondary"
             sx={{ mr: 2 }}
-          >
+            >
             Get Started
           </Button>
+            </Link>
+          <Link href='/courses'>
           <Button variant="outlined" size="large" color="inherit">
             Browse Courses
           </Button>
+          </Link>
         </Container>
       </Box>
     </motion.div>

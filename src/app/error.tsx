@@ -1,7 +1,8 @@
 "use client";
 
+import { CentralScreenContainer } from "@/components/common/CentralScreenContainer";
 import CancelRoundedIcon from "@mui/icons-material/CancelRounded";
-import { Button, Typography } from "@mui/material";
+import { Alert, Box, Button, Container, Typography } from "@mui/material";
 import { useEffect } from "react";
 
 export default function Error({
@@ -16,16 +17,17 @@ export default function Error({
   }, [error]);
 
   return (
-    <div className="offset-top-bar h-screen flex justify-center items-center">
-      <div className="flex h-full flex-col items-center justify-center gap-3">
-        <CancelRoundedIcon color="error" className="size-8" />
-        <Typography variant="h5" fontWeight="500">
+    <CentralScreenContainer>
+      <Container maxWidth="sm" sx={{ textAlign: "center", mt: -10 }}>
+        <CancelRoundedIcon color="error" sx={{ fontSize: 80 }} />
+        <Typography variant="h4" sx={{ mt: 2, fontWeight: "bold" }}>
           Something went wrong!
         </Typography>
-        <Button variant="contained" onClick={() => reset()}>
+
+        <Button variant="contained" size="large" sx={{ mt: 4 }} onClick={() => reset()}>
           Try again
         </Button>
-      </div>
-    </div>
+      </Container>
+    </CentralScreenContainer>
   );
 }

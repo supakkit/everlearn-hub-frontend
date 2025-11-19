@@ -25,9 +25,14 @@ import Link from "next/link";
 
 const pages: { label: string; href: string }[] = [
   { label: "Courses", href: "/courses" },
-  { label: "Contact Us", href: "/contact" },
 ];
-const settings = ["Profile", "Account", "Dashboard", "Logout"];
+
+const settings = [
+  { label: "Profile", href: "/profile" },
+  { label: "Dashboard", href: "/dashboard" },
+  { label: "Library", href: "/learn" },
+  { label: "Logout", href: "/" },
+];
 
 export function TopAppBar() {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -59,10 +64,8 @@ export function TopAppBar() {
       <List>
         {pages.map((page) => (
           <ListItem key={page.label} disablePadding>
-            <ListItemButton>
-              <Link href={page.href}>
-                <ListItemText primary={page.label} />
-              </Link>
+            <ListItemButton component={Link} href={page.href}>
+              <ListItemText primary={page.label} />
             </ListItemButton>
           </ListItem>
         ))}
@@ -82,7 +85,10 @@ export function TopAppBar() {
 
   return (
     <AppBar position="sticky" color="primary" elevation={2}>
-      <Toolbar sx={{ display: "flex", justifyContent: "space-between" }} className="top-bar-height"  >
+      <Toolbar
+        sx={{ display: "flex", justifyContent: "space-between" }}
+        className="top-bar-height"
+      >
         {/* Mobile menu button */}
         <IconButton
           sx={{ display: { xs: "flex", md: "none" } }}
@@ -110,9 +116,14 @@ export function TopAppBar() {
           {/* Desktop Navigation */}
           <Box sx={{ display: { xs: "none", md: "flex" }, gap: 2 }}>
             {pages.map((page) => (
-              <Link key={page.label} href={page.href}>
-                <Button color="inherit">{page.label}</Button>
-              </Link>
+              <Button
+                key={page.label}
+                component={Link}
+                href={page.href}
+                color="inherit"
+              >
+                {page.label}
+              </Button>
             ))}
           </Box>
         </Container>
@@ -131,7 +142,7 @@ export function TopAppBar() {
           <Box>
             <Tooltip title="User menu">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="User" src="/static/avatar.png" />
+                <Avatar alt="User" src="" />
               </IconButton>
             </Tooltip>
             <Menu
@@ -140,8 +151,13 @@ export function TopAppBar() {
               onClose={handleCloseUserMenu}
             >
               {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography>{setting}</Typography>
+                <MenuItem
+                  key={setting.label}
+                  component={Link}
+                  href={setting.href}
+                  onClick={handleCloseUserMenu}
+                >
+                  <Typography>{setting.label}</Typography>
                 </MenuItem>
               ))}
             </Menu>

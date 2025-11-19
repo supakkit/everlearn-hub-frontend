@@ -5,14 +5,15 @@ import { useRouter } from "next/navigation";
 
 export function CallToBuyAction({ courseId }: { courseId: string }) {
   const router = useRouter();
-  const isLoggedIn = false;
+  // const isLoggedIn = false;
 
   const handleBuy = () => {
-    if (!isLoggedIn) {
-      router.push(`/auth/login?redirect=/checkout?courseId=${courseId}`);
-    } else {
-      router.push(`/checkout?courseId=${courseId}`);
-    }
+    // if (!isLoggedIn) {
+    //   router.push(`/auth/login?redirect=/checkout?courseId=${courseId}`);
+    // } else {
+    //   router.push(`/checkout?courseId=${courseId}`);
+    // }
+    router.push(`/checkout?courseId=${courseId}`);
   };
 
   return (

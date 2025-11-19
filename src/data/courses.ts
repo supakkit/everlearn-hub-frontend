@@ -11,7 +11,7 @@ export interface Course {
 export interface Lesson {
   id: number;
   title: string;
-  preview: boolean;
+  isPreview: boolean;
 }
 
 export const courses: Course[] = [
@@ -23,10 +23,10 @@ export const courses: Course[] = [
     image: "https://picsum.photos/400/260",
     description: "Learn React from scratch and build dynamic web applications.",
     lessons: [
-      { id: 1, title: "Welcome to the Course", preview: true },
-      { id: 2, title: "What is JavaScript?", preview: true },
-      { id: 3, title: "Variables Explained", preview: false },
-      { id: 4, title: "Basic Math Operations", preview: false },
+      { id: 1, title: "Welcome to the Course", isPreview: true },
+      { id: 2, title: "What is JavaScript?", isPreview: true },
+      { id: 3, title: "Variables Explained", isPreview: false },
+      { id: 4, title: "Basic Math Operations", isPreview: false },
     ],
   },
   {
@@ -37,10 +37,10 @@ export const courses: Course[] = [
     image: "https://picsum.photos/401/260",
     description: "Master the fundamentals of UI/UX with hands-on projects.",
     lessons: [
-      { id: 1, title: "Welcome to the Course", preview: true },
-      { id: 2, title: "What is JavaScript?", preview: true },
-      { id: 3, title: "Variables Explained", preview: false },
-      { id: 4, title: "Basic Math Operations", preview: false },
+      { id: 1, title: "Welcome to the Course", isPreview: true },
+      { id: 2, title: "What is JavaScript?", isPreview: true },
+      { id: 3, title: "Variables Explained", isPreview: false },
+      { id: 4, title: "Basic Math Operations", isPreview: false },
     ],
   },
   {
@@ -51,10 +51,10 @@ export const courses: Course[] = [
     image: "https://picsum.photos/402/260",
     description: "Build essential business strategy skills.",
     lessons: [
-      { id: 1, title: "Welcome to the Course", preview: true },
-      { id: 2, title: "What is JavaScript?", preview: true },
-      { id: 3, title: "Variables Explained", preview: false },
-      { id: 4, title: "Basic Math Operations", preview: false },
+      { id: 1, title: "Welcome to the Course", isPreview: true },
+      { id: 2, title: "What is JavaScript?", isPreview: true },
+      { id: 3, title: "Variables Explained", isPreview: false },
+      { id: 4, title: "Basic Math Operations", isPreview: false },
     ],
   },
   {
@@ -65,10 +65,10 @@ export const courses: Course[] = [
     image: "https://picsum.photos/403/260",
     description: "Get started with Python programming.",
     lessons: [
-      { id: 1, title: "Welcome to the Course", preview: true },
-      { id: 2, title: "What is JavaScript?", preview: true },
-      { id: 3, title: "Variables Explained", preview: false },
-      { id: 4, title: "Basic Math Operations", preview: false },
+      { id: 1, title: "Welcome to the Course", isPreview: true },
+      { id: 2, title: "What is JavaScript?", isPreview: true },
+      { id: 3, title: "Variables Explained", isPreview: false },
+      { id: 4, title: "Basic Math Operations", isPreview: false },
     ],
   },
   {
@@ -79,10 +79,10 @@ export const courses: Course[] = [
     image: "https://picsum.photos/404/260",
     description: "Learn React from scratch and build dynamic web applications.",
     lessons: [
-      { id: 1, title: "Welcome to the Course", preview: true },
-      { id: 2, title: "What is JavaScript?", preview: true },
-      { id: 3, title: "Variables Explained", preview: false },
-      { id: 4, title: "Basic Math Operations", preview: false },
+      { id: 1, title: "Welcome to the Course", isPreview: true },
+      { id: 2, title: "What is JavaScript?", isPreview: true },
+      { id: 3, title: "Variables Explained", isPreview: false },
+      { id: 4, title: "Basic Math Operations", isPreview: false },
     ],
   },
   {
@@ -93,10 +93,10 @@ export const courses: Course[] = [
     image: "https://picsum.photos/405/260",
     description: "Master the fundamentals of UI/UX with hands-on projects.",
     lessons: [
-      { id: 1, title: "Welcome to the Course", preview: true },
-      { id: 2, title: "What is JavaScript?", preview: true },
-      { id: 3, title: "Variables Explained", preview: false },
-      { id: 4, title: "Basic Math Operations", preview: false },
+      { id: 1, title: "Welcome to the Course", isPreview: true },
+      { id: 2, title: "What is JavaScript?", isPreview: true },
+      { id: 3, title: "Variables Explained", isPreview: false },
+      { id: 4, title: "Basic Math Operations", isPreview: false },
     ],
   },
   {
@@ -107,10 +107,10 @@ export const courses: Course[] = [
     image: "https://picsum.photos/406/260",
     description: "Build essential business strategy skills.",
     lessons: [
-      { id: 1, title: "Welcome to the Course", preview: true },
-      { id: 2, title: "What is JavaScript?", preview: true },
-      { id: 3, title: "Variables Explained", preview: false },
-      { id: 4, title: "Basic Math Operations", preview: false },
+      { id: 1, title: "Welcome to the Course", isPreview: true },
+      { id: 2, title: "What is JavaScript?", isPreview: true },
+      { id: 3, title: "Variables Explained", isPreview: false },
+      { id: 4, title: "Basic Math Operations", isPreview: false },
     ],
   },
   {
@@ -121,10 +121,10 @@ export const courses: Course[] = [
     image: "https://picsum.photos/407/260",
     description: "Get started with Python programming.",
     lessons: [
-      { id: 1, title: "Welcome to the Course", preview: true },
-      { id: 2, title: "What is JavaScript?", preview: true },
-      { id: 3, title: "Variables Explained", preview: false },
-      { id: 4, title: "Basic Math Operations", preview: false },
+      { id: 1, title: "Welcome to the Course", isPreview: true },
+      { id: 2, title: "What is JavaScript?", isPreview: true },
+      { id: 3, title: "Variables Explained", isPreview: false },
+      { id: 4, title: "Basic Math Operations", isPreview: false },
     ],
   },
 ];
