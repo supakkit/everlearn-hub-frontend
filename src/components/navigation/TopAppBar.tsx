@@ -6,35 +6,18 @@ import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import Drawer from "@mui/material/Drawer";
-import List from "@mui/material/List";
-import ListItem from "@mui/material/ListItem";
-import ListItemButton from "@mui/material/ListItemButton";
-import ListItemText from "@mui/material/ListItemText";
-import Divider from "@mui/material/Divider";
-import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
-import Tooltip from "@mui/material/Tooltip";
-import Menu from "@mui/material/Menu";
-import MenuItem from "@mui/material/MenuItem";
 import MenuIcon from "@mui/icons-material/Menu";
 import { ModeSwitch } from "./ModeSwitch";
 import { useState } from "react";
-import SchoolRoundedIcon from "@mui/icons-material/SchoolRounded";
+import SchoolRounded from "@mui/icons-material/SchoolRounded";
 import { Container } from "@mui/material";
 import Link from "next/link";
+import { navbarItems, navigation } from "@/data/navigation";
+import { MobileSidebarDrawer } from "./MobileSidebarDrawer";
+import { UserMenu } from "./UserMenu";
 
-const pages: { label: string; href: string }[] = [
-  { label: "Courses", href: "/courses" },
-];
-
-const settings = [
-  { label: "Profile", href: "/profile" },
-  { label: "Dashboard", href: "/dashboard" },
-  { label: "Library", href: "/learn" },
-  { label: "Logout", href: "/" },
-];
-
-export function TopAppBar() {
+export const TopAppBar: React.FC = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
 
@@ -50,39 +33,6 @@ export function TopAppBar() {
     setAnchorElUser(null);
   };
 
-  // Mobile Sidebar Drawer
-  const drawer = (
-    <Box sx={{ width: 260 }} role="presentation" onClick={handleDrawerToggle}>
-      <Box sx={{ display: "flex", alignItems: "center", p: 2, gap: 1 }}>
-        <SchoolRoundedIcon />
-        <Typography variant="h6" sx={{ fontWeight: 700 }}>
-          EverLearn Hub
-        </Typography>
-      </Box>
-
-      <Divider />
-      <List>
-        {pages.map((page) => (
-          <ListItem key={page.label} disablePadding>
-            <ListItemButton component={Link} href={page.href}>
-              <ListItemText primary={page.label} />
-            </ListItemButton>
-          </ListItem>
-        ))}
-      </List>
-      <Divider />
-
-      <Box sx={{ p: 2 }}>
-        <Button fullWidth variant="contained" sx={{ mb: 1 }}>
-          Login
-        </Button>
-        <Button fullWidth variant="outlined">
-          Sign Up
-        </Button>
-      </Box>
-    </Box>
-  );
-
   return (
     <AppBar position="sticky" color="primary" elevation={2}>
       <Toolbar
@@ -97,12 +47,11 @@ export function TopAppBar() {
         >
           <MenuIcon />
         </IconButton>
-
         <Container sx={{ display: "flex", alignItems: "center", gap: 4 }}>
           {/* Logo */}
-          <Link href="/">
+          <Link href={navigation.home.href}>
             <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-              <SchoolRoundedIcon sx={{ display: { xs: "none", md: "flex" } }} />
+              <SchoolRounded sx={{ display: { xs: "none", md: "flex" } }} />
               <Typography
                 variant="h6"
                 noWrap
@@ -112,10 +61,9 @@ export function TopAppBar() {
               </Typography>
             </Box>
           </Link>
-
           {/* Desktop Navigation */}
           <Box sx={{ display: { xs: "none", md: "flex" }, gap: 2 }}>
-            {pages.map((page) => (
+            {navbarItems.pages.map((page) => (
               <Button
                 key={page.label}
                 component={Link}
@@ -127,7 +75,6 @@ export function TopAppBar() {
             ))}
           </Box>
         </Container>
-
         <Container
           sx={{
             display: "flex",
@@ -137,31 +84,11 @@ export function TopAppBar() {
           }}
         >
           <ModeSwitch />
-
-          {/* User Menu */}
-          <Box>
-            <Tooltip title="User menu">
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="User" src="" />
-              </IconButton>
-            </Tooltip>
-            <Menu
-              anchorEl={anchorElUser}
-              open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
-            >
-              {settings.map((setting) => (
-                <MenuItem
-                  key={setting.label}
-                  component={Link}
-                  href={setting.href}
-                  onClick={handleCloseUserMenu}
-                >
-                  <Typography>{setting.label}</Typography>
-                </MenuItem>
-              ))}
-            </Menu>
-          </Box>
+          <UserMenu
+            handleOpenUserMenu={handleOpenUserMenu}
+            handleCloseUserMenu={handleCloseUserMenu}
+            anchorElUser={anchorElUser}
+          />
         </Container>
       </Toolbar>
 
@@ -172,8 +99,8 @@ export function TopAppBar() {
         onClose={handleDrawerToggle}
         ModalProps={{ keepMounted: true }}
       >
-        {drawer}
+        <MobileSidebarDrawer handleDrawerToggle={handleDrawerToggle} />
       </Drawer>
     </AppBar>
   );
-}
+};
