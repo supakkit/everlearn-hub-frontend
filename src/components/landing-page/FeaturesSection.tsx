@@ -1,3 +1,5 @@
+'use client'
+
 import { Card, Container, Grid, Typography } from "@mui/material";
 import { motion } from "motion/react";
 

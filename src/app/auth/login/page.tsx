@@ -1,11 +1,12 @@
+import LoginForm from "@/components/auth/LoginForm";
+import { CentralScreenContainer } from "@/components/common/CentralScreenContainer";
 
 
-export default function LoginPage({ searchParams }: { searchParams: { redirect: string } }) {
-  const redirectTo = searchParams.redirect || "/";
+export default function LoginPage() {
 
   return (
-    <div style={{ display: "flex", justifyContent: "center", marginTop: 60 }}>
-      {/* <LoginForm redirectTo={redirectTo} /> */}
-    </div>
+    <CentralScreenContainer>
+      <LoginForm />
+    </CentralScreenContainer>
   );
 }

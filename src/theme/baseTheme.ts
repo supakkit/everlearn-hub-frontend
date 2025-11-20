@@ -26,14 +26,19 @@ const baseComponentsOptions: ThemeOptions["components"] = {
         variants: [
           {
             props: { variant: "link" },
-            style: {
+            style: ({ theme }: { theme: Theme }) => ({
+              color:
+                theme.palette.mode === "dark"
+                  ? theme.palette.primary.contrastText
+                  : theme.palette.primary.main,
+              padding: 0,
               background: "none",
               "&:hover": {
                 textDecoration: "underline",
                 textUnderlineOffset: 4,
                 background: "none",
               },
-            },
+            }),
           },
           {
             props: { variant: "outlinedDarkMode" },
@@ -60,11 +65,18 @@ const baseComponentsOptions: ThemeOptions["components"] = {
       root: ({ theme }: { theme: Theme }) => ({
         "&:focus": {
           color:
-          theme.palette.mode === "dark"
-            ? theme.palette.primary.contrastText
-            : theme.palette.primary.main,
-        }
+            theme.palette.mode === "dark"
+              ? theme.palette.primary.contrastText
+              : theme.palette.primary.main,
+        },
       }),
+    },
+  },
+  MuiFormHelperText: {
+    styleOverrides: {
+      root: {
+        fontSize: 14,
+      },
     },
   },
 };

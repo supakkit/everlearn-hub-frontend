@@ -1,3 +1,5 @@
+'use client'
+
 import { Box, Button, Container, Typography } from "@mui/material";
 import { motion } from "motion/react";
 import Link from "next/link";
