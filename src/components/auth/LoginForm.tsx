@@ -14,8 +14,9 @@ import Stack from "@mui/material/Stack";
 import { GoogleIcon } from "../common/CustomIcons";
 import { Card, Container } from "@mui/material";
 import Link from "next/link";
+import { navigation } from "@/data/navigation";
 
-export default function LoginForm() {
+export const LoginForm: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [emailError, setEmailError] = useState(false);
   const [emailErrorMessage, setEmailErrorMessage] = useState("");
@@ -65,8 +66,10 @@ export default function LoginForm() {
     setShowPassword((prev) => !prev);
   };
 
+  const handleSignInWithGoogle = () => {};
+
   return (
-    <Container maxWidth="sm">
+    <Container maxWidth="xs" sx={{ mt: 10 }}>
       <Card
         variant="outlined"
         sx={{ width: "100%", padding: 4, display: "grid", gap: 2 }}
@@ -74,7 +77,11 @@ export default function LoginForm() {
         <Typography
           component="h1"
           variant="h4"
-          sx={{ width: "100%", fontSize: "clamp(2rem, 10vw, 2.15rem)" }}
+          sx={{
+            width: "100%",
+            textAlign: "center",
+            fontSize: "clamp(2rem, 10vw, 2.15rem)",
+          }}
         >
           Sign in
         </Typography>
@@ -103,6 +110,7 @@ export default function LoginForm() {
               required
               fullWidth
               variant="outlined"
+              size="small"
               color={emailError ? "error" : "primary"}
             />
           </FormControl>
@@ -121,6 +129,7 @@ export default function LoginForm() {
                 required
                 fullWidth
                 variant="outlined"
+                size="small"
                 color={passwordError ? "error" : "primary"}
               />
             </FormControl>
@@ -146,14 +155,17 @@ export default function LoginForm() {
           <Button
             fullWidth
             variant="outlinedDarkMode"
-            onClick={() => alert("Sign in with Google")}
+            onClick={handleSignInWithGoogle}
             startIcon={<GoogleIcon />}
           >
             Sign in with Google
           </Button>
           <Typography sx={{ textAlign: "center" }}>
             Don&apos;t have an account?{" "}
-            <Link href="/auth/signup" className="underline underline-offset-2">
+            <Link
+              href={navigation.signup.href}
+              className="underline underline-offset-2"
+            >
               Sign up
             </Link>
           </Typography>
@@ -161,4 +173,4 @@ export default function LoginForm() {
       </Card>
     </Container>
   );
-}
+};

@@ -14,8 +14,9 @@ import Stack from "@mui/material/Stack";
 import { GoogleIcon } from "../common/CustomIcons";
 import { Card, Container } from "@mui/material";
 import Link from "next/link";
+import { navigation } from "@/data/navigation";
 
-export default function SignUpForm() {
+export const SignUpForm: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [emailError, setEmailError] = useState(false);
   const [emailErrorMessage, setEmailErrorMessage] = useState("");
@@ -24,7 +25,7 @@ export default function SignUpForm() {
   const [nameError, setNameError] = useState(false);
   const [nameErrorMessage, setNameErrorMessage] = useState("");
 
-  const validateInputs = () => {
+  const validateInputs = (): boolean => {
     const email = document.getElementById("email") as HTMLInputElement;
     const password = document.getElementById("password") as HTMLInputElement;
     const fullName = document.getElementById("fullName") as HTMLInputElement;
@@ -79,8 +80,10 @@ export default function SignUpForm() {
     setShowPassword((prev) => !prev);
   };
 
+  const handleSignUpWithGoogle = () => {};
+
   return (
-    <Container maxWidth="sm">
+    <Container maxWidth="xs" sx={{ mt: 5 }}>
       <Card
         variant="outlined"
         sx={{ width: "100%", padding: 4, display: "grid", gap: 2 }}
@@ -88,7 +91,11 @@ export default function SignUpForm() {
         <Typography
           component="h1"
           variant="h4"
-          sx={{ width: "100%", fontSize: "clamp(2rem, 10vw, 2.15rem)" }}
+          sx={{
+            width: "100%",
+            textAlign: "center",
+            fontSize: "clamp(2rem, 10vw, 2.15rem)",
+          }}
         >
           Sign up
         </Typography>
@@ -109,6 +116,7 @@ export default function SignUpForm() {
               error={nameError}
               helperText={nameErrorMessage}
               color={nameError ? "error" : "primary"}
+              size="small"
             />
           </FormControl>
           <FormControl>
@@ -124,6 +132,7 @@ export default function SignUpForm() {
               error={emailError}
               helperText={emailErrorMessage}
               color={passwordError ? "error" : "primary"}
+              size="small"
             />
           </FormControl>
           <Stack>
@@ -141,6 +150,7 @@ export default function SignUpForm() {
                 error={passwordError}
                 helperText={passwordErrorMessage}
                 color={passwordError ? "error" : "primary"}
+                size="small"
               />
             </FormControl>
             <FormControlLabel
@@ -167,14 +177,17 @@ export default function SignUpForm() {
           <Button
             fullWidth
             variant="outlinedDarkMode"
-            onClick={() => alert("Sign up with Google")}
+            onClick={handleSignUpWithGoogle}
             startIcon={<GoogleIcon />}
           >
             Sign up with Google
           </Button>
           <Typography sx={{ textAlign: "center" }}>
             Already have an account?{" "}
-            <Link href="/auth/login" className="underline underline-offset-2">
+            <Link
+              href={navigation.login.href}
+              className="underline underline-offset-2"
+            >
               Sign in
             </Link>
           </Typography>
@@ -182,4 +195,4 @@ export default function SignUpForm() {
       </Card>
     </Container>
   );
-}
+};

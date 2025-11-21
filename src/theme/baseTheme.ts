@@ -94,13 +94,6 @@ const baseComponentsOptions: ThemeOptions["components"] = {
       }),
     },
   },
-  MuiFormHelperText: {
-    styleOverrides: {
-      root: {
-        fontSize: 14,
-      },
-    },
-  },
 };
 
 export const baseThemeOptions: ThemeOptions = {

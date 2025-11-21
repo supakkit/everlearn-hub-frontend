@@ -1,12 +1,7 @@
-import LoginForm from "@/components/auth/LoginForm";
-import { CentralScreenContainer } from "@/components/common/CentralScreenContainer";
+import { LoginForm } from "@/components/auth/LoginForm";
 
+const LoginPage: React.FC = () => {
+  return <LoginForm />;
+};
 
-export default function LoginPage() {
-
-  return (
-    <CentralScreenContainer>
-      <LoginForm />
-    </CentralScreenContainer>
-  );
-}
+export default LoginPage;

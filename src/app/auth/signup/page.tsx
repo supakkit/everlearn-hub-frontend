@@ -1,10 +1,5 @@
-import SignUpForm from "@/components/auth/SignUpForm";
-import { CentralScreenContainer } from "@/components/common/CentralScreenContainer";
+import { SignUpForm } from "@/components/auth/SignUpForm";
 
 export default function SignUpPage() {
-  return (
-    <CentralScreenContainer>
-      <SignUpForm />
-    </CentralScreenContainer>
-  );
+  return <SignUpForm />;
 }
