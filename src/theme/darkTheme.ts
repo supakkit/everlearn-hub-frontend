@@ -15,7 +15,12 @@ const darkThemeOptions: ThemeOptions = {
       main: '#c51162',
     },
     background: {
-      default: '#292929',
+      default: '#262626',
+      paper: '#292929'
+    },
+    basic: {
+      main: "#fff",
+      contrastText: "#000",
     },
   },
 };

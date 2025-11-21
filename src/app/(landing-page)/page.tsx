@@ -2,18 +2,19 @@ import { Box } from "@mui/material";
 import { HeroSection } from "../../components/landing-page/HeroSection";
 import { FeaturesSection } from "../../components/landing-page/FeaturesSection";
 import { CategoriesSection } from "../../components/landing-page/CategoriesSection";
-import { TrendingCoursesSection } from "../../components/landing-page/TrendingCoursesSection";
-import { HowItWorksSection } from "../../components/landing-page/HowItWorksSection";
+import { CoursesSection } from "../../components/landing-page/CoursesSection";
 import { CTASection } from "../../components/landing-page/CTASection";
+import { SectionDivider } from "@/components/landing-page/SectionDivider";
 
 const LandingPage: React.FC = () => {
   return (
     <Box>
       <HeroSection />
-      <FeaturesSection />
+      <CoursesSection />
+      <SectionDivider />
       <CategoriesSection />
-      <TrendingCoursesSection />
-      <HowItWorksSection />
+      <SectionDivider />
+      <FeaturesSection />
       <CTASection />
     </Box>
   );

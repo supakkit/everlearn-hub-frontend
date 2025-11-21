@@ -1,10 +1,11 @@
-'use client'
+"use client";
 
-import { Box, Button, Container, Typography } from "@mui/material";
+import { navigation } from "@/data/navigation";
+import { Box, Button, Container, Grid, Typography } from "@mui/material";
 import { motion } from "motion/react";
 import Link from "next/link";
 
-export function HeroSection() {
+export const HeroSection: React.FC = () => {
   const isLoggedIn = false; // test auth
   return (
     <motion.div
@@ -28,23 +29,22 @@ export function HeroSection() {
           <Typography variant="h6" mb={4}>
             Micro-learning courses designed for busy people like you.
           </Typography>
-          <Link href={isLoggedIn ? '/learn' : '/auth/signup'}>
-          <Button
-            variant="contained"
-            size="large"
-            color="secondary"
-            sx={{ mr: 2 }}
+            <Link
+              href={
+                isLoggedIn ? navigation.library.href : navigation.signup.href
+              }
             >
-            Get Started
-          </Button>
+              <Button variant="contained" size="large" color="secondary" sx={{ m: 1 }}>
+                Get Started
+              </Button>
             </Link>
-          <Link href='/courses'>
-          <Button variant="outlined" size="large" color="inherit">
-            Browse Courses
-          </Button>
-          </Link>
+            <Link href={navigation.courses.href}>
+              <Button variant="outlined" size="large" color="inherit" sx={{ m: 1 }}>
+                Browse Courses
+              </Button>
+            </Link>
         </Container>
       </Box>
     </motion.div>
   );
-}
+};

@@ -110,7 +110,15 @@ export default function CoursesPage() {
       {/* Course Grid */}
       <Grid container spacing={3}>
         {paginatedCourses.map((course) => (
-          <CourseCard key={course.id} course={course} />
+          <Grid key={course.id} size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="h-full"
+            >
+              <CourseCard course={course} />
+            </motion.div>
+          </Grid>
         ))}
       </Grid>
 

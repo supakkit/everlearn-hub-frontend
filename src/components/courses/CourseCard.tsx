@@ -1,64 +1,76 @@
-"use client";
-
-import { motion } from "framer-motion";
 import {
+  Box,
   Button,
   Card,
   CardActions,
   CardContent,
   CardMedia,
   Chip,
-  Grid,
   Typography,
 } from "@mui/material";
 import { Course } from "@/data/courses";
 import Link from "next/link";
+import Image from "next/image";
 
 export function CourseCard({ course }: { course: Course }) {
   return (
-    <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
-      <motion.div
-        initial={{ opacity: 0, y: 30 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="h-full"
-      >
-        <Card
+    <Card
+      key={course.id}
+      sx={{
+        height: "100%",
+        minWidth: 300,
+        display: "flex",
+        flexDirection: "column",
+        "&:hover": { boxShadow: 6, transform: "translateY(-4px)" },
+      }}
+    >
+      <CardMedia>
+        <Box sx={{ width: "100%", height: 180, position: "relative" }}>
+          <Image
+            src={course.image}
+            alt={course.title}
+            fill
+            style={{ objectFit: "cover" }}
+          />
+        </Box>
+      </CardMedia>
+      <CardContent sx={{ flex: 1 }}>
+        <Typography
+          variant="h6"
+          fontWeight="bold"
+          gutterBottom
           sx={{
-            height: "100%",
-            display: "flex",
-            flexDirection: "column",
-            transition: "0.3s ease",
-            "&:hover": { boxShadow: 6, transform: "translateY(-4px)" },
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            display: "-webkit-box",
+            WebkitLineClamp: 2,
+            WebkitBoxOrient: "vertical",
           }}
         >
-          <CardMedia
-            component="img"
-            height="160"
-            image={course.image}
-            alt={course.title}
-          />
-          <CardContent sx={{ flexGrow: 1 }}>
-            <Typography variant="h6" fontWeight="bold" gutterBottom>
-              {course.title}
-            </Typography>
-            <Chip label={course.category} size="small" sx={{ mb: 1 }} />
-            <Typography variant="body2" color="text.secondary">
-              {course.description}
-            </Typography>
-          </CardContent>
-          <CardActions sx={{ marginTop: "auto" }}>
-            <Button
-              component={Link}
-              href={`/courses/${course.id}`}
-              size="small"
-              variant="contained"
-              fullWidth
-            >
-              View Course
-            </Button>
-          </CardActions>
-        </Card>
-      </motion.div>
-    </Grid>
+          {course.title}
+        </Typography>
+        <Chip label={course.category} size="small" sx={{ mb: 1 }} />
+        <Typography
+          variant="body2"
+          color="text.secondary"
+          sx={{
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            display: "-webkit-box",
+            WebkitLineClamp: 2,
+            WebkitBoxOrient: "vertical",
+          }}
+        >
+          {course.description}
+        </Typography>
+      </CardContent>
+      <CardActions sx={{ marginTop: "auto" }}>
+        <Link href={`/courses/${course.id}`} className="w-full">
+          <Button size="small" variant="contained" fullWidth>
+            View Course
+          </Button>
+        </Link>
+      </CardActions>
+    </Card>
   );
 }

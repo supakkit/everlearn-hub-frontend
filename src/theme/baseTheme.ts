@@ -7,6 +7,15 @@ import {
 } from "@mui/material/styles";
 import { grey, indigo } from "@mui/material/colors";
 
+declare module "@mui/material/styles" {
+  interface Palette {
+    basic: Palette["primary"];
+  }
+  interface PaletteOptions {
+    basic?: PaletteOptions["primary"];
+  }
+}
+
 declare module "@mui/material/Button" {
   interface ButtonPropsVariantOverrides {
     link: true;
@@ -37,6 +46,19 @@ const baseComponentsOptions: ThemeOptions["components"] = {
                 textDecoration: "underline",
                 textUnderlineOffset: 4,
                 background: "none",
+              },
+            }),
+          },
+          {
+            props: { variant: "text" },
+            style: ({ theme }: { theme: Theme }) => ({
+              color:
+                theme.palette.mode === "dark"
+                  ? theme.palette.primary.contrastText
+                  : theme.palette.primary.main,
+              "&:hover": {
+                background:
+                  theme.palette.mode === "dark" ? grey[800] : indigo[50],
               },
             }),
           },
@@ -93,6 +115,10 @@ export const baseThemeOptions: ThemeOptions = {
     },
     background: {
       default: grey["A100"],
+    },
+    basic: {
+      main: "#000",
+      contrastText: "#fff",
     },
   },
   shape: {

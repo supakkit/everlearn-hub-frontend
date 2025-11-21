@@ -34,7 +34,7 @@ export const TopAppBar: React.FC = () => {
   };
 
   return (
-    <AppBar position="sticky" color="primary" elevation={2}>
+    <AppBar position='sticky' color='default' elevation={2}>
       <Toolbar
         sx={{ display: "flex", justifyContent: "space-between" }}
         className="top-bar-height"
@@ -47,6 +47,7 @@ export const TopAppBar: React.FC = () => {
         >
           <MenuIcon />
         </IconButton>
+
         <Container sx={{ display: "flex", alignItems: "center", gap: 4 }}>
           {/* Logo */}
           <Link href={navigation.home.href}>
@@ -68,7 +69,7 @@ export const TopAppBar: React.FC = () => {
                 key={page.label}
                 component={Link}
                 href={page.href}
-                color="inherit"
+                sx={{ color: (theme) => theme.palette.basic.main }}
               >
                 {page.label}
               </Button>
