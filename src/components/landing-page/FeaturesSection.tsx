@@ -22,7 +22,7 @@ export const FeaturesSection: React.FC = () => {
             <motion.div
               key={index}
               initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
+              whileInView={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.2, duration: 0.7 }}
               className="h-full"
             >
