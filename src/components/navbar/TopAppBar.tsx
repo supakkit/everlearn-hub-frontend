@@ -17,7 +17,7 @@ import { navbarItems, navigation } from "@/data/navigation";
 import { MobileSidebarDrawer } from "./MobileSidebarDrawer";
 import { UserMenu } from "./UserMenu";
 
-export const TopAppBar: React.FC = () => {
+export function TopAppBar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
 
@@ -34,7 +34,7 @@ export const TopAppBar: React.FC = () => {
   };
 
   return (
-    <AppBar position='sticky' color='default' elevation={2}>
+    <AppBar position="sticky" color="default" elevation={2}>
       <Toolbar
         sx={{ display: "flex", justifyContent: "space-between" }}
         className="top-bar-height"
@@ -104,4 +104,4 @@ export const TopAppBar: React.FC = () => {
       </Drawer>
     </AppBar>
   );
-};
+}

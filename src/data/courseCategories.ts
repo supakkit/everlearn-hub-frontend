@@ -1,12 +1,13 @@
 import { navigation } from "./navigation";
 import { IconComponentType } from "@/types/common/icon";
-import slugify from "slugify";
 import TerminalRoundedIcon from '@mui/icons-material/TerminalRounded';
 import CurrencyExchangeRoundedIcon from '@mui/icons-material/CurrencyExchangeRounded';
 import BrushRoundedIcon from '@mui/icons-material/BrushRounded';
 import TranslateRoundedIcon from '@mui/icons-material/TranslateRounded';
 import RocketLaunchRoundedIcon from '@mui/icons-material/RocketLaunchRounded';
 import SelfImprovementRoundedIcon from '@mui/icons-material/SelfImprovementRounded';
+import EmergencyIcon from '@mui/icons-material/Emergency';
+import { getSlug } from "@/config/slugify";
 
 interface CourseCategoriesDefinition {
   title: string;
@@ -27,10 +28,7 @@ function createCategory({
     icon,
 
     get slug() {
-      return slugify(title, {
-        lower: true,
-        strict: true,
-      });
+      return getSlug(title);
     },
 
     get href() {
@@ -40,6 +38,10 @@ function createCategory({
 }
 
 const courseCategoriesDefinition: CourseCategoriesDefinition[] = [
+  {
+    title: "All",
+    icon: EmergencyIcon,
+  },
   {
     title: "Software Development",
     icon: TerminalRoundedIcon,

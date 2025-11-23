@@ -2,6 +2,7 @@ import { Typography, Button, Container, Grid } from "@mui/material";
 import CancelPresentationIcon from "@mui/icons-material/CancelPresentation";
 import Link from "next/link";
 import { CentralScreenContainer } from "@/components/common/CentralScreenContainer";
+import { navigation } from "@/data/navigation";
 
 export default function CheckoutCancelPage() {
   return (
@@ -20,18 +21,22 @@ export default function CheckoutCancelPage() {
         <Grid
           sx={{
             display: "flex",
+            flexDirection: {
+              xs: "column",
+              sm: "row",
+            },
             justifyContent: "center",
             gap: 2,
             marginTop: 4,
           }}
         >
-          <Link href="/courses">
+          <Link href={navigation.courses.href}>
             <Button variant="contained" color="primary" size="large">
               Continue Browsing Courses
             </Button>
           </Link>
 
-          <Link href="/">
+          <Link href={navigation.home.href}>
             <Button variant="outlinedDarkMode" size="large">
               Back to Home
             </Button>

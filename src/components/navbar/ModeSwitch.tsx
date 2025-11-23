@@ -1,9 +1,13 @@
 "use client";
 
 import { useColorMode } from "@/providers/MuiThemeProvider";
-import { Brightness4, Brightness7 } from "@mui/icons-material";
 import { IconButton } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
+import BedtimeRoundedIcon from '@mui/icons-material/BedtimeRounded';
+import WbSunnyRoundedIcon from '@mui/icons-material/WbSunnyRounded';
+
+
+
 
 export function ModeSwitch() {
   const theme = useTheme();
@@ -12,8 +16,11 @@ export function ModeSwitch() {
   if (!colorMode) return null;
 
   return (
-    <IconButton onClick={colorMode.toggleColorMode} color="inherit">
-      {theme.palette.mode === "dark" ? <Brightness7 /> : <Brightness4 />}
+    <IconButton title="toggle theme" onClick={colorMode.toggleColorMode} color="inherit">
+      {theme.palette.mode === "dark" ? <WbSunnyRoundedIcon /> : <BedtimeRoundedIcon />}
     </IconButton>
   );
 }
+
+
+

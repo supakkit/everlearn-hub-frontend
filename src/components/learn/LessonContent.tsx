@@ -1,0 +1,111 @@
+import { Course, Lesson } from "@/types/course";
+import { Box, Button, CardContent, Paper, Typography } from "@mui/material";
+import { motion } from "framer-motion";
+import ReactMarkdown from "react-markdown";
+import NavigateNextRoundedIcon from "@mui/icons-material/NavigateNextRounded";
+import CheckCircleRoundedIcon from "@mui/icons-material/CheckCircleRounded";
+import CheckCircleOutlinedIcon from '@mui/icons-material/CheckCircleOutlined';
+import Link from "next/link";
+import { navigation } from "@/data/navigation";
+
+type PropType = {
+  selectedLesson: Lesson | null;
+  isLessonUnlocked: (selectedLesson: Lesson) => boolean;
+  completedLessons: string[];
+  markLessonCompleted: (id: string) => void;
+  saving: boolean;
+  handleNextLesson: (e: React.MouseEvent<HTMLElement>) => void;
+  course: Course;
+};
+
+export function LessonContent({
+  selectedLesson,
+  isLessonUnlocked,
+  completedLessons,
+  markLessonCompleted,
+  saving,
+  handleNextLesson,
+  course,
+}: PropType) {
+  const isCompletedLesson = completedLessons.includes(selectedLesson?.id || "");
+  const isLastLesson = selectedLesson?.id === course.lessons.at(-1)?.id;
+  return (
+    <Box flexGrow={1}>
+      {selectedLesson ? (
+        <motion.div
+          key={selectedLesson.id}
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.25 }}
+        >
+          <Paper sx={{ mb: 2 }} elevation={2}>
+            <CardContent>
+              <Typography variant="h5" fontWeight="bold" mb={2}>
+                {selectedLesson.title}
+              </Typography>
+
+              {/* if lesson is locked (not unlocked and not preview) show message */}
+              {!isLessonUnlocked(selectedLesson) &&
+              !selectedLesson.isPreview ? (
+                <Box>
+                  <Typography color="text.secondary" mb={2}>
+                    This lesson is locked. Complete the previous lesson to
+                    unlock.
+                  </Typography>
+                </Box>
+              ) : (
+                <Box>
+                  {/* Render markdown content */}
+                  <Box sx={{ mb: 2 }}>
+                    <ReactMarkdown>{selectedLesson.content}</ReactMarkdown>
+                  </Box>
+                </Box>
+              )}
+            </CardContent>
+          </Paper>
+
+          <Box display="flex" justifySelf="end" gap={2} alignItems="center">
+            <Button
+              variant={isCompletedLesson ? "outlined" : "contained"}
+              onClick={() => markLessonCompleted(selectedLesson.id)}
+              disabled={saving || isCompletedLesson}
+              size='large'
+            >
+              {isCompletedLesson
+                ? <>Completed<CheckCircleRoundedIcon sx={{ fontSize: 20, ml: 1 }} /></>
+                : saving
+                ? "Saving..."
+                : <>Mark Completed<CheckCircleOutlinedIcon sx={{ fontSize: 20, ml: 1 }} /></>}
+            </Button>
+
+            {!isLastLesson && (
+              <Button
+                variant="text"
+                onClick={handleNextLesson}
+                disabled={!isCompletedLesson}
+                size='large'
+              >
+                Next Lesson
+                <NavigateNextRoundedIcon sx={{ fontSize: 20 }} />
+              </Button>
+            )}
+
+            {isCompletedLesson && isLastLesson && (
+              <Link href={navigation.dashboard.href}>
+              <Button
+                variant="contained"
+                disabled={!isCompletedLesson}
+                size='large'
+                >
+                Dashboard
+              </Button>
+                </Link>
+            )}
+          </Box>
+        </motion.div>
+      ) : (
+        <Typography>No lesson selected.</Typography>
+      )}
+    </Box>
+  );
+}

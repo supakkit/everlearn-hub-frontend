@@ -1,23 +1,25 @@
 "use client";
 
 import { courseCategories } from "@/data/courseCategories";
-import { Card, Container, Grid, Typography } from "@mui/material";
+import { Box, Card, Container, Grid, Typography } from "@mui/material";
 import Link from "next/link";
 import { motion } from "motion/react";
 
-export const CategoriesSection: React.FC = () => {
+export function CategoriesSection() {
   return (
-    <Container sx={{ py: 8 }}>
+    <Box sx={{ py: 8 }}>
+     <Container >
       <Typography variant="h4" fontWeight={700} textAlign="center" mb={6}>
         Popular Categories
       </Typography>
 
       <Grid container spacing={3}>
-        {courseCategories.map((cat) => (
+        {courseCategories.slice(1, 7).map((cat) => (
           <Grid size={{ xs: 12, sm: 6, md: 4 }} key={cat.slug}>
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
               transition={{ delay: 0.2, duration: 0.7 }}
             >
               <Link href={cat.href}>
@@ -32,6 +34,8 @@ export const CategoriesSection: React.FC = () => {
           </Grid>
         ))}
       </Grid>
-    </Container>
+    </Container> 
+    </Box>
+    
   );
-};
+}

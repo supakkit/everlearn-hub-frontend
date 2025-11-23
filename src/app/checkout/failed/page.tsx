@@ -2,6 +2,7 @@ import { Typography, Button, Container, Grid } from "@mui/material";
 import ReportGmailerrorredIcon from "@mui/icons-material/ReportGmailerrorred";
 import Link from "next/link";
 import { CentralScreenContainer } from "@/components/common/CentralScreenContainer";
+import { navigation } from "@/data/navigation";
 
 export default function CheckoutFailedPage() {
   return (
@@ -24,13 +25,13 @@ export default function CheckoutFailedPage() {
             marginTop: 4,
           }}
         >
-          <Link href="/checkout">
+          <Link href={navigation.checkout.href}>
             <Button variant="contained" color="primary" size="large">
               Try Again
             </Button>
           </Link>
 
-          <Link href="/">
+          <Link href={navigation.home.href}>
             <Button variant="outlinedDarkMode" size="large">
               Back to Home
             </Button>

@@ -10,12 +10,19 @@ import { courses } from "@/data/courses";
 import { CourseCard } from "../courses/CourseCard";
 import { motion } from "motion/react";
 
-export const CoursesSection: React.FC = () => {
+export function CoursesSection() {
   const [emblaRef] = useEmblaCarousel({ loop: true }, [
     Autoplay({ stopOnMouseEnter: true, stopOnInteraction: false }),
   ]);
   return (
-    <Container sx={{ py: 8 }}>
+    <Box sx={{ py: 10 }}>
+    <Container>
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.5 }}
+      >
       <Grid
         container
         sx={{ justifyContent: "space-between", alignItems: "baseline" }}
@@ -31,12 +38,15 @@ export const CoursesSection: React.FC = () => {
             <ArrowForwardIosRoundedIcon sx={{ fontSize: 16 }} />
           </Button>
         </Link>
-      </Grid>
+      </Grid>  
+      </motion.div>
+      
 
       <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 1.5, ease: "easeIn" }}
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ delay: 0.5, duration: 1.2 }}
       >
         <Box ref={emblaRef} sx={{ overflow: "hidden" }}>
           <Box
@@ -55,5 +65,6 @@ export const CoursesSection: React.FC = () => {
         </Box>
       </motion.div>
     </Container>
+    </Box>
   );
-};
+}

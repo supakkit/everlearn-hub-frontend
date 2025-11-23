@@ -1,11 +1,9 @@
 import { ChildrenPropType } from "@/types/common/childrenProp";
 
-export const CentralScreenContainer: React.FC<ChildrenPropType> = ({
-  children,
-}) => {
+export function CentralScreenContainer({ children }: ChildrenPropType) {
   return (
     <div className="offset-top-bar min-h-screen flex justify-center items-center">
       {children}
     </div>
   );
-};
+}

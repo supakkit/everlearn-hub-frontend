@@ -7,8 +7,12 @@ export const navigation = {
   logout: { label: "Logout", href: "/" },
   profile: { label: "Profile", href: "/profile" },
   dashboard: { label: "Dashboard", href: "/dashboard" },
-  library: { label: "Library", href: "/learn" },
+  learn: { label: "Learn", href: "/learn" },
   courses: { label: "Courses", href: "/courses" },
+  checkout: { label: "Checkout", href: "/checkout" },
+  checkoutCancel: { label: "Cancel Checkout", href: "/checkout/cancel" },
+  checkoutFailed: { label: "Checkout Failed", href: "/checkout/failed" },
+  checkoutSuccess: { label: "Checkout Success", href: "/checkout/success" },
 };
 
 interface NavbarItems {
@@ -21,7 +25,6 @@ export const navbarItems: NavbarItems = {
   settings: [
     navigation.profile,
     navigation.dashboard,
-    navigation.library,
     navigation.logout,
   ],
 };

@@ -2,16 +2,15 @@
 
 import { CentralScreenContainer } from "@/components/common/CentralScreenContainer";
 import CancelRoundedIcon from "@mui/icons-material/CancelRounded";
-import { Alert, Box, Button, Container, Typography } from "@mui/material";
+import { Button, Container, Typography } from "@mui/material";
 import { useEffect } from "react";
 
-export default function Error({
-  error,
-  reset,
-}: {
+type PropType = {
   error: Error & { digest?: string };
   reset: () => void;
-}) {
+};
+
+export default function Error({ error, reset }: PropType) {
   useEffect(() => {
     console.error(error);
   }, [error]);
@@ -24,7 +23,12 @@ export default function Error({
           Something went wrong!
         </Typography>
 
-        <Button variant="contained" size="large" sx={{ mt: 4 }} onClick={() => reset()}>
+        <Button
+          variant="contained"
+          size="large"
+          sx={{ mt: 4 }}
+          onClick={() => reset()}
+        >
           Try again
         </Button>
       </Container>

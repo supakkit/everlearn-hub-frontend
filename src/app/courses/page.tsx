@@ -1,16 +1,11 @@
 "use client";
 
-import { Suspense, useMemo, useState } from "react";
 import {
   Box,
   Button,
   Container,
   Grid,
   Typography,
-  Card,
-  CardContent,
-  CardMedia,
-  CardActions,
   Chip,
   Stack,
   TextField,
@@ -20,56 +15,81 @@ import { motion } from "framer-motion";
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { CourseCard } from "@/components/courses/CourseCard";
-import { courses } from "@/data/courses";
-
-const filterOptions = [
-  "All",
-  "Web Development",
-  "Design",
-  "Business",
-  "Lifestyle",
-];
+import { courses as mockCourses } from "@/data/courses";
+import { courseCategories } from "@/data/courseCategories";
+import { navigation } from "@/data/navigation";
+import { useCallback, useEffect, useState } from "react";
+import { Course } from "@/types/course";
+import { getSlug } from "@/config/slugify";
 
 export default function CoursesPage() {
   const searchParams = useSearchParams();
   const router = useRouter();
+  const [queryInput, setQueryInput] = useState("");
+  const [courses, setCourses] = useState<Course[]>([]);
 
   const page = Number(searchParams.get("page")) || 1;
-  const category = searchParams.get("category") || "All";
+  const category = searchParams.get("category") || "all";
   const query = searchParams.get("query") || "";
 
-  const itemsPerPage = 1;
+  const itemsPerPage = 10;
   const totalItems = 10; // get from server response
   const totalPages = Math.ceil(totalItems / itemsPerPage);
 
   const updateFilter = (key: string, value: string) => {
     const params = new URLSearchParams(searchParams.toString());
     params.set(key, value);
-    // params.set("page", "1"); // reset page on filter change
-    router.push(`/courses?${params.toString()}`);
+    if (key !== "page") params.set("page", "1");
+    router.push(`${navigation.courses.href}?${params.toString()}`);
   };
 
-  const handleSearchSubmit = (event: React.MouseEvent<HTMLButtonElement>) => {
+  const handleClearFilter = () => {
+    router.push(navigation.courses.href);
+  };
+
+  const handleSearchSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-
-    alert("send request");
+    const query = queryInput.trim();
+    if (query) updateFilter("query", query);
+    setQueryInput("");
   };
 
-  const filteredCourses = courses.filter((course) => {
-    const matchesCategory = category === "All" || course.category === category;
-    const matchesSearch = course.title
-      .toLowerCase()
-      .includes(query.toLowerCase());
-    return matchesCategory && matchesSearch;
-  });
+  const fetchCourses = useCallback(() => {
+    const filteredCourses = mockCourses.filter((course) => {
+      console.log("getSlug:", getSlug(course.category));
+      const matchesCategory =
+        category === "all" || getSlug(course.category) === category;
+      const matchesSearch = course.title
+        .toLowerCase()
+        .includes(query.toLowerCase());
+      return matchesCategory && matchesSearch;
+    });
 
-  const paginatedCourses = filteredCourses.slice(
-    (page - 1) * itemsPerPage,
-    page * itemsPerPage
-  );
+    const paginatedCourses = filteredCourses.slice(
+      (page - 1) * itemsPerPage,
+      page * itemsPerPage
+    );
+
+    return paginatedCourses;
+  }, [page, category, query]);
+
+  useEffect(() => {
+    let ignore = false;
+    const getData = () => {
+      const data = fetchCourses();
+      if (!ignore) {
+        setCourses(data || []);
+      }
+    };
+    getData();
+
+    return () => {
+      ignore = true;
+    };
+  }, [page, category, query, fetchCourses]);
 
   return (
-    <Container sx={{ py: 6 }}>
+    <Container className="min-h-screen offset-top-bar pt-22 relative pb-24">
       {/* Header */}
       <Typography
         component={motion.h1}
@@ -77,44 +97,78 @@ export default function CoursesPage() {
         animate={{ opacity: 1, y: 0 }}
         variant="h4"
         fontWeight={700}
-        mb={3}
+        mb={2}
       >
         Explore Courses
       </Typography>
 
+      {/* The Search Keyword */}
+      <Box
+        sx={{
+          my: 2,
+          display: query.trim() === "" ? "none" : "flex",
+          alignItems: "center",
+          gap: 2,
+        }}
+      >
+        <Typography variant="h6">Recent search:</Typography>
+        <Chip
+          label={query}
+          onDelete={handleClearFilter}
+          sx={{ fontSize: 15, fontWeight: 500 }}
+        />
+      </Box>
+
       {/* Search & Filter */}
-      <Stack direction={{ xs: "column", sm: "row" }} spacing={2} mb={2}>
+      <Stack
+        component="form"
+        direction={{ xs: "column", sm: "row" }}
+        spacing={2}
+        mb={2}
+        onSubmit={handleSearchSubmit}
+      >
         <TextField
           variant="outlined"
+          type="text"
+          name="query"
           placeholder="Search courses..."
           fullWidth
-          value={query}
-          onChange={(e) => updateFilter("query", e.target.value)}
+          value={queryInput}
+          onChange={(e) => setQueryInput(e.target.value)}
         />
-        <Button variant="contained" size="large" onClick={handleSearchSubmit}>
+        <Button variant="contained" size="large" type="submit">
           Search
         </Button>
       </Stack>
-      <Stack direction="row" spacing={1} mb={4} sx={{ overflowX: "auto" }}>
-        {filterOptions.map((f) => (
+      <Stack
+        direction="row"
+        spacing={1}
+        mb={4}
+        sx={{ overflowX: "auto", py: 1 }}
+      >
+        {courseCategories.map((item) => (
           <Chip
-            key={f}
-            label={f}
+            key={item.slug}
+            label={item.title}
             clickable
-            onClick={() => updateFilter("category", f)}
-            color={category === f ? "primary" : "default"}
+            onClick={() => updateFilter("category", item.slug)}
+            color={category === item.slug ? "primary" : "default"}
           />
         ))}
       </Stack>
 
       {/* Course Grid */}
       <Grid container spacing={3}>
-        {paginatedCourses.map((course) => (
-          <Grid key={course.id} size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
+        {courses.map((course) => (
+          <Grid
+            key={course.id}
+            size={{ xs: 12, sm: 6, md: 4, lg: 3 }}
+            sx={{ display: "flex", justifyContent: "center" }}
+          >
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
-              className="h-full"
+              className="h-full w-fit"
             >
               <CourseCard course={course} />
             </motion.div>
@@ -122,17 +176,27 @@ export default function CoursesPage() {
         ))}
       </Grid>
 
-      {filteredCourses.length === 0 && (
+      {courses.length === 0 && (
         <Typography mt={4} textAlign="center" color="text.secondary">
           No courses found.
         </Typography>
       )}
 
-      <Box sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          position: "absolute",
+          bottom: 16,
+          left: 0,
+          right: 0,
+        }}
+      >
         <Pagination
           count={totalPages}
           page={page}
           showFirstButton={true}
+          showLastButton={true}
           onChange={(_, value) => updateFilter("page", String(value))}
           color="primary"
           size="large"

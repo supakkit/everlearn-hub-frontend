@@ -5,8 +5,11 @@ import { CategoriesSection } from "../../components/landing-page/CategoriesSecti
 import { CoursesSection } from "../../components/landing-page/CoursesSection";
 import { CTASection } from "../../components/landing-page/CTASection";
 import { SectionDivider } from "@/components/landing-page/SectionDivider";
+import { TestimonialsSection } from "@/components/landing-page/TestimonialsSection";
+import { FAQSection } from "@/components/landing-page/FAQSection";
+import { PillarsSection } from "@/components/landing-page/PillarsSection";
 
-const LandingPage: React.FC = () => {
+export default function LandingPage() {
   return (
     <Box>
       <HeroSection />
@@ -15,9 +18,13 @@ const LandingPage: React.FC = () => {
       <CategoriesSection />
       <SectionDivider />
       <FeaturesSection />
+      <SectionDivider />
+      <TestimonialsSection />
+      <SectionDivider />
+      <PillarsSection />
+      <SectionDivider />
+      <FAQSection />
       <CTASection />
     </Box>
   );
-};
-
-export default LandingPage;
+}

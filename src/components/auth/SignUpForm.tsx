@@ -16,7 +16,7 @@ import { Card, Container } from "@mui/material";
 import Link from "next/link";
 import { navigation } from "@/data/navigation";
 
-export const SignUpForm: React.FC = () => {
+export function SignUpForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [emailError, setEmailError] = useState(false);
   const [emailErrorMessage, setEmailErrorMessage] = useState("");
@@ -195,4 +195,4 @@ export const SignUpForm: React.FC = () => {
       </Card>
     </Container>
   );
-};
+}

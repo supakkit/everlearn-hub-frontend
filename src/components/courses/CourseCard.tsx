@@ -8,9 +8,9 @@ import {
   Chip,
   Typography,
 } from "@mui/material";
-import { Course } from "@/data/courses";
 import Link from "next/link";
 import Image from "next/image";
+import { Course } from "@/types/course";
 
 export function CourseCard({ course }: { course: Course }) {
   return (
@@ -18,7 +18,8 @@ export function CourseCard({ course }: { course: Course }) {
       key={course.id}
       sx={{
         height: "100%",
-        minWidth: 300,
+        minWidth: 280,
+        width: 280,
         display: "flex",
         flexDirection: "column",
         "&:hover": { boxShadow: 6, transform: "translateY(-4px)" },

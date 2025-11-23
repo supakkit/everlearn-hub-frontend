@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { Providers } from "@/providers/Providers";
 import Script from "next/script";
-import { TopAppBar } from "@/components/navigation/TopAppBar";
+import { TopAppBar } from "@/components/navbar/TopAppBar";
+import { ChildrenPropType } from "@/types/common/childrenProp";
 
 export const metadata: Metadata = {
   title: "EverLearn Hub",
@@ -10,11 +11,7 @@ export const metadata: Metadata = {
     "Micro-learning SaaS platform where individuals can access bite-sized courses through a subscription model and learn at their own pace.",
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export default function RootLayout({ children }: ChildrenPropType) {
   return (
     <html lang="en" suppressHydrationWarning>
       <head>

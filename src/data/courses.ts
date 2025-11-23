@@ -1,130 +1,117 @@
-export interface Course {
-  id: number;
-  title: string;
-  slug: string;
-  category: string;
-  image: string;
-  description: string;
-  lessons: Lesson[];
-}
+import { Course } from "@/types/course";
 
-export interface Lesson {
-  id: number;
-  title: string;
-  isPreview: boolean;
-}
 
 export const courses: Course[] = [
   {
-    id: 1,
+    id: 'course_1',
     title: "React for Beginners",
     slug: "react-for-beginners",
     category: "Web Development",
     image: "https://picsum.photos/400/260",
     description: "Learn React from scratch and build dynamic web applications.",
     lessons: [
-      { id: 1, title: "Welcome to the Course", isPreview: true },
-      { id: 2, title: "What is JavaScript?", isPreview: true },
-      { id: 3, title: "Variables Explained", isPreview: false },
-      { id: 4, title: "Basic Math Operations", isPreview: false },
+      { id: 'lesson_1', title: "Welcome to the Course", isPreview: true, content: "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quisquam, deserunt." },
+      { id: 'lesson_2', title: "What is JavaScript?", isPreview: true, content: "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quisquam, deserunt." },
+      { id: 'lesson_3', title: "Variables Explained", isPreview: false, content: "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quisquam, deserunt." },
+      { id: 'lesson_4', title: "Basic Math Operations", isPreview: false, content: "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quisquam, deserunt." },
     ],
   },
   {
-    id: 2,
+    id: 'course_2',
     title: "UI/UX Complete Bootcamp",
     slug: "ui-ux-complete-bootcamp",
     category: "Design",
     image: "https://picsum.photos/401/260",
     description: "Master the fundamentals of UI/UX with hands-on projects.",
     lessons: [
-      { id: 1, title: "Welcome to the Course", isPreview: true },
-      { id: 2, title: "What is JavaScript?", isPreview: true },
-      { id: 3, title: "Variables Explained", isPreview: false },
-      { id: 4, title: "Basic Math Operations", isPreview: false },
+      { id: 'lesson_1', title: "Welcome to the Course", isPreview: true, content: "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quisquam, deserunt." },
+      { id: 'lesson_2', title: "What is JavaScript?", isPreview: true, content: "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quisquam, deserunt." },
+      { id: 'lesson_3', title: "Variables Explained", isPreview: false, content: "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quisquam, deserunt." },
+      { id: 'lesson_4', title: "Basic Math Operations", isPreview: false, content: "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quisquam, deserunt." },
     ],
   },
   {
-    id: 3,
+    id: 'course_3',
     title: "Business Strategy 101",
     slug: "business-strategy-101",
     category: "Business",
     image: "https://picsum.photos/402/260",
     description: "Build essential business strategy skills.",
     lessons: [
-      { id: 1, title: "Welcome to the Course", isPreview: true },
-      { id: 2, title: "What is JavaScript?", isPreview: true },
-      { id: 3, title: "Variables Explained", isPreview: false },
-      { id: 4, title: "Basic Math Operations", isPreview: false },
+      { id: 'lesson_1', title: "Welcome to the Course", isPreview: true, content: "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quisquam, deserunt." },
+      { id: 'lesson_2', title: "What is JavaScript?", isPreview: true, content: "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quisquam, deserunt." },
+      { id: 'lesson_3', title: "Variables Explained", isPreview: false, content: "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quisquam, deserunt." },
+      { id: 'lesson_4', title: "Basic Math Operations", isPreview: false, content: "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quisquam, deserunt." },
     ],
   },
   {
-    id: 4,
+    id: 'course_4',
     title: "Intro to Python",
     slug: "intro-to-python",
     category: "Web Development",
     image: "https://picsum.photos/403/260",
     description: "Get started with Python programming.",
     lessons: [
-      { id: 1, title: "Welcome to the Course", isPreview: true },
-      { id: 2, title: "What is JavaScript?", isPreview: true },
-      { id: 3, title: "Variables Explained", isPreview: false },
-      { id: 4, title: "Basic Math Operations", isPreview: false },
+      { id: 'lesson_1', title: "Welcome to the Course", isPreview: true, content: "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quisquam, deserunt." },
+      { id: 'lesson_2', title: "What is JavaScript?", isPreview: true, content: "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quisquam, deserunt." },
+      { id: 'lesson_3', title: "Variables Explained", isPreview: false, content: "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quisquam, deserunt." },
+      { id: 'lesson_4', title: "Basic Math Operations", isPreview: false, content: "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quisquam, deserunt." },
     ],
   },
   {
-    id: 5,
+    id: 'course_5',
     title: "React for Beginners 2",
     slug: "react-for-beginners-2",
     category: "Web Development",
     image: "https://picsum.photos/404/260",
     description: "Learn React from scratch and build dynamic web applications.",
     lessons: [
-      { id: 1, title: "Welcome to the Course", isPreview: true },
-      { id: 2, title: "What is JavaScript?", isPreview: true },
-      { id: 3, title: "Variables Explained", isPreview: false },
-      { id: 4, title: "Basic Math Operations", isPreview: false },
+      { id: 'lesson_1', title: "Welcome to the Course", isPreview: true, content: "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quisquam, deserunt." },
+      { id: 'lesson_2', title: "What is JavaScript?", isPreview: true, content: "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quisquam, deserunt." },
+      { id: 'lesson_3', title: "Variables Explained", isPreview: false, content: "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quisquam, deserunt." },
+      { id: 'lesson_4', title: "Basic Math Operations", isPreview: false, content: "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quisquam, deserunt." },
     ],
   },
   {
-    id: 6,
+    id: 'course_6',
     title: "UI/UX Complete Bootcamp 2",
     slug: "ui-ux-complete-bootcamp-2",
     category: "Design",
     image: "https://picsum.photos/405/260",
     description: "Master the fundamentals of UI/UX with hands-on projects.",
     lessons: [
-      { id: 1, title: "Welcome to the Course", isPreview: true },
-      { id: 2, title: "What is JavaScript?", isPreview: true },
-      { id: 3, title: "Variables Explained", isPreview: false },
-      { id: 4, title: "Basic Math Operations", isPreview: false },
+      { id: 'lesson_1', title: "Welcome to the Course", isPreview: true, content: "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quisquam, deserunt." },
+      { id: 'lesson_2', title: "What is JavaScript?", isPreview: true, content: "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quisquam, deserunt." },
+      { id: 'lesson_3', title: "Variables Explained", isPreview: false, content: "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quisquam, deserunt." },
+      { id: 'lesson_4', title: "Basic Math Operations", isPreview: false, content: "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quisquam, deserunt." },
     ],
   },
   {
-    id: 7,
+    id: 'course_7',
     title: "Business Strategy 101 2",
     slug: "business-strategy-101-2",
     category: "Business",
     image: "https://picsum.photos/406/260",
     description: "Build essential business strategy skills.",
     lessons: [
-      { id: 1, title: "Welcome to the Course", isPreview: true },
-      { id: 2, title: "What is JavaScript?", isPreview: true },
-      { id: 3, title: "Variables Explained", isPreview: false },
-      { id: 4, title: "Basic Math Operations", isPreview: false },
+      { id: 'lesson_1', title: "Welcome to the Course", isPreview: true, content: "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quisquam, deserunt." },
+      { id: 'lesson_2', title: "What is JavaScript?", isPreview: true, content: "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quisquam, deserunt." },
+      { id: 'lesson_3', title: "Variables Explained", isPreview: false, content: "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quisquam, deserunt." },
+      { id: 'lesson_4', title: "Basic Math Operations", isPreview: false, content: "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quisquam, deserunt." },
     ],
   },
   {
-    id: 8,
+    id: 'course_8',
     title: "Intro to Python 2",
     slug: "intro-to-python-2",
     category: "Web Development",
     image: "https://picsum.photos/407/260",
     description: "Get started with Python programming.",
     lessons: [
-      { id: 1, title: "Welcome to the Course", isPreview: true },
-      { id: 2, title: "What is JavaScript?", isPreview: true },
-      { id: 3, title: "Variables Explained", isPreview: false },
-      { id: 4, title: "Basic Math Operations", isPreview: false },
+      { id: 'lesson_1', title: "Welcome to the Course", isPreview: true, content: "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quisquam, deserunt." },
+      { id: 'lesson_2', title: "What is JavaScript?", isPreview: true, content: "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quisquam, deserunt." },
+      { id: 'lesson_3', title: "Variables Explained", isPreview: false, content: "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quisquam, deserunt." },
+      { id: 'lesson_4', title: "Basic Math Operations", isPreview: false, content: "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quisquam, deserunt." },
     ],
   },
 ];
