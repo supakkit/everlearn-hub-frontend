@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "openapi": "npx openapi-typescript http://localhost:3001/api-json -o src/types/api/api.ts"
   },
   "dependencies": {
     "@emotion/cache": "^11.14.0",
@@ -16,6 +17,7 @@
     "@mui/material": "^7.3.5",
     "@mui/material-nextjs": "^7.3.5",
     "@mui/utils": "^7.3.5",
+    "axios": "^1.13.2",
     "embla-carousel-autoplay": "^8.6.0",
     "embla-carousel-react": "^8.6.0",
     "motion": "^12.23.24",
