@@ -20,8 +20,8 @@ import {
 import Link from "next/link";
 import { GoogleIcon } from "@/components/common/CustomIcons";
 import { navigation } from "@/data/navigation";
-import { useAuth } from "@/contexts/AuthContext";
-import { useRouter } from "next/navigation";
+import { useAuth } from "@/providers/AuthProvider";
+import { useToast } from "@/providers/ToastProvider";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -33,7 +33,7 @@ export default function LoginPage() {
   const [formError, setFormError] = useState("");
 
   const { login } = useAuth();
-  const router = useRouter();
+  const { showToast } = useToast();
 
   const validate = () => {
     let valid = true;
@@ -63,6 +63,7 @@ export default function LoginPage() {
 
     try {
       await login(email, password);
+      showToast("Logged in successfully.", "success");
     } catch (error) {
       console.error(error);
       setFormError("Failed to login, please try again.");
@@ -71,8 +72,10 @@ export default function LoginPage() {
 
   return (
     <Container maxWidth="xs" sx={{ mt: 10 }}>
-      <Card variant="outlined" sx={{ width: "100%", p: 4, display: "grid", gap: 2 }}>
-        
+      <Card
+        variant="outlined"
+        sx={{ width: "100%", p: 4, display: "grid", gap: 2 }}
+      >
         <Typography
           component="h1"
           variant="h4"
@@ -96,7 +99,12 @@ export default function LoginPage() {
           component="form"
           onSubmit={handleSubmit}
           noValidate
-          sx={{ display: "flex", flexDirection: "column", width: "100%", gap: 2 }}
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            width: "100%",
+            gap: 2,
+          }}
         >
           <FormControl>
             <FormLabel htmlFor="email">Email</FormLabel>
@@ -158,6 +166,7 @@ export default function LoginPage() {
             fullWidth
             variant="outlinedDarkMode"
             startIcon={<GoogleIcon />}
+            disabled
             onClick={() => {}}
           >
             Sign in with Google
@@ -165,7 +174,10 @@ export default function LoginPage() {
 
           <Typography sx={{ textAlign: "center" }}>
             Don&apos;t have an account?{" "}
-            <Link href={navigation.signup.href} className="underline underline-offset-2">
+            <Link
+              href={navigation.signup.href}
+              className="underline underline-offset-2"
+            >
               Sign up
             </Link>
           </Typography>

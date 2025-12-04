@@ -5,7 +5,6 @@ import { navigation } from "./data/navigation";
 export function proxy(req: NextRequest) {
   // refreshToken must exist if user is logged in
   const accessToken = req.cookies.get("accessToken")?.value;
-  console.log('accessToken:', accessToken)
   const protectedRoutes = [navigation.dashboard.href, navigation.profile.href];
 
   const isProtected = protectedRoutes.some((path) =>

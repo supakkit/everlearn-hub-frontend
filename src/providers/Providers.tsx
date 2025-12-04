@@ -4,7 +4,8 @@ import React from "react";
 import { AppRouterCacheProvider } from "@mui/material-nextjs/v13-appRouter";
 import { CssBaseline } from "@mui/material";
 import dynamic from "next/dynamic";
-import { AuthProvider } from "@/contexts/AuthContext";
+import { AuthProvider } from "@/providers/AuthProvider";
+import { ToastProvider } from "./ToastProvider";
 const NextThemeProvider = dynamic(() => import("./NextThemeProvider"), {
   ssr: false,
 });
@@ -23,7 +24,7 @@ export function Providers({
         <NextThemeProvider>
           <MuiThemeProvider>
             <CssBaseline />
-            {children}
+            <ToastProvider>{children}</ToastProvider>
           </MuiThemeProvider>
         </NextThemeProvider>
       </AppRouterCacheProvider>

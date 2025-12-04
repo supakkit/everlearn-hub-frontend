@@ -29,7 +29,7 @@ api.interceptors.response.use(
     // If refresh call fails → do NOT retry again
     if (originalRequest.url?.includes("/auth/refresh")) {
       return Promise.reject(
-        new ApiError("Session expired. Please login again.", 401)
+        new ApiError("Refresh token failed. Please login again.", 401)
       );
     }
 
