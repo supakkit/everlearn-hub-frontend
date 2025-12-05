@@ -5,9 +5,11 @@ import { trustBadges } from "@/data/trustBadges";
 import { Box, Button, Container, Typography } from "@mui/material";
 import { motion } from "motion/react";
 import Link from "next/link";
+import { useAuth } from "@/providers/AuthProvider";
 
 export function HeroSection() {
-  const isLoggedIn = false; // test auth
+  const { user } = useAuth()
+  const isLoggedIn = !!user;
 
   return (
     <Box
@@ -39,7 +41,7 @@ export function HeroSection() {
         }}
       />
 
-      <Container maxWidth="md" sx={{ position: "relative", zIndex: 2 }}>
+      <Container maxWidth="lg" sx={{ position: "relative", zIndex: 2 }}>
         {/* Headline */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -51,7 +53,7 @@ export function HeroSection() {
             fontWeight={800}
             mb={2}
             sx={{
-              fontSize: { xs: "2.4rem", md: "3.5rem" },
+              fontSize: { xs: "2.4rem", md: "3.5rem", lg: "5rem" },
               lineHeight: 1.2,
               textWrap: "pretty",
             }}
@@ -81,7 +83,7 @@ export function HeroSection() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1.1 }}
         >
-          <Box sx={{ display: "flex", justifyContent: "center", gap: 2 }}>
+          <Box sx={{ display: "flex", flexDirection: { xs: "column", sm: "row" }, justifyContent: "center", gap: 2 }}>
             <Link
               href={
                 isLoggedIn ? navigation.dashboard.href : navigation.signup.href
@@ -92,8 +94,8 @@ export function HeroSection() {
                 size="large"
                 color="secondary"
                 sx={{
-                  px: 4,
-                  py: 1.5,
+                  width: 200,
+                  height: 50,
                   fontWeight: 700,
                 }}
               >
@@ -106,8 +108,8 @@ export function HeroSection() {
                 variant="outlined"
                 size="large"
                 sx={{
-                  px: 4,
-                  py: 1.5,
+                  width: 200,
+                  height: 50,
                   borderColor: "white",
                   color: "white",
                   fontWeight: 700,

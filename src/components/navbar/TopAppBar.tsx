@@ -11,7 +11,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import { ModeSwitch } from "./ModeSwitch";
 import { useState } from "react";
 import SchoolRounded from "@mui/icons-material/SchoolRounded";
-import { Container } from "@mui/material";
+import { Container, Divider } from "@mui/material";
 import Link from "next/link";
 import { navbarItems, navigation } from "@/data/navigation";
 import { MobileSidebarDrawer } from "./MobileSidebarDrawer";
@@ -34,7 +34,8 @@ export function TopAppBar() {
   };
 
   return (
-    <AppBar position="sticky" color="default" elevation={2}>
+    <AppBar position="sticky" elevation={0} sx={{ background: (theme) =>
+          `linear-gradient(135deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`, }}>
       <Toolbar
         sx={{ display: "flex", justifyContent: "space-between" }}
         className="top-bar-height"
@@ -65,26 +66,26 @@ export function TopAppBar() {
           {/* Desktop Navigation */}
           <Box sx={{ display: { xs: "none", md: "flex" }, gap: 2 }}>
             {navbarItems.pages.map((page) => (
-              <Button
+              <Typography
                 key={page.label}
                 component={Link}
                 href={page.href}
-                sx={{ color: (theme) => theme.palette.basic.main }}
               >
                 {page.label}
-              </Button>
+              </Typography>
             ))}
           </Box>
         </Container>
         <Container
           sx={{
-            display: "flex",
+            display: "inline-flex",
             alignItems: "center",
-            gap: 4,
+            gap: 1,
             justifyContent: "end",
           }}
         >
           <ModeSwitch />
+          <Divider orientation="vertical" variant='middle' flexItem />
           <UserMenu
             handleOpenUserMenu={handleOpenUserMenu}
             handleCloseUserMenu={handleCloseUserMenu}

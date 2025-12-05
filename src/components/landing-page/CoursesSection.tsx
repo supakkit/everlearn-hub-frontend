@@ -16,55 +16,55 @@ export function CoursesSection() {
   ]);
   return (
     <Box sx={{ py: 10 }}>
-    <Container>
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.5 }}
-      >
-      <Grid
-        container
-        sx={{ justifyContent: "space-between", alignItems: "baseline" }}
-      >
-        <Typography variant="h4" fontWeight={700}>
-          Top Courses
-        </Typography>
-        <Link href={navigation.courses.href}>
-          <Button variant="text">
-            <Typography sx={{ display: { xs: "none", sm: "block" } }}>
-              Explore all courses
-            </Typography>
-            <ArrowForwardIosRoundedIcon sx={{ fontSize: 16 }} />
-          </Button>
-        </Link>
-      </Grid>  
-      </motion.div>
-      
-
-      <motion.div
-        initial={{ opacity: 0, y: 30 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ delay: 0.5, duration: 1.2 }}
-      >
-        <Box ref={emblaRef} sx={{ overflow: "hidden" }}>
-          <Box
-            sx={{
-              display: "flex",
-              gap: 3,
-              paddingLeft: 3,
-              paddingY: 2,
-              height: 450,
-            }}
+      <Container>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+        >
+          
+          <Grid
+            container
+            sx={{ justifyContent: "space-between", alignItems: "baseline" }}
           >
-            {courses.map((course) => (
-              <CourseCard key={course.id} course={course} />
-            ))}
+            <Typography variant="h5" fontWeight={700}>
+              Top Courses
+            </Typography>
+            <Link href={navigation.courses.href}>
+              <Button variant="text">
+                <Typography sx={{ display: { xs: "none", sm: "block" } }}>
+                  Explore all courses
+                </Typography>
+                <ArrowForwardIosRoundedIcon sx={{ fontSize: 16 }} />
+              </Button>
+            </Link>
+          </Grid>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.5, duration: 1.2 }}
+        >
+          <Box ref={emblaRef} sx={{ overflow: "hidden" }}>
+            <Box
+              sx={{
+                display: "flex",
+                gap: 3,
+                paddingLeft: 3,
+                paddingY: 2,
+                height: 450,
+              }}
+            >
+              {courses.map((course) => (
+                <CourseCard key={course.id} course={course} />
+              ))}
+            </Box>
           </Box>
-        </Box>
-      </motion.div>
-    </Container>
+        </motion.div>
+      </Container>
     </Box>
   );
 }

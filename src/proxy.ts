@@ -5,7 +5,13 @@ import { navigation } from "./data/navigation";
 export function proxy(req: NextRequest) {
   // refreshToken must exist if user is logged in
   const accessToken = req.cookies.get("accessToken")?.value;
-  const protectedRoutes = [navigation.dashboard.href, navigation.profile.href];
+  const protectedRoutes = [
+    navigation.admin.href,
+    navigation.checkout.href,
+    navigation.dashboard.href,
+    navigation.learn.href,
+    navigation.profile.href,
+  ];
 
   const isProtected = protectedRoutes.some((path) =>
     req.nextUrl.pathname.startsWith(path)
@@ -20,8 +26,10 @@ export function proxy(req: NextRequest) {
 
 export const config = {
   matcher: [
+    "/admin/:path*",
+    "/checkout/:path*",
     "/dashboard/:path*",
+    "/learn/:path*",
     "/profile/:path*",
   ],
 };
-

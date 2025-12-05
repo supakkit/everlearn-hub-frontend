@@ -222,8 +222,7 @@ export interface components {
             name: string;
             /** @default STUDENT */
             role: string;
-            /** @default null */
-            avatarUrl: Record<string, never> | null;
+            avatarUrl?: string;
             /** Format: date-time */
             createdAt: string;
         };
@@ -267,8 +266,7 @@ export interface components {
             /** @default 0 */
             priceBaht: number;
             categoryName: string;
-            /** @default null */
-            imageUrl: Record<string, never> | null;
+            imageUrl?: string;
         };
         UpdateCourseDto: {
             title?: string;

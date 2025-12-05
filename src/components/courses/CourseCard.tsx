@@ -23,7 +23,9 @@ export function CourseCard({ course }: { course: Course }) {
         display: "flex",
         flexDirection: "column",
         "&:hover": { boxShadow: 6, transform: "translateY(-4px)" },
+        border: (theme) => `1px solid ${theme.palette.primary.light}`
       }}
+      elevation={0}
     >
       <CardMedia>
         <Box sx={{ width: "100%", height: 180, position: "relative" }}>

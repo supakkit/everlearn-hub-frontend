@@ -11,12 +11,20 @@ import {
   Typography,
 } from "@mui/material";
 import Link from "next/link";
+import { useAuth } from "@/providers/AuthProvider";
+import { useToast } from "@/providers/ToastProvider";
 
 type PropType = {
   handleDrawerToggle: () => void;
 };
 
 export function MobileSidebarDrawer({ handleDrawerToggle }: PropType) {
+  const { user, logout } = useAuth();
+  const { showToast } = useToast();
+  const handleLogout = () => {
+    logout();
+    showToast("Logged out successfully", "success");
+  }
   return (
     <Box sx={{ width: 260 }} role="presentation" onClick={handleDrawerToggle}>
       <Box sx={{ display: "flex", alignItems: "center", p: 2, gap: 1 }}>
@@ -41,16 +49,22 @@ export function MobileSidebarDrawer({ handleDrawerToggle }: PropType) {
       <Divider />
 
       <Box sx={{ p: 2 }}>
-        <Link href={navigation.login.href}>
-          <Button fullWidth variant="contained" sx={{ mb: 1 }}>
-            Login
-          </Button>
-        </Link>
-        <Link href={navigation.signup.href}>
-          <Button fullWidth variant="outlined">
-            Sign Up
-          </Button>
-        </Link>
+        {!!user ? (
+          <Button onClick={handleLogout} fullWidth variant="contained">Logout</Button>
+        ) : (
+          <>
+            <Link href={navigation.login.href}>
+              <Button fullWidth variant="contained" sx={{ mb: 1 }}>
+                Login
+              </Button>
+            </Link>
+            <Link href={navigation.signup.href}>
+              <Button fullWidth variant="outlined">
+                Sign Up
+              </Button>
+            </Link>
+          </>
+        )}
       </Box>
     </Box>
   );

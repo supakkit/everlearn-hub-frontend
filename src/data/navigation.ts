@@ -4,7 +4,7 @@ export const navigation = {
   home: { label: 'Home', href: '/' },
   signup: { label: "Sign up", href: "/auth/signup" },
   login: { label: "Login", href: "/auth/login" },
-  logout: { label: "Logout", href: "/" },
+  admin: { label: "Admin", href: "/admin" },
   profile: { label: "Profile", href: "/profile" },
   dashboard: { label: "Dashboard", href: "/dashboard" },
   learn: { label: "Learn", href: "/learn" },
@@ -25,6 +25,5 @@ export const navbarItems: NavbarItems = {
   settings: [
     navigation.profile,
     navigation.dashboard,
-    navigation.logout,
   ],
 };
