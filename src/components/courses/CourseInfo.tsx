@@ -1,7 +1,5 @@
 import { navigation } from "@/data/navigation";
-import { Course } from "@/types/course";
 import {
-  Button,
   Grid,
   List,
   ListItemButton,
@@ -10,12 +8,12 @@ import {
   Paper,
   Typography,
 } from "@mui/material";
-import Link from "next/link";
 import LockIcon from "@mui/icons-material/Lock";
 import PlayCircleIcon from "@mui/icons-material/PlayCircle";
+import { CourseResponse } from "@/types/api/api-types";
 
 type PropType = {
-  course: Course;
+  course: CourseResponse;
 };
 
 export function CourseInfo({ course }: PropType) {
@@ -47,43 +45,43 @@ export function CourseInfo({ course }: PropType) {
         }}
       >
         <List disablePadding>
-          {course.lessons.map((lesson, index) => (
-            <ListItemButton
-              key={lesson.id}
-              disabled={!lesson.isPreview}
-              divider
-              sx={{
-                height: 62,
-                opacity: lesson.isPreview ? 1 : 0.5,
-                px: 3,
-                "&:hover": {
-                  background: lesson.isPreview ? "action.hover" : "inherit",
-                },
-              }}
-            >
-              <ListItemIcon sx={{ minWidth: 40 }}>
-                {lesson.isPreview ? (
-                  <PlayCircleIcon color="primary" />
-                ) : (
-                  <LockIcon />
-                )}
-              </ListItemIcon>
-
-              <ListItemText
+          {!!course.lessons &&
+            course.lessons.map((lesson, index) => (
+              <ListItemButton
+                key={lesson.id}
+                href={`${navigation.learn.href}/${lesson.id}`}
+                disabled={!lesson.isPreview}
+                divider
                 sx={{
-                  fontSize: 16,
-                  fontWeight: 500,
+                  height: 62,
+                  opacity: lesson.isPreview ? 1 : 0.5,
+                  px: 3,
+                  "&:hover": {
+                    background: lesson.isPreview ? "action.hover" : "inherit",
+                  },
                 }}
-                primary={`${index + 1}. ${lesson.title}`}
-              />
+              >
+                <ListItemIcon sx={{ minWidth: 40 }}>
+                  {lesson.isPreview ? (
+                    <PlayCircleIcon color="primary" />
+                  ) : (
+                    <LockIcon />
+                  )}
+                </ListItemIcon>
 
-              {lesson.isPreview && (
-                <Link href={`${navigation.learn.href}/${course.id}`}>
-                  <Button size="small">Preview</Button>
-                </Link>
-              )}
-            </ListItemButton>
-          ))}
+                <ListItemText
+                  sx={{
+                    fontSize: 16,
+                    fontWeight: 500,
+                  }}
+                  primary={`${index + 1}. ${lesson.title}`}
+                />
+
+                {lesson.isPreview && (
+                  <Typography color="text.secondary">Preview</Typography>
+                )}
+              </ListItemButton>
+            ))}
         </List>
       </Paper>
     </Grid>

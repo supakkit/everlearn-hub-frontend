@@ -1,7 +1,7 @@
 import api from "./api";
 
 
-export const LessonAPI = {
+export const lessonAPI = {
   getByCourse: (courseId: string) => api.get(`/lessons/course/${courseId}`),
 
   createLesson: (formData: FormData) =>

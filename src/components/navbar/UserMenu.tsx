@@ -44,7 +44,7 @@ export function UserMenu({
         </Tooltip>
       ) : (
         <Link href={navigation.login.href}>
-          <Button variant="outlinedDarkMode" sx={{ px: 2.5, py: 0.7 }}>Login</Button>
+          <Button variant="outlined" color="inherit" sx={{ px: 2.5, py: 0.7 }}>Login</Button>
         </Link>
       )}
       <Menu

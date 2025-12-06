@@ -212,6 +212,22 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/categories": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["CategoriesController_getCategoryNames"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -256,6 +272,11 @@ export interface components {
             isPublished: boolean;
             categoryId: string;
         };
+        PublicLesson: {
+            id: string;
+            title: string;
+            isPreview: boolean;
+        };
         CourseResponse: {
             id: string;
             title: string;
@@ -266,7 +287,12 @@ export interface components {
             /** @default 0 */
             priceBaht: number;
             categoryName: string;
-            imageUrl?: string;
+            imageUrl: string;
+            lessons?: components["schemas"]["PublicLesson"][];
+        };
+        AllCoursesResponse: {
+            courses: components["schemas"]["CourseResponse"][];
+            total: number;
         };
         UpdateCourseDto: {
             title?: string;
@@ -287,7 +313,7 @@ export interface components {
             title: string;
             content: string;
             courseId: string;
-            isPreview: boolean;
+            isPreview?: boolean;
             pdfs?: components["schemas"]["CreatePdfDto"][];
         };
         PdfResponse: {
@@ -306,12 +332,23 @@ export interface components {
             isPreview: boolean;
             pdfs?: components["schemas"]["PdfResponse"][] | null;
         };
+        UpdatePdfDto: {
+            name?: string;
+            description?: string;
+            fileName?: string;
+            removedPdfPublicId?: string;
+        };
         UpdateLessonDto: {
             title?: string;
             content?: string;
             courseId?: string;
             isPreview?: boolean;
-            pdfs?: components["schemas"]["CreatePdfDto"][];
+            pdfs?: components["schemas"]["UpdatePdfDto"][];
+        };
+        CategoryNamesResponse: {
+            name: string;
+            slug: string;
+            icon: string;
         };
     };
     responses: never;
@@ -530,7 +567,12 @@ export interface operations {
     };
     CoursesController_findAll: {
         parameters: {
-            query?: never;
+            query?: {
+                page?: string;
+                limit?: string;
+                category?: string;
+                search?: string;
+            };
             header?: never;
             path?: never;
             cookie?: never;
@@ -542,7 +584,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["CourseResponse"][];
+                    "application/json": components["schemas"]["AllCoursesResponse"];
                 };
             };
         };
@@ -763,6 +805,25 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["LessonResponse"];
+                };
+            };
+        };
+    };
+    CategoriesController_getCategoryNames: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CategoryNamesResponse"][];
                 };
             };
         };

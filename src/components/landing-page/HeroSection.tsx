@@ -8,8 +8,7 @@ import Link from "next/link";
 import { useAuth } from "@/providers/AuthProvider";
 
 export function HeroSection() {
-  const { user } = useAuth()
-  const isLoggedIn = !!user;
+  const { isAuthUser } = useAuth();
 
   return (
     <Box
@@ -86,7 +85,7 @@ export function HeroSection() {
           <Box sx={{ display: "flex", flexDirection: { xs: "column", sm: "row" }, justifyContent: "center", gap: 2 }}>
             <Link
               href={
-                isLoggedIn ? navigation.dashboard.href : navigation.signup.href
+                isAuthUser ? navigation.dashboard.href : navigation.signup.href
               }
             >
               <Button

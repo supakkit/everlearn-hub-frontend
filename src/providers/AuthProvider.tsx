@@ -1,6 +1,13 @@
 "use client";
 
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import { authAPI } from "@/services/auth";
 import { useRouter } from "next/navigation";
 import { User } from "@/types/api/api-types";
@@ -11,6 +18,8 @@ interface AuthContextType {
   loading: boolean;
   login: (email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
+  isAuthUser: boolean;
+  isAdmin: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
@@ -38,21 +47,29 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     loadSession();
   }, []);
 
-  const login = async (email: string, password: string) => {
-    await authAPI.login(email, password);
-    const profile = await authAPI.getProfile();
-    setUser(profile);
-    router.push(navigation.dashboard.href);
-  };
+  const login = useCallback(
+    async (email: string, password: string) => {
+      await authAPI.login(email, password);
+      const profile = await authAPI.getProfile();
+      setUser(profile);
+      router.push(navigation.dashboard.href);
+    },
+    [router]
+  );
 
-  const logout = async () => {
+  const logout = useCallback(async () => {
     await authAPI.logout();
     setUser(null);
     router.push(navigation.login.href);
-  };
+  }, [router]);
+
+  const isAuthUser = useMemo(() => user !== null, [user]);
+  const isAdmin = useMemo(() => user !== null && user.role === "ADMIN", [user]);
 
   return (
-    <AuthContext.Provider value={{ user, loading, login, logout }}>
+    <AuthContext.Provider
+      value={{ user, loading, login, logout, isAuthUser, isAdmin }}
+    >
       {children}
     </AuthContext.Provider>
   );

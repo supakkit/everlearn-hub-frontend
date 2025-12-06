@@ -1,29 +1,45 @@
+"use client";
+
 import { Container, Grid, Box } from "@mui/material";
-import { courses } from "@/data/courses";
 import { CourseNotFound } from "@/components/courses/CourseNotFound";
 import { BuyBox } from "@/components/courses/BuyBox";
 import { CourseInfo } from "@/components/courses/CourseInfo";
 import { CourseHeroSection } from "@/components/courses/CourseHeroSection";
+import { useParams } from "next/navigation";
+import { useCallback, useEffect, useState } from "react";
+import { CourseResponse } from "@/types/api/api-types";
+import { courseAPI } from "@/services/courses";
+import { CourseSkeleton } from "@/components/courses/CourseSkeleton";
 
-type PropType = {
-  params: Promise<{ courseId: string }>;
-};
+export default function CourseDetailPage() {
+  const params = useParams();
+  const { courseId } = params as { courseId: string };
 
-export default async function CourseDetailPage({ params }: PropType) {
-  const { courseId } = await params;
+  const [course, setCourse] = useState<CourseResponse>();
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
-  const session = ""; // assume
-
-  const course = courses.find((course) => String(course.id) === courseId);
-
-  const handleBuy = () => {
-    if (!session) {
+  const fetchCourses = useCallback(async () => {
+    setLoading(true);
+    setError("");
+    try {
+      const course = await courseAPI.getOne(courseId);
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      setCourse(course);
+    } catch (err) {
+      setError("Failed to fetch course");
+      console.error("Failed to fetch course:", err);
+    } finally {
+      setLoading(false);
     }
-  };
+  }, [courseId]);
 
-  if (!course) {
-    return <CourseNotFound />;
-  }
+  useEffect(() => {
+    fetchCourses();
+  }, [fetchCourses]);
+
+  if (loading) return <CourseSkeleton />;
+  if (!course || error) return <CourseNotFound />;
 
   return (
     <Box sx={{ pb: 10 }}>
@@ -31,7 +47,7 @@ export default async function CourseDetailPage({ params }: PropType) {
       <Container maxWidth="lg" sx={{ pt: 4 }}>
         <Grid container spacing={4}>
           <CourseInfo course={course} />
-          <BuyBox courseId={courseId} />
+          <BuyBox course={course} />
         </Grid>
       </Container>
     </Box>

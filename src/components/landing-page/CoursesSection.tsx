@@ -6,14 +6,42 @@ import useEmblaCarousel from "embla-carousel-react";
 import Link from "next/link";
 import { navigation } from "@/data/navigation";
 import ArrowForwardIosRoundedIcon from "@mui/icons-material/ArrowForwardIosRounded";
-import { courses } from "@/data/courses";
 import { CourseCard } from "../courses/CourseCard";
 import { motion } from "motion/react";
+import { useCallback, useEffect, useState } from "react";
+import { CourseResponse } from "@/types/api/api-types";
+import { courseAPI } from "@/services/courses";
+import { CoursesSectionSkeleton } from "./CoursesSectionSkeleton";
 
 export function CoursesSection() {
   const [emblaRef] = useEmblaCarousel({ loop: true }, [
     Autoplay({ stopOnMouseEnter: true, stopOnInteraction: false }),
   ]);
+
+  const [courses, setCourses] = useState<CourseResponse[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  const fetchCourses = useCallback(async () => {
+    setLoading(true);
+    setError("");
+    try {
+      const { courses } = await courseAPI.getAll({ limit: "10" });
+      setCourses(courses);
+    } catch (err) {
+      setError("Failed to fetch course");
+      console.error("Failed to fetch course:", err);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchCourses();
+  }, [fetchCourses]);
+
+  if (loading) return <CoursesSectionSkeleton />;
+  if (courses.length === 0 || error) return null;
   return (
     <Box sx={{ py: 10 }}>
       <Container>
@@ -23,7 +51,6 @@ export function CoursesSection() {
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
         >
-          
           <Grid
             container
             sx={{ justifyContent: "space-between", alignItems: "baseline" }}
@@ -55,11 +82,14 @@ export function CoursesSection() {
                 gap: 3,
                 paddingLeft: 3,
                 paddingY: 2,
-                height: 450,
+                flexShrink: 1,
               }}
             >
               {courses.map((course) => (
-                <CourseCard key={course.id} course={course} />
+                <CourseCard
+                  key={course.id}
+                  course={course}
+                />
               ))}
             </Box>
           </Box>

@@ -4,6 +4,9 @@ export default async function fetchApi(path: string, options?: RequestInit) {
   const res = await fetch(`${baseURL}${path}`, {
     ...options,
   });
-  if (!res.ok) throw new Error('Failed to fetch data');
+  if (!res.ok) {
+    const errorData = await res.json();
+    throw new Error(errorData.message || `Failed to fetch: ${res.statusText}`);
+  }
   return res.json();
 }

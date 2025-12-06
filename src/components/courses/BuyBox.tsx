@@ -1,6 +1,6 @@
-"use client";
-
 import { customerBenefits } from "@/data/customerBenefits";
+import { navigation } from "@/data/navigation";
+import { CourseResponse } from "@/types/api/api-types";
 import {
   Button,
   Card,
@@ -10,23 +10,16 @@ import {
   ListItemIcon,
   ListItemText,
   Paper,
+  Stack,
   Typography,
 } from "@mui/material";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 
-export function BuyBox({ courseId }: { courseId: string }) {
-  const router = useRouter();
-  // const isLoggedIn = false;
+type PropType = {
+  course: CourseResponse;
+};
 
-  const handleBuy = () => {
-    // if (!isLoggedIn) {
-    //   router.push(`/auth/login?redirect=/checkout?courseId=${courseId}`);
-    // } else {
-    //   router.push(`/checkout?courseId=${courseId}`);
-    // }
-    router.push(`/checkout?courseId=${courseId}`);
-  };
-
+export function BuyBox({ course }: PropType) {
   return (
     <Grid size={{ xs: 12, md: 5, lg: 4 }}>
       <Card sx={{ p: 3, position: "sticky", top: 100, borderRadius: 3 }}>
@@ -58,7 +51,7 @@ export function BuyBox({ courseId }: { courseId: string }) {
         {/* Pomotion */}
         <Paper
           elevation={0}
-          sx={{ p: 2, mb: 3, bgcolor: "grey.100", borderRadius: 2 }}
+          sx={{ p: 2, mb: 3, bgcolor: "background.default", borderRadius: 2 }}
         >
           <Typography variant="body2" fontWeight="bold">
             7-Day Money Back Guarantee
@@ -69,13 +62,20 @@ export function BuyBox({ courseId }: { courseId: string }) {
           </Typography>
         </Paper>
 
-        <Typography variant="h6" sx={{ mb: 2, textAlign: "right" }}>
-          2222 Baht
-        </Typography>
+        <Stack direction="row" justifyContent="space-between" sx={{ mb: 2 }}>
+          <Typography variant="h6" fontWeight="bold">
+            Price:
+          </Typography>
+          <Typography variant="h6" fontWeight="bold">
+            {course.isFree ? "Free" : `${course.priceBaht} Baht`}
+          </Typography>
+        </Stack>
 
-        <Button variant="contained" size="large" fullWidth>
-          Buy Now
-        </Button>
+        <Link href={`${navigation.checkout.href}/${course.id}`}>
+          <Button variant="contained" size="large" fullWidth>
+            {course.isFree ? "Enroll Now" : "Buy Now"}
+          </Button>
+        </Link>
       </Card>
     </Grid>
   );

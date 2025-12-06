@@ -6,6 +6,7 @@ import { CssBaseline } from "@mui/material";
 import dynamic from "next/dynamic";
 import { AuthProvider } from "@/providers/AuthProvider";
 import { ToastProvider } from "./ToastProvider";
+import { InitialDataProvider } from "./InitialDataProvider";
 const NextThemeProvider = dynamic(() => import("./NextThemeProvider"), {
   ssr: false,
 });
@@ -24,7 +25,9 @@ export function Providers({
         <NextThemeProvider>
           <MuiThemeProvider>
             <CssBaseline />
-            <ToastProvider>{children}</ToastProvider>
+            <ToastProvider>
+              <InitialDataProvider>{children}</InitialDataProvider>
+            </ToastProvider>
           </MuiThemeProvider>
         </NextThemeProvider>
       </AppRouterCacheProvider>

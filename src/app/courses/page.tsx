@@ -15,28 +15,34 @@ import { motion } from "framer-motion";
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { CourseCard } from "@/components/courses/CourseCard";
-import { courses as mockCourses } from "@/data/courses";
-import { courseCategories } from "@/data/courseCategories";
 import { navigation } from "@/data/navigation";
 import { useCallback, useEffect, useState } from "react";
-import { Course } from "@/types/course";
-import { getSlug } from "@/config/slugify";
+import { useInitialData } from "@/providers/InitialDataProvider";
+import { courseAPI } from "@/services/courses";
+import { CourseResponse, GetCourseParams } from "@/types/api/api-types";
+
+type ParamsKeys = keyof NonNullable<GetCourseParams>;
 
 export default function CoursesPage() {
   const searchParams = useSearchParams();
   const router = useRouter();
+
   const [queryInput, setQueryInput] = useState("");
-  const [courses, setCourses] = useState<Course[]>([]);
+  const [courses, setCourses] = useState<CourseResponse[]>([]);
+  const [totalItems, setTotalItems] = useState(0);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  const { courseCategoryNames } = useInitialData();
 
   const page = Number(searchParams.get("page")) || 1;
   const category = searchParams.get("category") || "all";
-  const query = searchParams.get("query") || "";
+  const search = searchParams.get("search") || "";
+  const ITEMS_PER_PAGE = 10;
 
-  const itemsPerPage = 10;
-  const totalItems = 10; // get from server response
-  const totalPages = Math.ceil(totalItems / itemsPerPage);
+  const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
 
-  const updateFilter = (key: string, value: string) => {
+  const updateFilter = (key: ParamsKeys, value: string) => {
     const params = new URLSearchParams(searchParams.toString());
     params.set(key, value);
     if (key !== "page") params.set("page", "1");
@@ -49,44 +55,36 @@ export default function CoursesPage() {
 
   const handleSearchSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const query = queryInput.trim();
-    if (query) updateFilter("query", query);
+    if (queryInput.trim()) updateFilter("search", queryInput.trim());
     setQueryInput("");
   };
 
-  const fetchCourses = useCallback(() => {
-    const filteredCourses = mockCourses.filter((course) => {
-      console.log("getSlug:", getSlug(course.category));
-      const matchesCategory =
-        category === "all" || getSlug(course.category) === category;
-      const matchesSearch = course.title
-        .toLowerCase()
-        .includes(query.toLowerCase());
-      return matchesCategory && matchesSearch;
-    });
+  const fetchCourses = useCallback(async () => {
+    setLoading(true);
+    setError("");
+    try {
+      const paramsObject: GetCourseParams = {
+        page: String(page),
+        limit: String(ITEMS_PER_PAGE),
+      };
 
-    const paginatedCourses = filteredCourses.slice(
-      (page - 1) * itemsPerPage,
-      page * itemsPerPage
-    );
+      if (category !== "all") paramsObject.category = category;
+      if (search.trim() !== "") paramsObject.search = search;
 
-    return paginatedCourses;
-  }, [page, category, query]);
+      const { courses, total } = await courseAPI.getAll(paramsObject);
+      setCourses(courses);
+      setTotalItems(total);
+    } catch (err) {
+      setError("Failed to fetch courses");
+      console.error("Failed to fetch courses:", err);
+    } finally {
+      setLoading(false);
+    }
+  }, [page, category, search]);
 
   useEffect(() => {
-    let ignore = false;
-    const getData = () => {
-      const data = fetchCourses();
-      if (!ignore) {
-        setCourses(data || []);
-      }
-    };
-    getData();
-
-    return () => {
-      ignore = true;
-    };
-  }, [page, category, query, fetchCourses]);
+    fetchCourses();
+  }, [page, category, search, fetchCourses]);
 
   return (
     <Container className="min-h-screen offset-top-bar pt-22 relative pb-24">
@@ -106,14 +104,14 @@ export default function CoursesPage() {
       <Box
         sx={{
           my: 2,
-          display: query.trim() === "" ? "none" : "flex",
+          display: search.trim() === "" ? "none" : "flex",
           alignItems: "center",
           gap: 2,
         }}
       >
         <Typography variant="h6">Recent search:</Typography>
         <Chip
-          label={query}
+          label={search}
           onDelete={handleClearFilter}
           sx={{ fontSize: 15, fontWeight: 500 }}
         />
@@ -130,7 +128,7 @@ export default function CoursesPage() {
         <TextField
           variant="outlined"
           type="text"
-          name="query"
+          name="search"
           placeholder="Search courses..."
           fullWidth
           value={queryInput}
@@ -146,10 +144,10 @@ export default function CoursesPage() {
         mb={4}
         sx={{ overflowX: "auto", py: 1 }}
       >
-        {courseCategories.map((item) => (
+        {courseCategoryNames.map((item) => (
           <Chip
             key={item.slug}
-            label={item.title}
+            label={item.name}
             clickable
             onClick={() => updateFilter("category", item.slug)}
             color={category === item.slug ? "primary" : "default"}
@@ -176,7 +174,19 @@ export default function CoursesPage() {
         ))}
       </Grid>
 
-      {courses.length === 0 && (
+      {loading && (
+        <Typography mt={4} textAlign="center">
+          Loading courses...
+        </Typography>
+      )}
+
+      {!loading && error && (
+        <Typography mt={4} textAlign="center">
+          {error}
+        </Typography>
+      )}
+
+      {loading && courses.length === 0 && (
         <Typography mt={4} textAlign="center" color="text.secondary">
           No courses found.
         </Typography>

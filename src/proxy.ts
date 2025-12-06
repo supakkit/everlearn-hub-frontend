@@ -13,7 +13,16 @@ export function proxy(req: NextRequest) {
     navigation.profile.href,
   ];
 
+  const onlyNoneAuthRoutes = [
+    navigation.login.href,
+    navigation.signup.href,
+  ];
+
   const isProtected = protectedRoutes.some((path) =>
+    req.nextUrl.pathname.startsWith(path)
+  );
+
+  const isNoneAuthRoute = onlyNoneAuthRoutes.some((path) =>
     req.nextUrl.pathname.startsWith(path)
   );
 
@@ -21,15 +30,15 @@ export function proxy(req: NextRequest) {
     return NextResponse.redirect(new URL(navigation.login.href, req.url));
   }
 
+  if (isNoneAuthRoute && accessToken) {
+    return NextResponse.redirect(new URL(navigation.dashboard.href, req.url));
+  }
+
   return NextResponse.next();
 }
 
 export const config = {
   matcher: [
-    "/admin/:path*",
-    "/checkout/:path*",
-    "/dashboard/:path*",
-    "/learn/:path*",
-    "/profile/:path*",
+    "/((?!_next|static|.*\\..*|api).*)",
   ],
 };

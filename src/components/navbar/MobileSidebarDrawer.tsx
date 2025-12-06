@@ -19,7 +19,7 @@ type PropType = {
 };
 
 export function MobileSidebarDrawer({ handleDrawerToggle }: PropType) {
-  const { user, logout } = useAuth();
+  const { isAuthUser, logout } = useAuth();
   const { showToast } = useToast();
   const handleLogout = () => {
     logout();
@@ -49,7 +49,7 @@ export function MobileSidebarDrawer({ handleDrawerToggle }: PropType) {
       <Divider />
 
       <Box sx={{ p: 2 }}>
-        {!!user ? (
+        {isAuthUser ? (
           <Button onClick={handleLogout} fullWidth variant="contained">Logout</Button>
         ) : (
           <>
