@@ -13,6 +13,7 @@ import {
 import Link from "next/link";
 import { useAuth } from "@/providers/AuthProvider";
 import { useToast } from "@/providers/ToastProvider";
+import { useRouter } from "next/navigation";
 
 type PropType = {
   handleDrawerToggle: () => void;
@@ -21,9 +22,12 @@ type PropType = {
 export function MobileSidebarDrawer({ handleDrawerToggle }: PropType) {
   const { isAuthUser, logout } = useAuth();
   const { showToast } = useToast();
+  const router = useRouter();
+
   const handleLogout = () => {
     logout();
     showToast("Logged out successfully", "success");
+    router.replace(navigation.login.href);
   }
   return (
     <Box sx={{ width: 260 }} role="presentation" onClick={handleDrawerToggle}>

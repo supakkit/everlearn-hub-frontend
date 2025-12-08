@@ -40,7 +40,7 @@ const defaultFormErrorMessage: FormErrorMessageType = {
 };
 
 export default function ProfilePage() {
-  const { user, setUser } = useAuth();
+  const { user, setUser, userLoading } = useAuth();
   const { showToast } = useToast();
   const router = useRouter();
 
@@ -61,7 +61,7 @@ export default function ProfilePage() {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  if (!user) throw new Error("Unauthorized");
+  if (!user || userLoading) return null;
 
   const validateInputs = (): boolean => {
     let isValid = true;

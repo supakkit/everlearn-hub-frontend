@@ -6,13 +6,13 @@ import {
   IconButton,
   Menu,
   MenuItem,
-  Stack,
   Tooltip,
   Typography,
 } from "@mui/material";
 import Link from "next/link";
 import { useAuth } from "@/providers/AuthProvider";
 import { useToast } from "@/providers/ToastProvider";
+import { useRouter } from "next/navigation";
 
 type UserMenuPropType = {
   handleOpenUserMenu: (event: React.MouseEvent<HTMLElement>) => void;
@@ -27,10 +27,12 @@ export function UserMenu({
 }: UserMenuPropType) {
   const { user, logout } = useAuth();
   const { showToast } = useToast();
+  const router = useRouter();
   const handleLogout = () => {
     logout();
     handleCloseUserMenu();
     showToast("Logged out successfully", "success");
+    router.replace(navigation.login.href);
   };
   return (
     <Box sx={{ ml: 1 }}>

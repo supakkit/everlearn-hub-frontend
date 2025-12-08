@@ -4,8 +4,6 @@ import { DashboardFooter } from "@/components/dashboard/DashboardFooter";
 import { DashBoardWelcome } from "@/components/dashboard/DashBoardWelcome";
 import { Alert, Container } from "@mui/material";
 import { useAuth } from "@/providers/AuthProvider";
-import { useRouter } from "next/navigation";
-import { navigation } from "@/data/navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { DashboardResponse } from "@/types/api/api-types";
 import { dashboardAPI } from "@/services/dashboard";
@@ -17,8 +15,7 @@ export default function DashboardPage() {
   const [dashboard, setDashboard] = useState<DashboardResponse>();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const router = useRouter();
-  const { user } = useAuth();
+  const { user, userLoading } = useAuth();
 
   const fetchDashboard = useCallback(async () => {
     setLoading(true);
@@ -51,7 +48,8 @@ export default function DashboardPage() {
     [dashboard]
   );
 
-  if (!user) throw new Error("Unauthorized");
+  if (!user || userLoading) return null;
+
   if (loading) return <DashboardSkeleton />;
   if (!dashboard || error)
     return (
