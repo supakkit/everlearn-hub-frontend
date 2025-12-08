@@ -7,8 +7,8 @@ import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import { useState } from "react";
 import { navigation } from "@/data/navigation";
-import { enrolledCourse } from "@/types/user";
 import { CourseList } from "./CourseList";
+import { DashboardResponse } from "@/types/api/api-types";
 
 function samePageLinkNavigation(
   event: React.MouseEvent<HTMLAnchorElement, MouseEvent>
@@ -34,8 +34,8 @@ interface LinkTabProps {
 }
 
 type PropType = {
-  learning: enrolledCourse[];
-  completed: enrolledCourse[];
+  learning: DashboardResponse["enrolledCourses"];
+  completed: DashboardResponse["enrolledCourses"];
 }
 
 export default function DashboardTabs({ learning, completed }: PropType) {

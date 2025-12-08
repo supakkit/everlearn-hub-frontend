@@ -1,8 +1,5 @@
-"use client";
-
-import { User } from "@/types/user";
+import { User } from "@/types/api/api-types";
 import { Box, Typography } from "@mui/material";
-import { motion } from "framer-motion";
 
 type PropType = {
   user: User;
@@ -11,14 +8,12 @@ type PropType = {
 export function DashBoardWelcome({ user }: PropType) {
   return (
     <Box>
-      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-        <Typography variant="h4" fontWeight="bold" mb={1}>
-          Welcome back, {user.fullName} 👋
-        </Typography>
-        <Typography variant="body1" color="text.secondary" mb={3}>
-          Here&apos;s your learning progress summary.
-        </Typography>
-      </motion.div>
+      <Typography variant="h4" fontWeight="bold" mb={1}>
+        Welcome back, {user.name} 👋
+      </Typography>
+      <Typography variant="body1" color="text.secondary" mb={3}>
+        Here&apos;s your learning progress summary.
+      </Typography>
     </Box>
   );
 }

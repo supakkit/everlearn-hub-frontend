@@ -1,32 +1,74 @@
+"use client";
+
 import { DashboardFooter } from "@/components/dashboard/DashboardFooter";
+import { DashBoardWelcome } from "@/components/dashboard/DashBoardWelcome";
+import { Alert, Container } from "@mui/material";
+import { useAuth } from "@/providers/AuthProvider";
+import { useRouter } from "next/navigation";
+import { navigation } from "@/data/navigation";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { DashboardResponse } from "@/types/api/api-types";
+import { dashboardAPI } from "@/services/dashboard";
 import { DashBoardStats } from "@/components/dashboard/DashBoardStats";
 import DashboardTabs from "@/components/dashboard/DashBoardTab";
-import { DashBoardWelcome } from "@/components/dashboard/DashBoardWelcome";
-import { userData } from "@/data/user";
-import { enrolledCourse } from "@/types/user";
-import { Container } from "@mui/material";
+import DashboardSkeleton from "@/components/dashboard/DashboardSkeleton";
 
 export default function DashboardPage() {
-  // const [learningCourses, completedCourses] = await Promise.all([
-  //   getLearningCourses(),    // server DB fetch
-  //   getCompletedCourses(),   // server DB fetch
-  // ]);
+  const [dashboard, setDashboard] = useState<DashboardResponse>();
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const router = useRouter();
+  const { user } = useAuth();
 
-  // Mock data — replace with backend data later
-  const user = userData;
-  
-  const learningCourses: enrolledCourse[] = [];
-  const completedCourses: enrolledCourse[] = [];
-  user.enrolledCourses.forEach((course) => {
-    if (course.progress < 100) learningCourses.push(course);
-    else completedCourses.push(course);
-  });
+  const fetchDashboard = useCallback(async () => {
+    setLoading(true);
+    setError("");
+    try {
+      const dashboard = await dashboardAPI.getDashboardData();
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      setDashboard(dashboard);
+    } catch (err) {
+      setError("Failed to fetch dashboard");
+      console.error("Failed to fetch dashboard:", err);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchDashboard();
+  }, [fetchDashboard]);
+
+  const [learning, completed] = useMemo(
+    () =>
+      dashboard?.enrolledCourses.reduce(
+        (acc, val) => {
+          acc[val.progressPercentage === 100 ? 1 : 0].push(val);
+          return acc;
+        },
+        [[], []] as DashboardResponse["enrolledCourses"][]
+      ) || [],
+    [dashboard]
+  );
+
+  if (!user) return router.push(navigation.login.href);
+  if (loading) return <DashboardSkeleton />;
+  if (!dashboard || error)
+    return (
+      <Alert
+        severity="error"
+        color="error"
+        sx={{ width: 200, fontWeight: 500, mt: 2, mx: "auto" }}
+      >
+        {error}
+      </Alert>
+    );
 
   return (
     <Container sx={{ py: 6 }}>
       <DashBoardWelcome user={user} />
-      <DashBoardStats userStats={user.stats} />
-      <DashboardTabs learning={learningCourses} completed={completedCourses} />
+      <DashBoardStats userStats={dashboard.stats} />
+      <DashboardTabs learning={learning} completed={completed} />
       <DashboardFooter />
     </Container>
   );
