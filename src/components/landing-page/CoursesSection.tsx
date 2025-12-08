@@ -10,7 +10,7 @@ import { CourseCard } from "../courses/CourseCard";
 import { motion } from "motion/react";
 import { useCallback, useEffect, useState } from "react";
 import { CourseResponse } from "@/types/api/api-types";
-import { courseAPI } from "@/services/courses";
+import { courseAPI } from "@/services/course";
 import { CoursesSectionSkeleton } from "./CoursesSectionSkeleton";
 
 export function CoursesSection() {
@@ -86,10 +86,7 @@ export function CoursesSection() {
               }}
             >
               {courses.map((course) => (
-                <CourseCard
-                  key={course.id}
-                  course={course}
-                />
+                <CourseCard key={course.id} course={course} />
               ))}
             </Box>
           </Box>

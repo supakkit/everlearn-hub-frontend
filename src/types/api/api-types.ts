@@ -18,6 +18,9 @@ export type AllCoursesResponse = paths["/api/courses"]["get"]["responses"]["200"
 export type CategoryNamesResponse = paths["/api/categories"]["get"]["responses"]["200"]["content"]["application/json"];
 
 
+// Dashboard
+export type DashboardResponse = paths["/api/dashboard/me"]["get"]["responses"]["200"]["content"]["application/json"];
+
 
 /**
  * Recommended Naming Convention

@@ -18,7 +18,7 @@ import { CourseCard } from "@/components/courses/CourseCard";
 import { navigation } from "@/data/navigation";
 import { useCallback, useEffect, useState } from "react";
 import { useInitialData } from "@/providers/InitialDataProvider";
-import { courseAPI } from "@/services/courses";
+import { courseAPI } from "@/services/course";
 import { CourseResponse, GetCourseParams } from "@/types/api/api-types";
 
 type ParamsKeys = keyof NonNullable<GetCourseParams>;

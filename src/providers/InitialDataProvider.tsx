@@ -1,7 +1,7 @@
 "use client";
 
 import { mapCategoryNames } from "@/utils/mapCategoryNames";
-import { categoryAPI } from "@/services/categories";
+import { categoryAPI } from "@/services/category";
 import { CategoryName } from "@/types/course";
 import {
   createContext,

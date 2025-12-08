@@ -12,6 +12,7 @@ import { authAPI } from "@/services/auth";
 import { useRouter } from "next/navigation";
 import { User } from "@/types/api/api-types";
 import { navigation } from "@/data/navigation";
+import { userAPI } from "@/services/user";
 
 interface AuthContextType {
   user: User | null;
@@ -35,7 +36,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       try {
         // refreshToken is automatically sent via cookie
         await authAPI.refreshToken();
-        const profile = await authAPI.getProfile();
+        const profile = await userAPI.getProfile();
         setUser(profile);
       } catch {
         setUser(null);
@@ -50,7 +51,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const login = useCallback(
     async (email: string, password: string) => {
       await authAPI.login(email, password);
-      const profile = await authAPI.getProfile();
+      const profile = await userAPI.getProfile();
       setUser(profile);
       router.push(navigation.dashboard.href);
     },

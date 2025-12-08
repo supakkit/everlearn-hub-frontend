@@ -4,22 +4,6 @@
  */
 
 export interface paths {
-    "/api/users": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["UsersController_findAll"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/api/users/me": {
         parameters: {
             query?: never;
@@ -36,14 +20,14 @@ export interface paths {
         patch: operations["UsersController_update"];
         trace?: never;
     };
-    "/api/users/{id}": {
+    "/api/admin/users": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        get: operations["UsersController_findOne"];
+        get: operations["AdminUsersController_findAll"];
         put?: never;
         post?: never;
         delete?: never;
@@ -52,7 +36,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/users/id": {
+    "/api/admin/users/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["AdminUsersController_findOne"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/users/id": {
         parameters: {
             query?: never;
             header?: never;
@@ -65,7 +65,7 @@ export interface paths {
         delete?: never;
         options?: never;
         head?: never;
-        patch: operations["UsersController_updateByAdmin"];
+        patch: operations["AdminUsersController_updateByAdmin"];
         trace?: never;
     };
     "/api/auth/signup": {
@@ -141,7 +141,7 @@ export interface paths {
         };
         get: operations["CoursesController_findAll"];
         put?: never;
-        post: operations["CoursesController_create"];
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -158,42 +158,90 @@ export interface paths {
         get: operations["CoursesController_findOne"];
         put?: never;
         post?: never;
-        delete: operations["CoursesController_remove"];
-        options?: never;
-        head?: never;
-        patch: operations["CoursesController_update"];
-        trace?: never;
-    };
-    "/api/lessons": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["LessonsController_findAll"];
-        put?: never;
-        post: operations["LessonsController_create"];
         delete?: never;
         options?: never;
         head?: never;
         patch?: never;
         trace?: never;
     };
-    "/api/lessons/{id}": {
+    "/api/admin/courses": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        get: operations["LessonsController_findOne"];
+        get?: never;
         put?: never;
-        post?: never;
-        delete: operations["LessonsController_remove"];
+        post: operations["AdminCoursesController_create"];
+        delete?: never;
         options?: never;
         head?: never;
-        patch: operations["LessonsController_update"];
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/courses/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete: operations["AdminCoursesController_remove"];
+        options?: never;
+        head?: never;
+        patch: operations["AdminCoursesController_update"];
+        trace?: never;
+    };
+    "/api/enrollments/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["EnrollmentsController_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/enrollments": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["AdminEnrollmentsController_findAll"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/enrollments/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["AdminEnrollmentsController_findOne"];
+        put?: never;
+        post?: never;
+        delete: operations["AdminEnrollmentsController_remove"];
+        options?: never;
+        head?: never;
+        patch?: never;
         trace?: never;
     };
     "/api/lessons/preview/{id}": {
@@ -212,6 +260,38 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/admin/lessons": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["AdminLessonsController_findAll"];
+        put?: never;
+        post: operations["AdminLessonsController_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/lessons/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["AdminLessonsController_findOne"];
+        put?: never;
+        post?: never;
+        delete: operations["AdminLessonsController_remove"];
+        options?: never;
+        head?: never;
+        patch: operations["AdminLessonsController_update"];
+        trace?: never;
+    };
     "/api/categories": {
         parameters: {
             query?: never;
@@ -220,6 +300,22 @@ export interface paths {
             cookie?: never;
         };
         get: operations["CategoriesController_getCategoryNames"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/dashboard/me": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["DashboardController_findOne"];
         put?: never;
         post?: never;
         delete?: never;
@@ -262,16 +358,6 @@ export interface components {
         AuthEntity: {
             success: boolean;
         };
-        CreateCourseDto: {
-            title: string;
-            description: string;
-            /** @default false */
-            isFree: boolean;
-            priceBaht: number;
-            /** @default false */
-            isPublished: boolean;
-            categoryId: string;
-        };
         PublicLesson: {
             id: string;
             title: string;
@@ -294,6 +380,16 @@ export interface components {
             courses: components["schemas"]["CourseResponse"][];
             total: number;
         };
+        CreateCourseDto: {
+            title: string;
+            description: string;
+            /** @default false */
+            isFree: boolean;
+            priceBaht: number;
+            /** @default false */
+            isPublished: boolean;
+            categoryId: string;
+        };
         UpdateCourseDto: {
             title?: string;
             description?: string;
@@ -303,6 +399,25 @@ export interface components {
             /** @default false */
             isPublished: boolean;
             categoryId?: string;
+        };
+        EnrollmentResponse: {
+            id: string;
+            paid: boolean;
+        };
+        PdfResponse: {
+            publicId: string;
+            name: string;
+            description: Record<string, never>;
+            downloadUrl: string;
+        };
+        LessonResponse: {
+            id: string;
+            title: string;
+            content: string;
+            position: number;
+            courseId: string;
+            isPreview: boolean;
+            pdfs?: components["schemas"]["PdfResponse"][] | null;
         };
         CreatePdfDto: {
             name: string;
@@ -315,22 +430,6 @@ export interface components {
             courseId: string;
             isPreview?: boolean;
             pdfs?: components["schemas"]["CreatePdfDto"][];
-        };
-        PdfResponse: {
-            publicId: string;
-            name: string;
-            description: Record<string, never>;
-            previewUrl: string;
-            downloadUrl: string;
-        };
-        LessonResponse: {
-            id: string;
-            title: string;
-            content: string;
-            position: number;
-            courseId: string;
-            isPreview: boolean;
-            pdfs?: components["schemas"]["PdfResponse"][] | null;
         };
         UpdatePdfDto: {
             name?: string;
@@ -350,6 +449,23 @@ export interface components {
             slug: string;
             icon: string;
         };
+        UserStatsResponse: {
+            completedCourses: number;
+            totalEnrolledCourses: number;
+            activeDaysThisYear: number;
+        };
+        EnrolledCourseResponse: {
+            courseId: string;
+            title: string;
+            thumbnail: string;
+            totalLessons: number;
+            completedLessons: number;
+            progressPercentage: number;
+        };
+        DashboardResponse: {
+            stats: components["schemas"]["UserStatsResponse"];
+            enrolledCourses: components["schemas"]["EnrolledCourseResponse"][];
+        };
     };
     responses: never;
     parameters: never;
@@ -359,25 +475,6 @@ export interface components {
 }
 export type $defs = Record<string, never>;
 export interface operations {
-    UsersController_findAll: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["UserResponse"][];
-                };
-            };
-        };
-    };
     UsersController_getProfile: {
         parameters: {
             query?: never;
@@ -439,7 +536,26 @@ export interface operations {
             };
         };
     };
-    UsersController_findOne: {
+    AdminUsersController_findAll: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UserResponse"][];
+                };
+            };
+        };
+    };
+    AdminUsersController_findOne: {
         parameters: {
             query?: never;
             header?: never;
@@ -460,7 +576,7 @@ export interface operations {
             };
         };
     };
-    UsersController_updateByAdmin: {
+    AdminUsersController_updateByAdmin: {
         parameters: {
             query?: never;
             header?: never;
@@ -589,7 +705,28 @@ export interface operations {
             };
         };
     };
-    CoursesController_create: {
+    CoursesController_findOne: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CourseResponse"];
+                };
+            };
+        };
+    };
+    AdminCoursesController_create: {
         parameters: {
             query?: never;
             header?: never;
@@ -612,7 +749,7 @@ export interface operations {
             };
         };
     };
-    CoursesController_findOne: {
+    AdminCoursesController_remove: {
         parameters: {
             query?: never;
             header?: never;
@@ -633,28 +770,7 @@ export interface operations {
             };
         };
     };
-    CoursesController_remove: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["CourseResponse"];
-                };
-            };
-        };
-    };
-    CoursesController_update: {
+    AdminCoursesController_update: {
         parameters: {
             query?: never;
             header?: never;
@@ -679,7 +795,110 @@ export interface operations {
             };
         };
     };
-    LessonsController_findAll: {
+    EnrollmentsController_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EnrollmentResponse"];
+                };
+            };
+        };
+    };
+    AdminEnrollmentsController_findAll: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EnrollmentResponse"][];
+                };
+            };
+        };
+    };
+    AdminEnrollmentsController_findOne: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EnrollmentResponse"];
+                };
+            };
+        };
+    };
+    AdminEnrollmentsController_remove: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EnrollmentResponse"];
+                };
+            };
+        };
+    };
+    LessonsController_findLessonPreview: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LessonResponse"];
+                };
+            };
+        };
+    };
+    AdminLessonsController_findAll: {
         parameters: {
             query?: never;
             header?: never;
@@ -698,7 +917,7 @@ export interface operations {
             };
         };
     };
-    LessonsController_create: {
+    AdminLessonsController_create: {
         parameters: {
             query?: never;
             header?: never;
@@ -721,7 +940,7 @@ export interface operations {
             };
         };
     };
-    LessonsController_findOne: {
+    AdminLessonsController_findOne: {
         parameters: {
             query?: never;
             header?: never;
@@ -742,7 +961,7 @@ export interface operations {
             };
         };
     };
-    LessonsController_remove: {
+    AdminLessonsController_remove: {
         parameters: {
             query?: never;
             header?: never;
@@ -763,7 +982,7 @@ export interface operations {
             };
         };
     };
-    LessonsController_update: {
+    AdminLessonsController_update: {
         parameters: {
             query?: never;
             header?: never;
@@ -777,27 +996,6 @@ export interface operations {
                 "application/json": components["schemas"]["UpdateLessonDto"];
             };
         };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["LessonResponse"];
-                };
-            };
-        };
-    };
-    LessonsController_findLessonPreview: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
         responses: {
             200: {
                 headers: {
@@ -824,6 +1022,25 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["CategoryNamesResponse"][];
+                };
+            };
+        };
+    };
+    DashboardController_findOne: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DashboardResponse"];
                 };
             };
         };
