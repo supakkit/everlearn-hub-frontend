@@ -22,15 +22,19 @@ import { GoogleIcon } from "@/components/common/CustomIcons";
 import { navigation } from "@/data/navigation";
 import { useAuth } from "@/providers/AuthProvider";
 import { useToast } from "@/providers/ToastProvider";
+import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [formError, setFormError] = useState("");
+
+  const router = useRouter();
 
   const { login } = useAuth();
   const { showToast } = useToast();
@@ -62,11 +66,15 @@ export default function LoginPage() {
     if (!validate()) return;
 
     try {
+      setLoading(true);
       await login(email, password);
       showToast("Logged in successfully.", "success");
+      router.replace(navigation.dashboard.href);
     } catch (error) {
       console.error(error);
       setFormError("Failed to login, please try again.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -118,6 +126,7 @@ export default function LoginPage() {
               fullWidth
               size="small"
               value={email}
+              disabled={loading}
               onChange={(e) => setEmail(e.target.value)}
               error={!!emailError}
               helperText={emailError}
@@ -137,6 +146,7 @@ export default function LoginPage() {
                 fullWidth
                 size="small"
                 value={password}
+                disabled={loading}
                 onChange={(e) => setPassword(e.target.value)}
                 error={!!passwordError}
                 helperText={passwordError}
@@ -147,6 +157,7 @@ export default function LoginPage() {
               control={
                 <Checkbox
                   checked={showPassword}
+                  disabled={loading}
                   onChange={() => setShowPassword((prev) => !prev)}
                 />
               }
@@ -154,8 +165,8 @@ export default function LoginPage() {
             />
           </Stack>
 
-          <Button type="submit" fullWidth size="large" variant="contained">
-            Sign in
+          <Button type="submit" fullWidth size="large" variant="contained" disabled={loading}>
+            {loading ? "Signing in..." : "Sign in"}
           </Button>
         </Box>
 

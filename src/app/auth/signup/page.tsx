@@ -24,6 +24,7 @@ export default function SignUpPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const [nameErrorMessage, setNameErrorMessage] = useState("");
   const [emailErrorMessage, setEmailErrorMessage] = useState("");
@@ -67,12 +68,15 @@ export default function SignUpPage() {
     if (!validateInputs()) return;
 
     try {
+      setLoading(true);
       await authAPI.signup({ name, email, password });
       showToast("Signed up successfully. Please login.", "success");
-      router.push(navigation.login.href);
+      router.replace(navigation.login.href);
     } catch (err) {
       console.error(err);
       setFormErrorMessage("Failed to sign up, please try again.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -117,6 +121,7 @@ export default function SignUpPage() {
               autoComplete="name"
               size="small"
               value={name}
+              disabled={loading}
               onChange={(e) => setName(e.target.value)}
               error={!!nameErrorMessage}
               helperText={nameErrorMessage}
@@ -135,6 +140,7 @@ export default function SignUpPage() {
               variant="outlined"
               size="small"
               value={email}
+              disabled={loading}
               onChange={(e) => setEmail(e.target.value)}
               error={!!emailErrorMessage}
               helperText={emailErrorMessage}
@@ -154,6 +160,7 @@ export default function SignUpPage() {
                 variant="outlined"
                 size="small"
                 value={password}
+                disabled={loading}
                 onChange={(e) => setPassword(e.target.value)}
                 error={!!passwordErrorMessage}
                 helperText={passwordErrorMessage}
@@ -163,6 +170,7 @@ export default function SignUpPage() {
               control={
                 <Checkbox
                   checked={showPassword}
+                  disabled={loading}
                   onChange={() => setShowPassword((prev) => !prev)}
                 />
               }
@@ -173,8 +181,9 @@ export default function SignUpPage() {
             type="submit"
             fullWidth
             variant="contained"
+            disabled={loading}
           >
-            Sign up
+            {loading ? "Signing up..." : "Sign up"}
           </Button>
         </Box>
         <Divider>
