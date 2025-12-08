@@ -11,54 +11,172 @@ import {
   Avatar,
   Divider,
   Container,
+  Checkbox,
+  FormControlLabel,
+  Stack,
 } from "@mui/material";
 import { motion } from "framer-motion";
 import { useState } from "react";
+import { useAuth } from "@/providers/AuthProvider";
+import { useToast } from "@/providers/ToastProvider";
+import { userAPI } from "@/services/user";
+import { UpdateProfileDto } from "@/types/api/api-types";
+import { useRouter } from "next/navigation";
+import { navigation } from "@/data/navigation";
+
+type EditUserFormType = UpdateProfileDto & { avatarFile?: File };
+type KeyOfEditUserFormType = keyof EditUserFormType;
+
+type FormErrorMessageType = {
+  nameErrorMessage: string;
+  emailErrorMessage: string;
+  passwordErrorMessage: string;
+};
+
+const defaultFormErrorMessage: FormErrorMessageType = {
+  nameErrorMessage: "",
+  emailErrorMessage: "",
+  passwordErrorMessage: "",
+};
 
 export default function ProfilePage() {
-  // Mock user data — replace with your real backend later
-  const user = {
-    name: "John Doe",
-    email: "john@gmail.com",
-    avatar: "",
-  };
+  const { user, setUser } = useAuth();
+  const { showToast } = useToast();
+  const router = useRouter();
 
   const [editMode, setEditMode] = useState(false);
-  const [editUserForm, setEditUserForm] = useState(user);
-  const [deleteEmailInput, setDeleteEmailInput] = useState("");
-  const [error, setError] = useState("");
+  const defaultUserForm: EditUserFormType = {
+    name: user?.name || "",
+    email: user?.email || "",
+    password: "",
+    deleteAvatar: false,
+  };
+  const [editUserForm, setEditUserForm] =
+    useState<EditUserFormType>(defaultUserForm);
+  const [avatarPreview, setAvatarPreview] = useState(user?.avatarUrl || "");
+  const [confirmDeleteAccountInput, setConfirmDeleteAccountInput] =
+    useState("");
+  const [formErrorMessage, setFormErrorMessage] =
+    useState<FormErrorMessageType>(defaultFormErrorMessage);
+  const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  if (!user) throw new Error("Unauthorized");
+
+  const validateInputs = (): boolean => {
+    let isValid = true;
+
+    if (!editUserForm.email || !/\S+@\S+\.\S+/.test(editUserForm.email)) {
+      setFormErrorMessage((prev) => ({
+        ...prev,
+        emailErrorMessage: "Please enter a valid email address.",
+      }));
+      isValid = false;
+    } else {
+      setFormErrorMessage((prev) => ({ ...prev, emailErrorMessage: "" }));
+    }
+
+    if (editUserForm.password && editUserForm.password.length < 6) {
+      setFormErrorMessage((prev) => ({
+        ...prev,
+        passwordErrorMessage: "Password must be at least 6 characters long.",
+      }));
+      isValid = false;
+    } else {
+      setFormErrorMessage((prev) => ({ ...prev, passwordErrorMessage: "" }));
+    }
+
+    if (!editUserForm.name || editUserForm.name.length < 1) {
+      setFormErrorMessage((prev) => ({
+        ...prev,
+        nameErrorMessage: "Name is required.",
+      }));
+      isValid = false;
+    } else {
+      setFormErrorMessage((prev) => ({ ...prev, nameErrorMessage: "" }));
+    }
+
+    return isValid;
+  };
 
   // --- Handlers ---
-  function handleAvatarUpload(e: React.ChangeEvent<HTMLInputElement>) {
+  const handleAvatarUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files?.length) {
       const file = e.target.files[0];
-      const url = URL.createObjectURL(file);
-      setEditUserForm((prev) => ({ ...prev, avatar: url }));
+      const previewURL = URL.createObjectURL(file);
+      setEditUserForm((prev) => ({ ...prev, avatarFile: file }));
+      setAvatarPreview(previewURL);
     }
-  }
+  };
 
-  function handleEditUser(e: React.ChangeEvent<HTMLInputElement>) {
-    setEditUserForm((prev) => ({ ...prev, name: e.target.value }))
-  }
-  
-  function handleSaveProfile() {
-    console.log("Saving profile...", editUserForm);
-  }
+  const handleFormChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setEditUserForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  };
 
-  function handleDeleteAccount() {
-    if (deleteEmailInput !== user.email) {
-      alert("Email does not match. Please type your correct email to confirm.");
-      return;
+  const handleSaveProfile = async (event: React.FormEvent) => {
+    event.preventDefault();
+    setFormErrorMessage(defaultFormErrorMessage);
+
+    if (!validateInputs()) return;
+
+    try {
+      setLoading(true);
+      const formData = new FormData();
+
+      Object.keys(editUserForm).forEach((key) => {
+        const value = editUserForm[key as KeyOfEditUserFormType];
+        if ((key === "name" || key === "email") && value === user[key]) {
+        } else if (value) {
+          const transformValue = value instanceof Blob ? value : String(value);
+          formData.append(key, transformValue);
+        }
+      });
+
+      const updatedUser = await userAPI.updateProfile(formData);
+      setUser(updatedUser);
+
+      showToast("Profile updated successfully.", "success");
+      setEditMode(false);
+      setConfirmDeleteAccountInput("");
+      setEditUserForm({
+        ...defaultUserForm,
+        name: updatedUser.name,
+        email: updatedUser.email,
+      });
+      setAvatarPreview(updatedUser.avatarUrl || "");
+      setFormErrorMessage(defaultFormErrorMessage);
+    } catch (err) {
+      console.error(err);
+      showToast("Failed to update profile.", "error");
+    } finally {
+      setLoading(false);
     }
+  };
 
-    console.log("Account deleted.");
-  }
+  const handleDeleteAccount = async () => {
+    if (confirmDeleteAccountInput !== user.email) return;
 
-  function handleEditMode() {
-    setEditMode(prev => !prev);
-    setEditUserForm(user);
-    setDeleteEmailInput('');
-  }
+    try {
+      setLoading(true);
+      await userAPI.deleteAccount();
+      showToast("Account deleted successfully.", "success");
+      setUser(null);
+      router.replace(navigation.signup.href);
+    } catch (err) {
+      console.error(err);
+      showToast("Failed to delete account.", "error");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleEditMode = () => {
+    setEditMode((prev) => !prev);
+
+    setConfirmDeleteAccountInput("");
+    setEditUserForm(defaultUserForm);
+    setFormErrorMessage(defaultFormErrorMessage);
+  };
 
   return (
     <Container sx={{ py: 6 }}>
@@ -72,70 +190,134 @@ export default function ProfilePage() {
         </Typography>
       </motion.div>
 
-      <Grid container direction='column' spacing={4}>
+      <Grid container direction="column" spacing={4}>
         {/* Personal Info Section */}
         <Grid>
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
           >
-            <Card >
+            <Card>
               <CardContent>
-                <Grid container columns={2} sx={{ justifyContent: 'space-between' }} >
-                <Typography variant="h6" fontWeight="bold" mb={2}>
-                  Personal Information
-                </Typography>
-
-                 <Button
-                  variant="outlinedDarkMode"
-                  onClick={handleEditMode}
+                <Grid
+                  container
+                  columns={2}
+                  sx={{ justifyContent: "space-between" }}
                 >
-                  {editMode ? 'Cancel' : 'Edit'}
-                </Button>
+                  <Typography variant="h6" fontWeight="bold" mb={2}>
+                    Personal Information
+                  </Typography>
+
+                  <Button
+                    variant="outlinedDarkMode"
+                    onClick={handleEditMode}
+                    disabled={loading}
+                  >
+                    {editMode ? "Cancel" : "Edit"}
+                  </Button>
                 </Grid>
 
                 {/* Avatar */}
-                <Box display="flex" alignItems="center" gap={2} mb={3} >
+                <Box display="flex" alignItems="center" gap={2} mb={3}>
                   <Avatar
-                    src={user.avatar}
+                    src={!editUserForm.deleteAvatar ? avatarPreview : ""}
                     sx={{ width: 72, height: 72, border: "2px solid #ccc" }}
                   />
-                  <Button variant="outlinedDarkMode" component="label" disabled={!editMode}>
-                    Upload Avatar
-                    <input
-                      type="file"
-                      hidden
-                      accept="image/*"
-                      onChange={handleAvatarUpload}
-                    />
-                  </Button>
+                  {editMode && (
+                    <Stack direction="row" gap={1}>
+                      <Button variant="outlinedDarkMode" component="label">
+                        Upload Avatar
+                        <input
+                          type="file"
+                          hidden
+                          accept="image/*"
+                          disabled={loading}
+                          onChange={handleAvatarUpload}
+                        />
+                      </Button>
+                      <Button
+                        variant="outlined"
+                        color="error"
+                        component="label"
+                        disabled={loading}
+                        onClick={() =>
+                          setEditUserForm((prev) => ({
+                            ...prev,
+                            deleteAvatar: !editUserForm.deleteAvatar,
+                          }))
+                        }
+                      >
+                        {editUserForm.deleteAvatar
+                          ? "Cancel Remove Avatar"
+                          : "Remove Avatar"}
+                      </Button>
+                    </Stack>
+                  )}
                 </Box>
 
                 <TextField
                   fullWidth
-                  label="Full Name"
+                  label="Name"
+                  name="name"
                   value={editUserForm.name}
-                  disabled={!editMode}
-                  onChange={handleEditUser}
+                  disabled={!editMode || loading}
+                  onChange={handleFormChange}
+                  error={!!formErrorMessage.nameErrorMessage}
+                  helperText={formErrorMessage.nameErrorMessage}
                   sx={{ mb: 2 }}
-                  slotProps={{ inputLabel: { color: 'white' } }}
+                  slotProps={{ inputLabel: { color: "white" } }}
                 />
 
                 <TextField
                   fullWidth
                   label="Email"
-                  value={user.email}
-                  disabled
-                  sx={{ mb: 3 }}
+                  name="email"
+                  type="email"
+                  value={editUserForm.email}
+                  disabled={!editMode || loading}
+                  onChange={handleFormChange}
+                  error={!!formErrorMessage.emailErrorMessage}
+                  helperText={formErrorMessage.emailErrorMessage}
+                  sx={{ mb: 2 }}
+                  slotProps={{ inputLabel: { color: "white" } }}
                 />
+
+                {editMode && (
+                  <Stack sx={{ mb: 3 }}>
+                    <TextField
+                      fullWidth
+                      label="Password"
+                      name="password"
+                      type={showPassword ? "text" : "password"}
+                      value={editUserForm.password}
+                      disabled={loading}
+                      onChange={handleFormChange}
+                      error={!!formErrorMessage.passwordErrorMessage}
+                      helperText={formErrorMessage.passwordErrorMessage}
+                      slotProps={{ inputLabel: { color: "white" } }}
+                    />
+
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          checked={showPassword}
+                          disabled={loading}
+                          onChange={() => setShowPassword((prev) => !prev)}
+                        />
+                      }
+                      label="Show password"
+                    />
+                  </Stack>
+                )}
 
                 <Button
                   variant="contained"
                   fullWidth
-                  sx={{ display: editMode ? 'block' : 'none' }}
+                  sx={{ display: editMode ? "block" : "none" }}
+                  disabled={loading}
                   onClick={handleSaveProfile}
                 >
-                  Save Changes
+                  {loading ? "Saving Changes..." : "Save Changes"}
                 </Button>
               </CardContent>
             </Card>
@@ -143,25 +325,23 @@ export default function ProfilePage() {
         </Grid>
 
         {/* Danger Zone */}
-        <Grid sx={{ display: editMode ? 'block' : 'none' }} >
+        <Grid sx={{ display: editMode ? "block" : "none" }}>
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
           >
             <Card sx={{ border: "1px solid #f44336" }}>
               <CardContent>
-                <Typography
-                  variant="h6"
-                  fontWeight="bold"
-                  color="error"
-                  mb={1}
-                >
+                <Typography variant="h6" fontWeight="bold" color="error" mb={1}>
                   Danger Zone
                 </Typography>
 
                 <Typography variant="body2" color="text.secondary" mb={3}>
-                  To delete your account permanently, please type your email
-                  address below to confirm.
+                  To delete your account permanently, type your email{" "}
+                  <Box component="span" sx={{ fontWeight: "bold" }}>
+                    {user.email}
+                  </Box>{" "}
+                  below to confirm.
                 </Typography>
 
                 <Divider sx={{ mb: 3 }} />
@@ -169,17 +349,17 @@ export default function ProfilePage() {
                 <TextField
                   fullWidth
                   label="Type your email to confirm"
-                  value={deleteEmailInput}
-                  onChange={(e) => setDeleteEmailInput(e.target.value)}
+                  value={confirmDeleteAccountInput}
+                  disabled={loading}
+                  onChange={(e) => setConfirmDeleteAccountInput(e.target.value)}
                   sx={{ mb: 2 }}
-                  slotProps={{ inputLabel: { color: 'white' } }}
                 />
 
                 <Button
                   variant="contained"
                   color="error"
                   fullWidth
-                  disabled={deleteEmailInput !== user.email}
+                  disabled={confirmDeleteAccountInput !== user.email || loading}
                   onClick={handleDeleteAccount}
                 >
                   Delete Account

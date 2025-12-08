@@ -51,7 +51,7 @@ export default function DashboardPage() {
     [dashboard]
   );
 
-  if (!user) return router.push(navigation.login.href);
+  if (!user) throw new Error("Unauthorized");
   if (loading) return <DashboardSkeleton />;
   if (!dashboard || error)
     return (

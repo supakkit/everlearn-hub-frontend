@@ -7,7 +7,10 @@ export type LoginDto = paths["/api/auth/login"]["post"]["requestBody"]["content"
 export type LoginResponse = paths["/api/auth/login"]["post"]["responses"]["200"]["content"]["application/json"];
 export type RefreshTokenResponse = paths["/api/auth/refresh"]["post"]["responses"]["200"]["content"]["application/json"];
 
+// User
 export type User = paths["/api/users/me"]["get"]["responses"]["200"]["content"]["application/json"];
+export type UpdateUserDto = paths["/api/users/me"]["patch"]["requestBody"]["content"]["application/json"];
+export type UpdateProfileDto = Omit<UpdateUserDto, 'role'>;
 
 // Course
 export type GetCourseParams = paths["/api/courses"]["get"]["parameters"]["query"];
