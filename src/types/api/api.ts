@@ -49,22 +49,6 @@ export interface paths {
         delete?: never;
         options?: never;
         head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/users/id": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
         patch: operations["AdminUsersController_updateByAdmin"];
         trace?: never;
     };
@@ -212,6 +196,22 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/enrollments/courses/{id}/me": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["EnrollmentsController_getUserEnrollment"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/admin/enrollments": {
         parameters: {
             query?: never;
@@ -244,6 +244,38 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/progress/lessons/{id}/me": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["ProgressesController_getLessonProgress"];
+        put?: never;
+        post: operations["ProgressesController_completeLesson"];
+        delete: operations["ProgressesController_deleteUserProgress"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/progress/courses/{id}/me": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["ProgressesController_getCourseProgress"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/lessons/preview/{id}": {
         parameters: {
             query?: never;
@@ -252,6 +284,22 @@ export interface paths {
             cookie?: never;
         };
         get: operations["LessonsController_findLessonPreview"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/lessons/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["LessonsController_getLessonWithProgress"];
         put?: never;
         post?: never;
         delete?: never;
@@ -358,11 +406,6 @@ export interface components {
         AuthEntity: {
             success: boolean;
         };
-        PublicLesson: {
-            id: string;
-            title: string;
-            isPreview: boolean;
-        };
         CourseResponse: {
             id: string;
             title: string;
@@ -374,11 +417,29 @@ export interface components {
             priceBaht: number;
             categoryName: string;
             imageUrl: string;
-            lessons?: components["schemas"]["PublicLesson"][];
         };
         AllCoursesResponse: {
             courses: components["schemas"]["CourseResponse"][];
             total: number;
+        };
+        OverviewLesson: {
+            id: string;
+            title: string;
+            position: number;
+            isPreview: boolean;
+        };
+        CourseWithLessonResponse: {
+            id: string;
+            title: string;
+            slug: string;
+            description: string;
+            /** @default false */
+            isFree: boolean;
+            /** @default 0 */
+            priceBaht: number;
+            categoryName: string;
+            imageUrl: string;
+            lessons: components["schemas"]["OverviewLesson"][];
         };
         CreateCourseDto: {
             title: string;
@@ -403,6 +464,22 @@ export interface components {
         EnrollmentResponse: {
             id: string;
             paid: boolean;
+        };
+        EnrolledCourseResponse: {
+            courseId: string;
+            title: string;
+            totalLessons: number;
+            completedLessons: string[];
+            progressPercentage: number;
+        };
+        ProgressResponse: {
+            lessonId: string;
+            isCompleted: boolean;
+            completedAt: Record<string, never>;
+        };
+        CourseProgressResponse: {
+            courseId: string;
+            completedLessons: string[];
         };
         PdfResponse: {
             publicId: string;
@@ -453,14 +530,6 @@ export interface components {
             completedCourses: number;
             totalEnrolledCourses: number;
             activeDaysThisYear: number;
-        };
-        EnrolledCourseResponse: {
-            courseId: string;
-            title: string;
-            thumbnail: string;
-            totalLessons: number;
-            completedLessons: number;
-            progressPercentage: number;
         };
         DashboardResponse: {
             stats: components["schemas"]["UserStatsResponse"];
@@ -580,7 +649,9 @@ export interface operations {
         parameters: {
             query?: never;
             header?: never;
-            path?: never;
+            path: {
+                id: string;
+            };
             cookie?: never;
         };
         requestBody: {
@@ -721,7 +792,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["CourseResponse"];
+                    "application/json": components["schemas"]["CourseWithLessonResponse"];
                 };
             };
         };
@@ -816,6 +887,27 @@ export interface operations {
             };
         };
     };
+    EnrollmentsController_getUserEnrollment: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EnrolledCourseResponse"];
+                };
+            };
+        };
+    };
     AdminEnrollmentsController_findAll: {
         parameters: {
             query?: never;
@@ -877,7 +969,112 @@ export interface operations {
             };
         };
     };
+    ProgressesController_getLessonProgress: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProgressResponse"];
+                };
+            };
+        };
+    };
+    ProgressesController_completeLesson: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProgressResponse"];
+                };
+            };
+        };
+    };
+    ProgressesController_deleteUserProgress: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProgressResponse"];
+                };
+            };
+        };
+    };
+    ProgressesController_getCourseProgress: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CourseProgressResponse"];
+                };
+            };
+        };
+    };
     LessonsController_findLessonPreview: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LessonResponse"];
+                };
+            };
+        };
+    };
+    LessonsController_getLessonWithProgress: {
         parameters: {
             query?: never;
             header?: never;

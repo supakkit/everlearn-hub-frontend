@@ -9,7 +9,7 @@ export function proxy(req: NextRequest) {
     navigation.admin.href,
     navigation.checkout.href,
     navigation.dashboard.href,
-    navigation.learn.href,
+    // navigation.learn.href,
     navigation.profile.href,
   ];
 

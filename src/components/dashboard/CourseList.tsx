@@ -35,7 +35,7 @@ export function CourseList({ courses }: PropType) {
                     {course.title}
                   </Typography>
                   <Typography variant="h6" fontWeight="medium">
-                    {course.completedLessons}/{course.totalLessons}
+                    {course.completedLessons.length}/{course.totalLessons}
                   </Typography>
                 </Stack>
                 <Typography variant="body2" color="text.secondary" mb={1}>

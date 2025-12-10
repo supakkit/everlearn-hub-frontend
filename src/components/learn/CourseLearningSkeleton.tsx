@@ -1,6 +1,6 @@
 import { Box, Container, Skeleton } from "@mui/material";
 
-export function LessonSkeleton() {
+export function CourseLearningSkeleton() {
   return (
     <Container maxWidth="lg" sx={{ py: 6 }}>
       <Skeleton variant="text" width={300} height={40} />

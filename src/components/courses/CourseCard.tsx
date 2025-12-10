@@ -10,13 +10,13 @@ import {
   Typography,
 } from "@mui/material";
 import Image from "next/image";
-import { CourseResponse } from "@/types/api/api-types";
+import { AllCoursesResponse } from "@/types/api/api-types";
 import { useRouter } from "next/navigation";
 import { navigation } from "@/data/navigation";
 import SellRoundedIcon from '@mui/icons-material/SellRounded';
 
 type PropsType = {
-  course: CourseResponse;
+  course: AllCoursesResponse["courses"][number];
 };
 
 export function CourseCard({ course }: PropsType) {

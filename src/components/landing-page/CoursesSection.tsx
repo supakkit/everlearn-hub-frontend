@@ -10,7 +10,7 @@ import { CourseCard } from "../courses/CourseCard";
 import { motion } from "motion/react";
 import { useCallback, useEffect, useState } from "react";
 import { CourseResponse } from "@/types/api/api-types";
-import { courseAPI } from "@/services/course";
+import { courseAPI } from "@/services/courses";
 import { CoursesSectionSkeleton } from "./CoursesSectionSkeleton";
 
 export function CoursesSection() {

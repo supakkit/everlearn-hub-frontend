@@ -49,7 +49,7 @@ export function CourseInfo({ course }: PropType) {
             course.lessons.map((lesson, index) => (
               <ListItemButton
                 key={lesson.id}
-                href={`${navigation.learn.href}/${lesson.id}`}
+                href={`${navigation.learn.href}/${course.id}?lessonId=${lesson.id}`}
                 disabled={!lesson.isPreview}
                 divider
                 sx={{

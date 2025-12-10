@@ -20,10 +20,18 @@ export type AllCoursesResponse = paths["/api/courses"]["get"]["responses"]["200"
 // Category
 export type CategoryNamesResponse = paths["/api/categories"]["get"]["responses"]["200"]["content"]["application/json"];
 
-
 // Dashboard
 export type DashboardResponse = paths["/api/dashboard/me"]["get"]["responses"]["200"]["content"]["application/json"];
 
+// Lesson
+export type LessonResponse = paths["/api/lessons/{id}"]["get"]["responses"]["200"]["content"]["application/json"];
+
+// Progress
+export type ProgressResponse = paths["/api/progress/lessons/{id}/me"]["get"]["responses"]["200"]["content"]["application/json"];
+export type CourseProgressResponse = paths["/api/progress/courses/{id}/me"]["get"]["responses"]["200"]["content"]["application/json"];
+
+// Enrollment
+export type EnrolledCourseResponse = paths["/api/enrollments/courses/{id}/me"]["get"]["responses"]["200"]["content"]["application/json"];
 
 /**
  * Recommended Naming Convention

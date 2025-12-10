@@ -8,7 +8,7 @@ import { CourseHeroSection } from "@/components/courses/CourseHeroSection";
 import { useParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import { CourseResponse } from "@/types/api/api-types";
-import { courseAPI } from "@/services/course";
+import { courseAPI } from "@/services/courses";
 import { CourseSkeleton } from "@/components/courses/CourseSkeleton";
 
 export default function CourseDetailPage() {

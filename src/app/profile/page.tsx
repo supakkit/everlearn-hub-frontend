@@ -19,7 +19,7 @@ import { motion } from "framer-motion";
 import { useState } from "react";
 import { useAuth } from "@/providers/AuthProvider";
 import { useToast } from "@/providers/ToastProvider";
-import { userAPI } from "@/services/user";
+import { userAPI } from "@/services/users";
 import { UpdateProfileDto } from "@/types/api/api-types";
 import { useRouter } from "next/navigation";
 import { navigation } from "@/data/navigation";

@@ -6,7 +6,7 @@ import { Alert, Container } from "@mui/material";
 import { useAuth } from "@/providers/AuthProvider";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { DashboardResponse } from "@/types/api/api-types";
-import { dashboardAPI } from "@/services/dashboard";
+import { dashboardAPI } from "@/services/dashboards";
 import { DashBoardStats } from "@/components/dashboard/DashBoardStats";
 import DashboardTabs from "@/components/dashboard/DashBoardTab";
 import DashboardSkeleton from "@/components/dashboard/DashboardSkeleton";

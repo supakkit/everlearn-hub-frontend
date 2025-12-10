@@ -10,7 +10,7 @@ import React, {
 } from "react";
 import { authAPI } from "@/services/auth";
 import { User } from "@/types/api/api-types";
-import { userAPI } from "@/services/user";
+import { userAPI } from "@/services/users";
 
 interface AuthContextType {
   user: User | null;
@@ -46,14 +46,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     loadSession();
   }, []);
 
-  const login = useCallback(
-    async (email: string, password: string) => {
-      await authAPI.login(email, password);
-      const profile = await userAPI.getProfile();
-      setUser(profile);
-    },
-    []
-  );
+  const login = useCallback(async (email: string, password: string) => {
+    await authAPI.login(email, password);
+    const profile = await userAPI.getProfile();
+    setUser(profile);
+  }, []);
 
   const logout = useCallback(async () => {
     await authAPI.logout();

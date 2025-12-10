@@ -18,8 +18,8 @@ import { CourseCard } from "@/components/courses/CourseCard";
 import { navigation } from "@/data/navigation";
 import { useCallback, useEffect, useState } from "react";
 import { useInitialData } from "@/providers/InitialDataProvider";
-import { courseAPI } from "@/services/course";
-import { CourseResponse, GetCourseParams } from "@/types/api/api-types";
+import { courseAPI } from "@/services/courses";
+import { AllCoursesResponse, GetCourseParams } from "@/types/api/api-types";
 
 type ParamsKeys = keyof NonNullable<GetCourseParams>;
 
@@ -28,7 +28,7 @@ export default function CoursesPage() {
   const router = useRouter();
 
   const [queryInput, setQueryInput] = useState("");
-  const [courses, setCourses] = useState<CourseResponse[]>([]);
+  const [courses, setCourses] = useState<AllCoursesResponse["courses"]>([]);
   const [totalItems, setTotalItems] = useState(0);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");

@@ -1,4 +1,3 @@
-import { Course, Lesson } from "@/types/course";
 import {
   Box,
   List,
@@ -6,15 +5,16 @@ import {
   ListItemText,
   Typography,
 } from "@mui/material";
-import CheckCircleRoundedIcon from '@mui/icons-material/CheckCircleRounded';
-import LockRoundedIcon from '@mui/icons-material/LockRounded';
+import CheckCircleRoundedIcon from "@mui/icons-material/CheckCircleRounded";
+import LockRoundedIcon from "@mui/icons-material/LockRounded";
+import { CourseResponse, LessonResponse } from "@/types/api/api-types";
 
 type PropType = {
-  course: Course;
-  isLessonUnlocked: (lesson: Lesson) => boolean;
+  course: CourseResponse;
+  isLessonUnlocked: (lesson: CourseResponse["lessons"][number]) => boolean;
   completedLessons: string[];
-  selectedLesson: Lesson | null;
-  handleSelectLesson: (lesson: Lesson) => void;
+  selectedLesson: LessonResponse | null;
+  handleSelectLesson: (lesson: CourseResponse["lessons"][number]) => void;
 };
 
 export function LessonSidebar({
@@ -32,7 +32,7 @@ export function LessonSidebar({
         transition: "width 0.3s ease",
       }}
     >
-      <List sx={{ bgcolor: 'background.paper' }}>
+      <List sx={{ bgcolor: "background.paper" }}>
         {course.lessons.map((lesson) => {
           const unlocked = isLessonUnlocked(lesson);
           const completed = completedLessons.includes(lesson.id);

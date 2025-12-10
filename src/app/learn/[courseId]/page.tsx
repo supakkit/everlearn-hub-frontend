@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { useParams } from "next/navigation";
+import { useParams, useSearchParams } from "next/navigation";
 import {
   Container,
   Box,
@@ -10,101 +10,139 @@ import {
   ToggleButton,
   Alert,
 } from "@mui/material";
-import type { Course, Lesson } from "@/types/course";
-import { courses } from "@/data/courses";
-import { userData } from "@/data/user";
 import { LessonContent } from "@/components/learn/LessonContent";
 import { LessonSidebar } from "@/components/learn/LessonSidebar";
 import { LessonHeader } from "@/components/learn/LessonHeader";
-import { LessonSkeleton } from "@/components/learn/LessonSkeleton";
+import { CourseLearningSkeleton } from "@/components/learn/CourseLearningSkeleton";
 import MenuOpenRoundedIcon from "@mui/icons-material/MenuOpenRounded";
 import KeyboardArrowRightRoundedIcon from "@mui/icons-material/KeyboardArrowRightRounded";
 import ExpandLessOutlinedIcon from "@mui/icons-material/ExpandLessOutlined";
 import ExpandMoreOutlinedIcon from "@mui/icons-material/ExpandMoreOutlined";
+import { CourseResponse, LessonResponse } from "@/types/api/api-types";
+import { courseAPI } from "@/services/courses";
+import { lessonAPI } from "@/services/lessons";
+import { progressAPI } from "@/services/progresses";
+import { useAuth } from "@/providers/AuthProvider";
+import { useRouter } from "next/navigation";
+import { navigation } from "@/data/navigation";
 
 export default function CourseLearningPage() {
-  const params = useParams() as { courseId?: string };
-  const courseId = params?.courseId ?? "";
+  const { courseId } = useParams() as { courseId: string };
+  const { isAuthUser } = useAuth();
+  const router = useRouter();
+  const searchParams = useSearchParams();
 
-  const [course, setCourse] = useState<Course | null>(null);
-  const [selectedLesson, setSelectedLesson] = useState<Lesson | null>(null);
+  const [course, setCourse] = useState<CourseResponse | null>(null);
+  const [selectedLesson, setSelectedLesson] = useState<LessonResponse | null>(
+    null
+  );
   const [completedLessons, setCompletedLessons] = useState<string[]>([]);
-  const [saving, setSaving] = useState(false);
-  const [loadingCourse, setLoadingCourse] = useState(true);
-  const [loadingProgress, setLoadingProgress] = useState(true);
-  const [error, setError] = useState<string>('');
+
+  const [courseLoading, setCourseLoading] = useState(false);
+  const [lessonLoading, setLessonLoading] = useState(false);
+  const [progressLoading, setProgressLoading] = useState(false);
+
+  const [error, setError] = useState("");
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
-  // Combined loading flag
-  const loading = loadingCourse || loadingProgress;
-
-  // fetch course (whole course) — keep old approach (one fetch)
   const fetchCourse = useCallback(async () => {
-    if (!courseId) return;
-    setLoadingCourse(true);
-    setError('');
+    setCourseLoading(true);
+    setError("");
+
     try {
-      //   const res = await fetch(`/api/courses/${encodeURIComponent(courseId)}`);
-      //   if (!res.ok) throw new Error(`Failed to load course: ${res.status}`);
-      //   const data: CourseApiResponse = await res.json();
-
-      // Mock data
-      await new Promise((resolve) => setTimeout(resolve, 800));
-      const data = courses.find((course) => course.id === courseId) || null;
-      if (!data) throw new Error(`Failed to load course`);
-
-      setCourse(data);
-      setSelectedLesson(data.lessons?.[0] ?? null);
+      const course = await courseAPI.getOne(courseId);
+      setCourse(course);
     } catch (err) {
       console.error(err);
-      setCourse(null);
-      setError("Failed to load course." );
+      setError("Error loading course");
     } finally {
-      setLoadingCourse(false);
+      setCourseLoading(false);
     }
   }, [courseId]);
 
-  // fetch user's completed lessons for this course (separate endpoint)
+  const fetchLesson = useCallback(async (lessonId: string) => {
+    setLessonLoading(true);
+    try {
+      const lesson = isAuthUser
+        ? await lessonAPI.getLesson(lessonId)
+        : await lessonAPI.getPreviewLesson(lessonId);
+      setSelectedLesson(lesson);
+    } catch (err) {
+      console.error(err);
+      setError("Error loading lesson");
+    } finally {
+      setLessonLoading(false);
+    }
+  }, [isAuthUser]);
+
   const fetchProgress = useCallback(async () => {
-    if (!courseId) return;
-    setLoadingProgress(true);
-    setError('');
+    if (!isAuthUser) return;
+    setProgressLoading(true);
+
     try {
-      // const res = await fetch(`/api/users/me/course-progress/${encodeURIComponent(courseId)}`);
-      // if (!res.ok) {
-      //   // 404 or empty progress are okay — treat as no completed lessons
-      //   if (res.status === 404) {
-      //     setCompletedLessons([]);
-      //   } else {
-      //     throw new Error(`Failed to load progress: ${res.status}`);
-      //   }
-      // } else {
-      //   const data: ProgressResponse = await res.json();
-      //   setCompletedLessons(data.completedLessons || []);
-      // }
-
-      // Mock data
-      await new Promise((resolve) => setTimeout(resolve, 800));
-      const data = userData.enrolledCourses.find(
-        (course) => course.id === courseId
-      );
-      if (data) setCompletedLessons(data.lessonProgress);
-      else setCompletedLessons([]);
-
+      const courseProgress = await progressAPI.getCourseProgress(courseId);
+      setCompletedLessons(courseProgress.completedLessons);
     } catch (err) {
       console.error(err);
-      setCompletedLessons([]);
-      setError("Failed to load user progress.");
+      setError("Error loading progress");
     } finally {
-      setLoadingProgress(false);
+      setProgressLoading(false);
     }
-  }, [courseId]);
+  }, [courseId, isAuthUser]);
 
   useEffect(() => {
     if (!courseId) return;
     fetchCourse();
     fetchProgress();
   }, [courseId, fetchCourse, fetchProgress]);
+
+  useEffect(() => {
+    if (!course || progressLoading || courseLoading || !course.lessons) return;
+
+    if (!isAuthUser) {
+      const lessonId = searchParams.get("lessonId");
+      const previewLesson = course.lessons.find(
+        (lesson) => lessonId === lesson.id && lesson.isPreview === true
+      );
+      if (!previewLesson) return router.replace(navigation.login.href);
+      fetchLesson(previewLesson.id);
+      return;
+    }
+
+    // No progress -> open first lesson
+    if (completedLessons.length === 0) {
+      const firstLesson = course.lessons[0];
+      if (firstLesson) fetchLesson(firstLesson.id);
+      return;
+    }
+
+    // Find the last completed lesson index
+    const lastCompletedId = completedLessons[completedLessons.length - 1];
+    const lastIndex = course.lessons.findIndex((l) => l.id === lastCompletedId);
+
+    // If last completed lesson is the final lesson -> open this lesson again
+    if (lastIndex === course.lessons.length - 1) {
+      fetchLesson(lastCompletedId);
+      return;
+    }
+
+    // Otherwise -> open the next lesson
+    const nextLesson = course.lessons[lastIndex + 1];
+    if (nextLesson) {
+      fetchLesson(nextLesson.id);
+    } else {
+      fetchLesson(lastCompletedId);
+    }
+  }, [
+    course,
+    completedLessons,
+    progressLoading,
+    courseLoading,
+    fetchLesson,
+    isAuthUser,
+    router,
+    searchParams
+  ]);
 
   // Helpers
   const lessonIndexMap = useMemo(() => {
@@ -114,12 +152,14 @@ export default function CourseLearningPage() {
   }, [course]);
 
   const isLessonUnlocked = useCallback(
-    (lesson: Lesson) => {
+    (lesson: CourseResponse["lessons"][number]) => {
       if (lesson.isPreview) return true;
       if (!course) return false;
+
       const idx = lessonIndexMap.get(lesson.id);
       if (typeof idx !== "number") return false;
       if (idx === 0) return true; // first lesson unlocked by default
+
       // unlocked if previous lesson is completed
       const prevLesson = course.lessons[idx - 1];
       return !!prevLesson && completedLessons.includes(prevLesson.id);
@@ -135,101 +175,65 @@ export default function CourseLearningPage() {
   }, [course, completedLessons]);
 
   // Mark current lesson completed
-  const markLessonCompleted = useCallback(
-    async (lessonId: string) => {
-      if (!courseId) return;
-      if (completedLessons.includes(lessonId)) {
-        setError("Lesson already completed.");
-        return;
-      }
-      setSaving(true);
-      setError('');
-      try {
-        // const res = await fetch(`/api/users/me/course-progress/${encodeURIComponent(courseId)}/complete-lesson`, {
-        //   method: 'POST',
-        //   headers: { 'Content-Type': 'application/json' },
-        //   body: JSON.stringify({ lessonId }),
-        // });
-        // if (!res.ok) throw new Error(`Failed to mark completed: ${res.status}`);
-
-        // Mock data
-        await new Promise((resolve) => setTimeout(resolve, 800));
-
-        // optimistic update: append to completedLessons
-        setCompletedLessons((prev) => {
-          if (prev.includes(lessonId)) return prev;
-          return [...prev, lessonId];
-        });
-        
-      } catch (err) {
-        console.error(err);
-        setError("Failed to mark lesson completed.");
-      } finally {
-        setSaving(false);
-      }
-    },
-    [courseId, completedLessons]
-  );
+  const markLessonCompleted = useCallback(async (lessonId: string) => {
+    setProgressLoading(true);
+    try {
+      await progressAPI.markLessonComplete(lessonId);
+      setCompletedLessons((prev) =>
+        prev.includes(lessonId) ? prev : [...prev, lessonId]
+      );
+    } catch (err) {
+      console.error(err);
+      setError("Failed marking lesson complete");
+    } finally {
+      setProgressLoading(false);
+    }
+  }, []);
 
   const handleSelectLesson = useCallback(
-    (lesson: Lesson) => {
-      setError('');
+    (lesson: CourseResponse["lessons"][number]) => {
+      if (lesson.id === selectedLesson?.id) return;
+
+      setError("");
       if (isLessonUnlocked(lesson)) {
-        setSelectedLesson(lesson);
+        fetchLesson(lesson.id);
       } else {
-        setError( "Complete the previous lesson to unlock this one.");
+        setError("Complete previous lesson to unlock.");
       }
     },
-    [isLessonUnlocked]
+    [isLessonUnlocked, fetchLesson, selectedLesson]
   );
 
-  const handleNextLesson = useCallback(async () => {
-    setError('');
-
+  const handleNextLesson = async () => {
     if (!course || !selectedLesson) return;
+
     const idx = lessonIndexMap.get(selectedLesson.id);
     if (typeof idx !== "number") return;
+
     // mark current completed first (if not)
     if (!completedLessons.includes(selectedLesson.id)) {
       await markLessonCompleted(selectedLesson.id);
     }
-    const nextIdx = idx + 1;
-    if (nextIdx >= course.lessons.length) {
+
+    const next = course.lessons[idx + 1];
+    if (!next) {
       setError("You finished the last lesson of this course.");
       return;
     }
-    const nextLesson = course.lessons[nextIdx];
-    if (isLessonUnlocked(nextLesson)) {
-      setSelectedLesson(nextLesson);
+
+    if (isLessonUnlocked(next)) {
+      fetchLesson(next.id);
     } else {
       setError("Next lesson is locked.");
     }
-  }, [
-    course,
-    selectedLesson,
-    lessonIndexMap,
-    completedLessons,
-    markLessonCompleted,
-    isLessonUnlocked,
-  ]);
+  };
 
-  if (loading) {
-    return <LessonSkeleton />;
-  }
-
-  if (!course) {
-    return (
-      <Container maxWidth="lg" sx={{ py: 8 }}>
-        <Typography variant="h5" color="error">
-          Course not found
-        </Typography>
-      </Container>
-    );
-  }
+  if (courseLoading) return <CourseLearningSkeleton />;
+  if (!courseId || !course) return null;
 
   return (
     <Container maxWidth="lg" sx={{ py: 6 }}>
-      {!!error && <Alert severity='error'>{error}</Alert>}
+      {!!error && <Alert severity="error">{error}</Alert>}
 
       <LessonHeader
         course={course}
@@ -298,15 +302,19 @@ export default function CourseLearningPage() {
         )}
 
         {/* Lesson content */}
-        <LessonContent
-          selectedLesson={selectedLesson}
-          isLessonUnlocked={isLessonUnlocked}
-          completedLessons={completedLessons}
-          markLessonCompleted={markLessonCompleted}
-          saving={saving}
-          handleNextLesson={handleNextLesson}
-          course={course}
-        />
+        {!!selectedLesson && (
+          <LessonContent
+            selectedLesson={selectedLesson}
+            isLessonUnlocked={isLessonUnlocked}
+            completedLessons={completedLessons}
+            markLessonCompleted={markLessonCompleted}
+            lessonLoading={lessonLoading}
+            progressLoading={progressLoading}
+            handleNextLesson={handleNextLesson}
+            course={course}
+            isAuthUser={isAuthUser}
+          />
+        )}
       </Box>
     </Container>
   );
