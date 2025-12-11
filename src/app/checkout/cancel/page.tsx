@@ -32,7 +32,7 @@ export default function CheckoutCancelPage() {
         >
           <Link href={navigation.courses.href}>
             <Button variant="contained" color="primary" size="large">
-              Continue Browsing Courses
+              Browse Courses
             </Button>
           </Link>
 

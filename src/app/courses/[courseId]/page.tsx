@@ -10,6 +10,7 @@ import { useCallback, useEffect, useState } from "react";
 import { CourseResponse } from "@/types/api/api-types";
 import { courseAPI } from "@/services/courses";
 import { CourseSkeleton } from "@/components/courses/CourseSkeleton";
+import { paymentAPI } from "@/services/payment";
 
 export default function CourseDetailPage() {
   const params = useParams();
@@ -17,6 +18,7 @@ export default function CourseDetailPage() {
 
   const [course, setCourse] = useState<CourseResponse>();
   const [loading, setLoading] = useState(false);
+  const [buyLoading, setBuyLoading] = useState(false);
   const [error, setError] = useState("");
 
   const fetchCourses = useCallback(async () => {
@@ -34,6 +36,25 @@ export default function CourseDetailPage() {
     }
   }, [courseId]);
 
+  const handleBuy = useCallback(async (courseId: string) => {
+    setBuyLoading(true);
+    try {
+      const { url } = await paymentAPI.buyCourse(courseId);
+
+      if (!url) {
+        alert("Unable to open Stripe Checkout. Please try again.");
+        return;
+      }
+
+      window.location.href = url;
+    } catch (err) {
+      console.error(err);
+      setError("Failed to buy course");
+    } finally {
+      setBuyLoading(false);
+    }
+  }, []);
+
   useEffect(() => {
     fetchCourses();
   }, [fetchCourses]);
@@ -43,11 +64,11 @@ export default function CourseDetailPage() {
 
   return (
     <Box sx={{ pb: 10 }}>
-      <CourseHeroSection course={course} />
+      <CourseHeroSection course={course} handleBuy={handleBuy} buyLoading={buyLoading} />
       <Container maxWidth="lg" sx={{ pt: 4 }}>
         <Grid container spacing={4}>
           <CourseInfo course={course} />
-          <BuyBox course={course} />
+          <BuyBox course={course} handleBuy={handleBuy} buyLoading={buyLoading} />
         </Grid>
       </Container>
     </Box>

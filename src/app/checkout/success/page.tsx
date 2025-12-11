@@ -7,49 +7,42 @@ import {
   Button,
   Card,
   CardContent,
-  CardMedia,
   CircularProgress,
   Container,
+  Stack,
   Typography,
 } from "@mui/material";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import { motion } from "framer-motion";
 import { CentralScreenContainer } from "@/components/common/CentralScreenContainer";
-
-type PurchasedCourse = {
-  id: string;
-  title: string;
-  image: string;
-};
+import { paymentAPI } from "@/services/payment";
+import { navigation } from "@/data/navigation";
+import { CheckoutSessionResponse } from "@/types/api/api-types";
+import Image from "next/image";
 
 export default function CheckoutSuccessPage() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const sessionId = searchParams.get("session_id");
 
-  const [course, setCourse] = useState<PurchasedCourse | null>(null);
+  const [checkoutSession, setCheckoutSession] =
+    useState<CheckoutSessionResponse | null>(null);
   const [loading, setLoading] = useState(false);
 
-  // Later: Replace with real backend call to verify Stripe session
-  const fetchPurchasedCourse = async () => {
+  const fetchPayment = async (sessionId: string) => {
     try {
-      // Simulate API delay
-      await new Promise((resolve) => setTimeout(resolve, 800));
-
-      // Mock purchased data — replace after connecting backend
-      setCourse({
-        id: "course_123",
-        title: "Mastering React for Beginners",
-        image:
-          "https://images.unsplash.com/photo-1519389950473-47ba0277781c?q=80",
-      });
+      setLoading(true);
+      const checkoutSession = await paymentAPI.getCheckoutSession(sessionId);
+      setCheckoutSession(checkoutSession);
+    } catch (err) {
+      console.error("Failed to fetch purchased course:", err);
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    if (sessionId) fetchPurchasedCourse();
+    if (sessionId) fetchPayment(sessionId);
   }, [sessionId]);
 
   return (
@@ -84,7 +77,7 @@ export default function CheckoutSuccessPage() {
         )}
 
         {/* Course Card */}
-        {!loading && course && (
+        {!loading && checkoutSession && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -94,38 +87,75 @@ export default function CheckoutSuccessPage() {
               elevation={4}
               sx={{
                 mt: 6,
-                borderRadius: 3,
-                overflow: "hidden",
+                borderRadius: 2,
+                display: "flex",
+                flexDirection: { xs: "column", sm: "row" },
               }}
             >
-              <CardMedia
-                component="img"
-                height="200"
-                image={course.image}
-                alt={course.title}
-              />
+              <CardContent sx={{ mx: "auto" }}>
+                <Image
+                  src={checkoutSession.image}
+                  alt={checkoutSession.title}
+                  width={150}
+                  height={150}
+                  className="rounded-2xl"
+                />
+              </CardContent>
 
-              <CardContent>
-                <Typography variant="h5" fontWeight="bold">
-                  {course.title}
+              <CardContent
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  flex: 1,
+                  gap: 2,
+                }}
+              >
+                <Typography
+                  variant="h5"
+                  fontWeight="bold"
+                  sx={{ lineClamp: 2 }}
+                >
+                  {checkoutSession.title}
                 </Typography>
 
-                <Button
-                  variant="contained"
-                  size="large"
-                  fullWidth
-                  sx={{ mt: 3, py: 1.5 }}
-                  onClick={() => router.push(`/courses/${course.id}`)}
-                >
-                  Start Learning
-                </Button>
+                <Typography variant="h5" fontWeight={800} color="textSecondary">
+                  {checkoutSession.amountPaid}฿
+                </Typography>
+
+                <Stack direction="row" gap={2} sx={{ mt: "auto", ml: "auto" }}>
+                  <Button
+                    variant="outlinedDarkMode"
+                    size="large"
+                    // fullWidth
+                    sx={{
+                      mt: "auto",
+                      width: 180,
+                      display: { xs: "none", md: "block" },
+                    }}
+                    onClick={() => router.push(`${navigation.dashboard.href}`)}
+                  >
+                    My Dashboard
+                  </Button>
+                  <Button
+                    variant="contained"
+                    size="large"
+                    sx={{ width: 180 }}
+                    onClick={() =>
+                      router.push(
+                        `${navigation.learn.href}/${checkoutSession.courseId}`
+                      )
+                    }
+                  >
+                    Start Learning
+                  </Button>
+                </Stack>
               </CardContent>
             </Card>
           </motion.div>
         )}
 
         {/* If backend fails */}
-        {!loading && !course && (
+        {!loading && !checkoutSession && (
           <Typography color="error" textAlign="center" mt={4}>
             Unable to load your course. Please contact support.
           </Typography>

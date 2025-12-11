@@ -1,15 +1,15 @@
 import { CourseResponse } from "@/types/api/api-types";
 import { Box, Button, Chip, Container, Grid, Typography } from "@mui/material";
 import Image from "next/image";
-import Link from "next/link";
-import { navigation } from "@/data/navigation";
-import SellRoundedIcon from '@mui/icons-material/SellRounded';
+import SellRoundedIcon from "@mui/icons-material/SellRounded";
 
 type PropType = {
   course: CourseResponse;
+  handleBuy: (courseId: string) => Promise<void>;
+  buyLoading: boolean;
 };
 
-export function CourseHeroSection({ course }: PropType) {
+export function CourseHeroSection({ course, handleBuy, buyLoading }: PropType) {
   return (
     <Container sx={{ py: 6 }}>
       <Grid container spacing={4} alignItems="center">
@@ -40,7 +40,10 @@ export function CourseHeroSection({ course }: PropType) {
             sx={{
               mb: 2,
               fontWeight: "bold",
-              color: (theme) => theme.palette.mode === 'dark' ? 'white' : `${theme.palette.primary.main}`,
+              color: (theme) =>
+                theme.palette.mode === "dark"
+                  ? "white"
+                  : `${theme.palette.primary.main}`,
               bgcolor: (theme) => `${theme.palette.primary.light + "55"}`,
             }}
           />
@@ -59,20 +62,21 @@ export function CourseHeroSection({ course }: PropType) {
 
           <Box sx={{ display: "flex", alignItems: "baseline", gap: 1, mb: 3 }}>
             <Typography variant="h4" fontWeight="bold">
-              <SellRoundedIcon sx={{ mr: 1 }} />{course.isFree ? "Free" : `${course.priceBaht} Baht`}
+              <SellRoundedIcon sx={{ mr: 1 }} />
+              {course.isFree ? "Free" : `${course.priceBaht} Baht`}
             </Typography>
           </Box>
 
-          <Link href={navigation.checkout.href}>
           <Button
             variant="contained"
             color="primary"
             size="large"
-            sx={{ px: 4, borderRadius: 2, fontSize: 20, fontWeight: 'bold' }}
-            >
-             {course.isFree ? 'Enroll Now' : 'Buy Now'}
+            sx={{ px: 4, borderRadius: 2, fontSize: 20, fontWeight: "bold" }}
+            disabled={buyLoading}
+            onClick={() => handleBuy(course.id)}
+          >
+            {course.isFree ? "Enroll Now" : "Buy Now"}
           </Button>
-            </Link>
         </Grid>
       </Grid>
     </Container>

@@ -33,6 +33,12 @@ export type CourseProgressResponse = paths["/api/progress/courses/{id}/me"]["get
 // Enrollment
 export type EnrolledCourseResponse = paths["/api/enrollments/courses/{id}/me"]["get"]["responses"]["200"]["content"]["application/json"];
 
+// Payment
+export type CheckoutDto = paths["/api/payments/checkout"]["post"]["requestBody"]["content"]["application/json"];
+export type RedirectCheckoutResponse = paths["/api/payments/checkout"]["post"]["responses"]["201"]["content"]["application/json"];
+export type CheckoutSessionResponse = paths["/api/payments/checkout-session/{sessionId}"]["get"]["responses"]["200"]["content"]["application/json"];
+
+
 /**
  * Recommended Naming Convention
  * 📌 Use PascalCase + Suffix Based on Purpose

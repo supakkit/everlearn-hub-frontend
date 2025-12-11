@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Box,
   Button,
@@ -13,7 +15,9 @@ import Image from "next/image";
 import { AllCoursesResponse } from "@/types/api/api-types";
 import { useRouter } from "next/navigation";
 import { navigation } from "@/data/navigation";
-import SellRoundedIcon from '@mui/icons-material/SellRounded';
+import SellRoundedIcon from "@mui/icons-material/SellRounded";
+import { useCallback, useState } from "react";
+import { paymentAPI } from "@/services/payment";
 
 type PropsType = {
   course: AllCoursesResponse["courses"][number];
@@ -21,6 +25,26 @@ type PropsType = {
 
 export function CourseCard({ course }: PropsType) {
   const router = useRouter();
+  const [buyLoading, setBuyLoading] = useState(false);
+
+  const handleBuy = useCallback(async (courseId: string) => {
+    setBuyLoading(true);
+    try {
+      const { url } = await paymentAPI.buyCourse(courseId);
+
+      if (!url) {
+        alert("Unable to open Stripe Checkout. Please try again.");
+        return;
+      }
+
+      window.location.href = url;
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setBuyLoading(false);
+    }
+  }, []);
+
   return (
     <Card
       key={course.id}
@@ -61,7 +85,8 @@ export function CourseCard({ course }: PropsType) {
             fontWeight="medium"
             sx={{ textAlign: "right" }}
           >
-            <SellRoundedIcon sx={{ fontSize: 18 }} />{" "}{course.isFree ? 'Free' : `${course.priceBaht}฿`}
+            <SellRoundedIcon sx={{ fontSize: 18 }} />{" "}
+            {course.isFree ? "Free" : `${course.priceBaht}฿`}
           </Typography>
         </Stack>
         <Typography
@@ -92,7 +117,6 @@ export function CourseCard({ course }: PropsType) {
         >
           {course.description}
         </Typography>
-        
       </CardContent>
       <CardActions sx={{ marginTop: "auto" }}>
         <Button
@@ -100,9 +124,10 @@ export function CourseCard({ course }: PropsType) {
           variant="contained"
           fullWidth
           sx={{ fontWeight: "bold" }}
+          disabled={buyLoading}
           onClick={(e) => {
-            router.push(`${navigation.checkout.href}/${course.id}`);
             e.stopPropagation();
+            handleBuy(course.id);
           }}
         >
           Buy

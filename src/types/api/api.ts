@@ -372,6 +372,54 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/payments/checkout": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["PaymentsController_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/payments/checkout-session/{sessionId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["PaymentsController_getCheckoutSession"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/stripe/webhook": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["StripeWebhookController_handleWebhook"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -484,7 +532,7 @@ export interface components {
         PdfResponse: {
             publicId: string;
             name: string;
-            description: Record<string, never>;
+            description: string | null;
             downloadUrl: string;
         };
         LessonResponse: {
@@ -494,7 +542,7 @@ export interface components {
             position: number;
             courseId: string;
             isPreview: boolean;
-            pdfs?: components["schemas"]["PdfResponse"][] | null;
+            pdfs: components["schemas"]["PdfResponse"][] | null;
         };
         CreatePdfDto: {
             name: string;
@@ -534,6 +582,19 @@ export interface components {
         DashboardResponse: {
             stats: components["schemas"]["UserStatsResponse"];
             enrolledCourses: components["schemas"]["EnrolledCourseResponse"][];
+        };
+        CreatePaymentDto: {
+            courseId: string;
+        };
+        RedirectCheckoutResponse: {
+            url: string;
+        };
+        CheckoutSessionResponse: {
+            sessionId: string;
+            courseId: string;
+            title: string;
+            image: string;
+            amountPaid: number;
         };
     };
     responses: never;
@@ -1239,6 +1300,67 @@ export interface operations {
                 content: {
                     "application/json": components["schemas"]["DashboardResponse"];
                 };
+            };
+        };
+    };
+    PaymentsController_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreatePaymentDto"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RedirectCheckoutResponse"];
+                };
+            };
+        };
+    };
+    PaymentsController_getCheckoutSession: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                sessionId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CheckoutSessionResponse"];
+                };
+            };
+        };
+    };
+    StripeWebhookController_handleWebhook: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
         };
     };

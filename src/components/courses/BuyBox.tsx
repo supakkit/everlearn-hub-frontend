@@ -1,5 +1,4 @@
 import { customerBenefits } from "@/data/customerBenefits";
-import { navigation } from "@/data/navigation";
 import { CourseResponse } from "@/types/api/api-types";
 import {
   Button,
@@ -13,13 +12,14 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import Link from "next/link";
 
 type PropType = {
   course: CourseResponse;
+  handleBuy: (courseId: string) => Promise<void>;
+  buyLoading: boolean;
 };
 
-export function BuyBox({ course }: PropType) {
+export function BuyBox({ course, handleBuy, buyLoading }: PropType) {
   return (
     <Grid size={{ xs: 12, md: 5, lg: 4 }}>
       <Card sx={{ p: 3, position: "sticky", top: 100, borderRadius: 3 }}>
@@ -71,11 +71,15 @@ export function BuyBox({ course }: PropType) {
           </Typography>
         </Stack>
 
-        <Link href={`${navigation.checkout.href}/${course.id}`}>
-          <Button variant="contained" size="large" fullWidth>
-            {course.isFree ? "Enroll Now" : "Buy Now"}
-          </Button>
-        </Link>
+        <Button
+          variant="contained"
+          size="large"
+          fullWidth
+          disabled={buyLoading}
+          onClick={() => handleBuy(course.id)}
+        >
+          {course.isFree ? "Enroll Now" : "Buy Now"}
+        </Button>
       </Card>
     </Grid>
   );
