@@ -388,6 +388,22 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/payments/free-enroll": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["PaymentsController_enrollFreeCourse"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/payments/checkout-session/{sessionId}": {
         parameters: {
             query?: never;
@@ -588,6 +604,10 @@ export interface components {
         };
         RedirectCheckoutResponse: {
             url: string;
+        };
+        FreeCourseCheckoutResponse: {
+            success: boolean;
+            courseId: string;
         };
         CheckoutSessionResponse: {
             sessionId: string;
@@ -1322,6 +1342,29 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["RedirectCheckoutResponse"];
+                };
+            };
+        };
+    };
+    PaymentsController_enrollFreeCourse: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreatePaymentDto"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["FreeCourseCheckoutResponse"];
                 };
             };
         };

@@ -15,7 +15,7 @@ import {
 
 type PropType = {
   course: CourseResponse;
-  handleBuy: (courseId: string) => Promise<void>;
+  handleBuy: (courseId: string, isFree: boolean) => Promise<void>;
   buyLoading: boolean;
 };
 
@@ -76,7 +76,7 @@ export function BuyBox({ course, handleBuy, buyLoading }: PropType) {
           size="large"
           fullWidth
           disabled={buyLoading}
-          onClick={() => handleBuy(course.id)}
+          onClick={() => handleBuy(course.id, course.isFree)}
         >
           {course.isFree ? "Enroll Now" : "Buy Now"}
         </Button>

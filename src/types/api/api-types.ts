@@ -37,6 +37,7 @@ export type EnrolledCourseResponse = paths["/api/enrollments/courses/{id}/me"]["
 export type CheckoutDto = paths["/api/payments/checkout"]["post"]["requestBody"]["content"]["application/json"];
 export type RedirectCheckoutResponse = paths["/api/payments/checkout"]["post"]["responses"]["201"]["content"]["application/json"];
 export type CheckoutSessionResponse = paths["/api/payments/checkout-session/{sessionId}"]["get"]["responses"]["200"]["content"]["application/json"];
+export type FreeCourseCheckoutResponse = paths["/api/payments/free-enroll"]["post"]["responses"]["201"]["content"]["application/json"];
 
 
 /**

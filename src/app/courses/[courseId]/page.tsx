@@ -11,10 +11,15 @@ import { CourseResponse } from "@/types/api/api-types";
 import { courseAPI } from "@/services/courses";
 import { CourseSkeleton } from "@/components/courses/CourseSkeleton";
 import { paymentAPI } from "@/services/payment";
+import { useToast } from "@/providers/ToastProvider";
+import { useRouter } from "next/navigation";
+import { navigation } from "@/data/navigation";
 
 export default function CourseDetailPage() {
   const params = useParams();
   const { courseId } = params as { courseId: string };
+  const { showToast } = useToast();
+  const router = useRouter();
 
   const [course, setCourse] = useState<CourseResponse>();
   const [loading, setLoading] = useState(false);
@@ -26,7 +31,6 @@ export default function CourseDetailPage() {
     setError("");
     try {
       const course = await courseAPI.getOne(courseId);
-      await new Promise((resolve) => setTimeout(resolve, 1000));
       setCourse(course);
     } catch (err) {
       setError("Failed to fetch course");
@@ -36,9 +40,16 @@ export default function CourseDetailPage() {
     }
   }, [courseId]);
 
-  const handleBuy = useCallback(async (courseId: string) => {
+  const handleBuy = useCallback(async (courseId: string, isFree: boolean) => {
     setBuyLoading(true);
     try {
+      if (isFree) {
+        const enrollment = await paymentAPI.enrollFreeCourse(courseId);
+        showToast("Enrolled course successfully", "success");
+        router.push(`${navigation.learn.href}/${enrollment.courseId}`);
+        return;
+      }
+
       const { url } = await paymentAPI.buyCourse(courseId);
 
       if (!url) {
@@ -53,7 +64,7 @@ export default function CourseDetailPage() {
     } finally {
       setBuyLoading(false);
     }
-  }, []);
+  }, [router, showToast]);
 
   useEffect(() => {
     fetchCourses();
@@ -64,11 +75,19 @@ export default function CourseDetailPage() {
 
   return (
     <Box sx={{ pb: 10 }}>
-      <CourseHeroSection course={course} handleBuy={handleBuy} buyLoading={buyLoading} />
+      <CourseHeroSection
+        course={course}
+        handleBuy={handleBuy}
+        buyLoading={buyLoading}
+      />
       <Container maxWidth="lg" sx={{ pt: 4 }}>
         <Grid container spacing={4}>
           <CourseInfo course={course} />
-          <BuyBox course={course} handleBuy={handleBuy} buyLoading={buyLoading} />
+          <BuyBox
+            course={course}
+            handleBuy={handleBuy}
+            buyLoading={buyLoading}
+          />
         </Grid>
       </Container>
     </Box>

@@ -5,7 +5,7 @@ import SellRoundedIcon from "@mui/icons-material/SellRounded";
 
 type PropType = {
   course: CourseResponse;
-  handleBuy: (courseId: string) => Promise<void>;
+  handleBuy: (courseId: string, isFree: boolean) => Promise<void>;
   buyLoading: boolean;
 };
 
@@ -73,7 +73,7 @@ export function CourseHeroSection({ course, handleBuy, buyLoading }: PropType) {
             size="large"
             sx={{ px: 4, borderRadius: 2, fontSize: 20, fontWeight: "bold" }}
             disabled={buyLoading}
-            onClick={() => handleBuy(course.id)}
+            onClick={() => handleBuy(course.id, course.isFree)}
           >
             {course.isFree ? "Enroll Now" : "Buy Now"}
           </Button>

@@ -18,6 +18,7 @@ import { navigation } from "@/data/navigation";
 import SellRoundedIcon from "@mui/icons-material/SellRounded";
 import { useCallback, useState } from "react";
 import { paymentAPI } from "@/services/payment";
+import { useToast } from "@/providers/ToastProvider";
 
 type PropsType = {
   course: AllCoursesResponse["courses"][number];
@@ -25,25 +26,36 @@ type PropsType = {
 
 export function CourseCard({ course }: PropsType) {
   const router = useRouter();
+  const { showToast } = useToast();
   const [buyLoading, setBuyLoading] = useState(false);
 
-  const handleBuy = useCallback(async (courseId: string) => {
-    setBuyLoading(true);
-    try {
-      const { url } = await paymentAPI.buyCourse(courseId);
+  const handleBuy = useCallback(
+    async (courseId: string, isFree: boolean) => {
+      setBuyLoading(true);
+      try {
+        if (isFree) {
+          const enrollment = await paymentAPI.enrollFreeCourse(courseId);
+          showToast("Enrolled course successfully", "success");
+          router.push(`${navigation.learn.href}/${enrollment.courseId}`);
+          return;
+        }
 
-      if (!url) {
-        alert("Unable to open Stripe Checkout. Please try again.");
-        return;
+        const { url } = await paymentAPI.buyCourse(courseId);
+
+        if (!url) {
+          alert("Unable to open Stripe Checkout. Please try again.");
+          return;
+        }
+
+        window.location.href = url;
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setBuyLoading(false);
       }
-
-      window.location.href = url;
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setBuyLoading(false);
-    }
-  }, []);
+    },
+    [router, showToast]
+  );
 
   return (
     <Card
@@ -127,10 +139,10 @@ export function CourseCard({ course }: PropsType) {
           disabled={buyLoading}
           onClick={(e) => {
             e.stopPropagation();
-            handleBuy(course.id);
+            handleBuy(course.id, course.isFree);
           }}
         >
-          Buy
+          {course.isFree ? "Enroll" : "Buy"}
         </Button>
       </CardActions>
     </Card>
