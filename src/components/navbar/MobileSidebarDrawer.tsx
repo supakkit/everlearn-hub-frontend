@@ -1,4 +1,4 @@
-import { navbarItems, navigation } from "@/data/navigation";
+import { adminMenuItems, navbarItems, navigation } from "@/data/navigation";
 import { SchoolRounded } from "@mui/icons-material";
 import {
   Box,
@@ -7,43 +7,76 @@ import {
   List,
   ListItem,
   ListItemButton,
+  ListItemIcon,
   ListItemText,
+  ListSubheader,
   Typography,
 } from "@mui/material";
 import Link from "next/link";
 import { useAuth } from "@/providers/AuthProvider";
 import { useToast } from "@/providers/ToastProvider";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 type PropType = {
-  handleDrawerToggle: () => void;
+  handleCloseDrawer: () => void;
 };
 
-export function MobileSidebarDrawer({ handleDrawerToggle }: PropType) {
-  const { isAuthUser, logout } = useAuth();
+export function MobileSidebarDrawer({ handleCloseDrawer }: PropType) {
+  const { isAuthUser, isAdmin, logout } = useAuth();
   const { showToast } = useToast();
   const router = useRouter();
+  const pathname = usePathname();
 
   const handleLogout = () => {
     logout();
     showToast("Logged out successfully", "success");
     router.replace(navigation.login.href);
-  }
+  };
   return (
-    <Box sx={{ width: 260 }} role="presentation" onClick={handleDrawerToggle}>
+    <Box
+      sx={{ width: 260, display: "flex", flexDirection: "column", flex: 1 }}
+      role="presentation"
+    >
       <Box sx={{ display: "flex", alignItems: "center", p: 2, gap: 1 }}>
         <SchoolRounded />
         <Typography variant="h6" sx={{ fontWeight: 700 }}>
           EverLearn Hub
         </Typography>
       </Box>
-
       <Divider />
-      <List>
+
+      {isAdmin && (
+        <>
+          <List subheader={<ListSubheader>Admin Menus</ListSubheader>}>
+            {adminMenuItems.map((item) => (
+              <ListItemButton
+                key={item.label}
+                LinkComponent={Link}
+                href={item.href}
+                onClick={handleCloseDrawer}
+                sx={{
+                  bgcolor: pathname === item.href ? "ButtonShadow" : "inherit",
+                }}
+              >
+                <ListItemIcon>
+                  <item.icon sx={{ color: "MenuText" }} />
+                </ListItemIcon>
+                <ListItemText primary={item.label} />
+              </ListItemButton>
+            ))}
+          </List>
+          <Divider />
+        </>
+      )}
+
+      <List subheader={<ListSubheader>Main Menus</ListSubheader>}>
         {navbarItems.pages.map((page) => (
           <ListItem key={page.label} disablePadding>
             <Link href={page.href} className="w-full">
-              <ListItemButton>
+              <ListItemButton onClick={handleCloseDrawer}>
+                <ListItemIcon>
+                  <page.icon sx={{ color: "MenuText" }} />
+                </ListItemIcon>
                 <ListItemText primary={page.label} />
               </ListItemButton>
             </Link>
@@ -52,9 +85,11 @@ export function MobileSidebarDrawer({ handleDrawerToggle }: PropType) {
       </List>
       <Divider />
 
-      <Box sx={{ p: 2 }}>
+      <Box sx={{ p: 2, mt: "auto" }}>
         {isAuthUser ? (
-          <Button onClick={handleLogout} fullWidth variant="contained">Logout</Button>
+          <Button onClick={handleLogout} fullWidth variant="contained">
+            Logout
+          </Button>
         ) : (
           <>
             <Link href={navigation.login.href}>

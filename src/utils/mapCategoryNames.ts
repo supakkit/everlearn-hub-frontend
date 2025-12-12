@@ -1,7 +1,14 @@
 import { CategoryNamesResponse } from "@/types/api/api-types";
-import { CategoryName } from "@/types/course";
 import * as MuiIcons from "@mui/icons-material";
 import { navigation } from "../data/navigation";
+import { IconComponentType } from "@/types/common/icon";
+
+export interface CategoryName {
+  name: string;
+  slug: string;
+  icon: IconComponentType;
+  href: string;
+}
 
 const Icons = MuiIcons as Record<string, React.ComponentType>;
 type IconName = keyof typeof MuiIcons;

@@ -6,7 +6,7 @@ export function proxy(req: NextRequest) {
   // refreshToken must exist if user is logged in
   const accessToken = req.cookies.get("accessToken")?.value;
   const protectedRoutes = [
-    navigation.admin.href,
+    // navigation.admin.href,
     navigation.checkout.href,
     navigation.dashboard.href,
     // navigation.learn.href,

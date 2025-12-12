@@ -6,7 +6,6 @@ import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import Drawer from "@mui/material/Drawer";
-import Button from "@mui/material/Button";
 import MenuIcon from "@mui/icons-material/Menu";
 import { ModeSwitch } from "./ModeSwitch";
 import { useState } from "react";
@@ -34,8 +33,14 @@ export function TopAppBar() {
   };
 
   return (
-    <AppBar position="sticky" elevation={0} sx={{ background: (theme) =>
-          `linear-gradient(135deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`, }}>
+    <AppBar
+      position="sticky"
+      elevation={0}
+      sx={{
+        background: (theme) =>
+          `linear-gradient(135deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
+      }}
+    >
       <Toolbar
         sx={{ display: "flex", justifyContent: "space-between" }}
         className="top-bar-height"
@@ -66,11 +71,7 @@ export function TopAppBar() {
           {/* Desktop Navigation */}
           <Box sx={{ display: { xs: "none", md: "flex" }, gap: 2 }}>
             {navbarItems.pages.map((page) => (
-              <Typography
-                key={page.label}
-                component={Link}
-                href={page.href}
-              >
+              <Typography key={page.label} component={Link} href={page.href}>
                 {page.label}
               </Typography>
             ))}
@@ -85,7 +86,7 @@ export function TopAppBar() {
           }}
         >
           <ModeSwitch />
-          <Divider orientation="vertical" variant='middle' flexItem />
+          <Divider orientation="vertical" variant="middle" flexItem />
           <UserMenu
             handleOpenUserMenu={handleOpenUserMenu}
             handleCloseUserMenu={handleCloseUserMenu}
@@ -101,7 +102,7 @@ export function TopAppBar() {
         onClose={handleDrawerToggle}
         ModalProps={{ keepMounted: true }}
       >
-        <MobileSidebarDrawer handleDrawerToggle={handleDrawerToggle} />
+        <MobileSidebarDrawer handleCloseDrawer={() => setMobileOpen(false)} />
       </Drawer>
     </AppBar>
   );

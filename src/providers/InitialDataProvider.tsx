@@ -2,7 +2,7 @@
 
 import { mapCategoryNames } from "@/utils/mapCategoryNames";
 import { categoryAPI } from "@/services/categories";
-import { CategoryName } from "@/types/course";
+import { CategoryName } from "@/utils/mapCategoryNames"; 
 import {
   createContext,
   useContext,
