@@ -7,14 +7,14 @@ import {
 } from "@mui/material";
 import CheckCircleRoundedIcon from "@mui/icons-material/CheckCircleRounded";
 import LockRoundedIcon from "@mui/icons-material/LockRounded";
-import { CourseResponse, LessonResponse } from "@/types/api/api-types";
+import { CourseWithLessonsResponse, LessonResponse } from "@/types/api/api-types";
 
 type PropType = {
-  course: CourseResponse;
-  isLessonUnlocked: (lesson: CourseResponse["lessons"][number]) => boolean;
+  course: CourseWithLessonsResponse;
+  isLessonUnlocked: (lesson: CourseWithLessonsResponse["lessons"][number]) => boolean;
   completedLessons: string[];
   selectedLesson: LessonResponse | null;
-  handleSelectLesson: (lesson: CourseResponse["lessons"][number]) => void;
+  handleSelectLesson: (lesson: CourseWithLessonsResponse["lessons"][number]) => void;
 };
 
 export function LessonSidebar({

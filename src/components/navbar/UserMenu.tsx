@@ -25,7 +25,7 @@ export function UserMenu({
   handleCloseUserMenu,
   anchorElUser,
 }: UserMenuPropType) {
-  const { user, logout } = useAuth();
+  const { user, isAdmin, logout } = useAuth();
   const { showToast } = useToast();
   const router = useRouter();
   const handleLogout = () => {
@@ -39,14 +39,16 @@ export function UserMenu({
       {!!user ? (
         <Tooltip title="User menu">
           <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-            <Avatar alt="User" src={user?.avatarUrl} >
+            <Avatar alt="User" src={user?.avatarUrl}>
               {user.name[0].toUpperCase()}
             </Avatar>
           </IconButton>
         </Tooltip>
       ) : (
         <Link href={navigation.login.href}>
-          <Button variant="outlined" color="inherit" sx={{ px: 2.5, py: 0.7 }}>Login</Button>
+          <Button variant="outlined" color="inherit" sx={{ px: 2.5, py: 0.7 }}>
+            Login
+          </Button>
         </Link>
       )}
       <Menu
@@ -61,17 +63,20 @@ export function UserMenu({
           vertical: "top",
           horizontal: "center",
         }}
+        sx={{ mt: 1 }}
       >
-        {navbarItems.settings.map((setting) => (
-          <Link key={setting.label} href={setting.href}>
-            <MenuItem
-              sx={{ width: 160, paddingX: 2, paddingY: 1 }}
-              onClick={handleCloseUserMenu}
-            >
-              <Typography>{setting.label}</Typography>
-            </MenuItem>
-          </Link>
-        ))}
+        {(isAdmin ? navbarItems.adminSettings : navbarItems.settings).map(
+          (setting) => (
+            <Link key={setting.label} href={setting.href}>
+              <MenuItem
+                sx={{ width: 180, paddingX: 2, paddingY: 1 }}
+                onClick={handleCloseUserMenu}
+              >
+                <Typography>{setting.label}</Typography>
+              </MenuItem>
+            </Link>
+          )
+        )}
         <MenuItem onClick={handleLogout}>Logout</MenuItem>
       </Menu>
     </Box>

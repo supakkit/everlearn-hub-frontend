@@ -6,19 +6,19 @@ import CheckCircleRoundedIcon from "@mui/icons-material/CheckCircleRounded";
 import CheckCircleOutlinedIcon from "@mui/icons-material/CheckCircleOutlined";
 import Link from "next/link";
 import { navigation } from "@/data/navigation";
-import { CourseResponse, LessonResponse } from "@/types/api/api-types";
+import { CourseWithLessonsResponse, LessonResponse } from "@/types/api/api-types";
 
 type PropType = {
   selectedLesson: LessonResponse;
   isLessonUnlocked: (
-    selectedLesson: CourseResponse["lessons"][number]
+    selectedLesson: CourseWithLessonsResponse["lessons"][number]
   ) => boolean;
   completedLessons: string[];
   markLessonCompleted: (id: string) => void;
   lessonLoading: boolean;
   progressLoading: boolean;
   handleNextLesson: (e: React.MouseEvent<HTMLElement>) => void;
-  course: CourseResponse;
+  course: CourseWithLessonsResponse;
   isAuthUser: boolean;
 };
 

@@ -10,9 +10,11 @@ import {
   useState,
   ReactNode,
 } from "react";
+import { CategoryNamesResponse } from "@/types/api/api-types";
 
 interface InitialData {
   courseCategoryNames: CategoryName[];
+  courseCategories: CategoryNamesResponse;
 }
 
 const InitialDataContext = createContext<InitialData | null>(null);
@@ -23,9 +25,10 @@ export function InitialDataProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     const loadData = async () => {
       try {
-        const categoryNames = await categoryAPI.getCategoryNames();
-        const courseCategoryNames = mapCategoryNames(categoryNames);
-        setData({ courseCategoryNames });
+        const categories = await categoryAPI.getCategoryNames();
+        const courseCategories = categories;
+        const courseCategoryNames = mapCategoryNames(categories);
+        setData({ courseCategoryNames, courseCategories });
       } catch (err) {
         console.error("Failed to load initial data", err);
       }

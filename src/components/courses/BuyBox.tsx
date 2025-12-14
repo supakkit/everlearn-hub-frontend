@@ -1,5 +1,5 @@
 import { customerBenefits } from "@/data/customerBenefits";
-import { CourseResponse } from "@/types/api/api-types";
+import { CourseWithLessonsResponse } from "@/types/api/api-types";
 import {
   Button,
   Card,
@@ -12,14 +12,18 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
+import { CourseDetailMode } from "./CourseDetail";
 
 type PropType = {
-  course: CourseResponse;
-  handleBuy: (courseId: string, isFree: boolean) => Promise<void>;
+  mode?: CourseDetailMode;
+  course: CourseWithLessonsResponse;
+  handleBuy?: (courseId: string, isFree: boolean) => Promise<void>;
   buyLoading: boolean;
 };
 
-export function BuyBox({ course, handleBuy, buyLoading }: PropType) {
+export function BuyBox({ mode = "public", course, handleBuy, buyLoading = false }: PropType) {
+  const isAdminPreview = mode === "admin-preview";
+
   return (
     <Grid size={{ xs: 12, md: 5, lg: 4 }}>
       <Card sx={{ p: 3, position: "sticky", top: 100, borderRadius: 3 }}>
@@ -75,8 +79,8 @@ export function BuyBox({ course, handleBuy, buyLoading }: PropType) {
           variant="contained"
           size="large"
           fullWidth
-          disabled={buyLoading}
-          onClick={() => handleBuy(course.id, course.isFree)}
+          disabled={buyLoading || isAdminPreview}
+          onClick={() => handleBuy && handleBuy(course.id, course.isFree)}
         >
           {course.isFree ? "Enroll Now" : "Buy Now"}
         </Button>

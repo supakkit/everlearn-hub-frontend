@@ -7,6 +7,21 @@ import ReceiptIcon from "@mui/icons-material/Receipt";
 import ViewListRoundedIcon from "@mui/icons-material/ViewListRounded";
 import LocalLibraryRoundedIcon from '@mui/icons-material/LocalLibraryRounded';
 
+const adminPreview = {
+  courses: { label: "Course Preview", href: "/admin/preview/courses" },
+}
+
+const adminNavigation = {
+  dashboard: { label: "Admin Dashboard", href: "/admin" },
+  users: { label: "Users", href: "/admin/users" },
+  courses: { label: "Courses", href: "/admin/courses" },
+  enrollment: { label: "Enrollment", href: "/admin/enrollment" },
+  categories: { label: "Categories", href: "/admin/categories" },
+  payments: { label: "Payments", href: "/admin/payments" },
+  stripeEvents: { label: "Stripe Events", href: "/admin/stripe-events" },
+  preview: adminPreview,
+}
+
 export const navigation = {
   home: { label: "Home", href: "/" },
   signup: { label: "Sign up", href: "/auth/signup" },
@@ -19,51 +34,51 @@ export const navigation = {
   checkoutCancel: { label: "Cancel Checkout", href: "/checkout/cancel" },
   checkoutFailed: { label: "Checkout Failed", href: "/checkout/failed" },
   checkoutSuccess: { label: "Checkout Success", href: "/checkout/success" },
-  admin: { label: "Admin Dashboard", href: "/admin" },
+  admin: adminNavigation,
 };
 
 export const adminMenuItems = [
   {
-    label: "Dashboard",
+    label: adminNavigation.dashboard.label,
     title: "Dashboard",
     icon: DashboardIcon,
-    href: "/admin",
+    href: adminNavigation.dashboard.href,
   },
   {
-    label: "Users",
+    label: adminNavigation.users.label,
     title: "User Management",
     icon: PeopleIcon,
-    href: "/admin/users",
+    href: adminNavigation.users.href,
   },
   {
-    label: "Courses",
+    label: adminNavigation.courses.label,
     title: "Course Management",
     icon: BookIcon,
-    href: "/admin/courses",
+    href: adminNavigation.courses.href,
   },
   {
-    label: "Enrollment",
+    label: adminNavigation.enrollment.label,
     title: "Enrollment Management",
     icon: ViewListRoundedIcon,
-    href: "/admin/enrollments",
+    href: adminNavigation.enrollment.href,
   },
   {
-    label: "Categories",
+    label: adminNavigation.categories.label,
     title: "Category Management",
     icon: CategoryIcon,
-    href: "/admin/categories",
+    href: adminNavigation.categories.href,
   },
   {
-    label: "Payments",
+    label: adminNavigation.payments.label,
     title: "Payment Management",
     icon: PaymentIcon,
-    href: "/admin/payments",
+    href: adminNavigation.payments.href,
   },
   {
-    label: "Stripe Events",
+    label: adminNavigation.stripeEvents.label,
     title: "Stripe Events",
     icon: ReceiptIcon,
-    href: "/admin/stripe-events",
+    href: adminNavigation.stripeEvents.href,
   },
 ];
 
@@ -78,4 +93,5 @@ const pages = [
 export const navbarItems = {
   pages: pages,
   settings: [navigation.profile, navigation.dashboard],
+  adminSettings: [navigation.profile, navigation.dashboard, navigation.admin.dashboard],
 };

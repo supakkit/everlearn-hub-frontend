@@ -1,15 +1,24 @@
-import { CourseResponse } from "@/types/api/api-types";
+import { CourseWithLessonsResponse } from "@/types/api/api-types";
 import { Box, Button, Chip, Container, Grid, Typography } from "@mui/material";
 import Image from "next/image";
 import SellRoundedIcon from "@mui/icons-material/SellRounded";
+import { CourseDetailMode } from "./CourseDetail";
 
 type PropType = {
-  course: CourseResponse;
-  handleBuy: (courseId: string, isFree: boolean) => Promise<void>;
+  mode?: CourseDetailMode;
+  course: CourseWithLessonsResponse;
+  handleBuy?: (courseId: string, isFree: boolean) => Promise<void>;
   buyLoading: boolean;
 };
 
-export function CourseHeroSection({ course, handleBuy, buyLoading }: PropType) {
+export function CourseHeroSection({
+  mode = "public",
+  course,
+  handleBuy,
+  buyLoading = false,
+}: PropType) {
+  const isAdminPreview = mode === "admin-preview";
+
   return (
     <Container sx={{ py: 6 }}>
       <Grid container spacing={4} alignItems="center">
@@ -72,8 +81,8 @@ export function CourseHeroSection({ course, handleBuy, buyLoading }: PropType) {
             color="primary"
             size="large"
             sx={{ px: 4, borderRadius: 2, fontSize: 20, fontWeight: "bold" }}
-            disabled={buyLoading}
-            onClick={() => handleBuy(course.id, course.isFree)}
+            disabled={buyLoading || isAdminPreview}
+            onClick={() => handleBuy && handleBuy(course.id, course.isFree)}
           >
             {course.isFree ? "Enroll Now" : "Buy Now"}
           </Button>

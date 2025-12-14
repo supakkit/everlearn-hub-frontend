@@ -14,8 +14,14 @@ export type UpdateProfileDto = Omit<UpdateUserDto, 'role'>;
 
 // Course
 export type GetCourseParams = paths["/api/courses"]["get"]["parameters"]["query"];
-export type CourseResponse = paths["/api/courses/{id}"]["get"]["responses"]["200"]["content"]["application/json"];
+export type CourseWithLessonsResponse = paths["/api/courses/{id}"]["get"]["responses"]["200"]["content"]["application/json"];
 export type AllCoursesResponse = paths["/api/courses"]["get"]["responses"]["200"]["content"]["application/json"];
+export type CreateCourseDto = paths["/api/admin/courses"]["post"]["requestBody"]["content"]["application/json"];
+export type UpdateCourseDto = paths["/api/admin/courses/{id}"]["patch"]["requestBody"]["content"]["application/json"];
+export type CourseResponse = paths["/api/admin/courses"]["post"]["responses"]["201"]["content"]["application/json"];
+
+// Admin Course
+export type AllCoursesWithLessonsResponse = paths["/api/admin/courses"]["get"]["responses"]["200"]["content"]["application/json"];
 
 // Category
 export type CategoryNamesResponse = paths["/api/categories"]["get"]["responses"]["200"]["content"]["application/json"];

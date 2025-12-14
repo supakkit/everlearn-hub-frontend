@@ -10,10 +10,10 @@ import {
 } from "@mui/material";
 import LockIcon from "@mui/icons-material/Lock";
 import PlayCircleIcon from "@mui/icons-material/PlayCircle";
-import { CourseResponse } from "@/types/api/api-types";
+import { CourseWithLessonsResponse } from "@/types/api/api-types";
 
 type PropType = {
-  course: CourseResponse;
+  course: CourseWithLessonsResponse;
 };
 
 export function CourseInfo({ course }: PropType) {

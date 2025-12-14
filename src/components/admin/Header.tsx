@@ -9,7 +9,7 @@ import {
   Stack,
 } from "@mui/material";
 import LastPageRoundedIcon from "@mui/icons-material/LastPageRounded";
-import { adminMenuItems } from "@/data/navigation";
+import { adminMenuItems, navigation } from "@/data/navigation";
 
 type PropsType = {
   onToggleSidebar: () => void;
@@ -23,6 +23,7 @@ export function Header({ onToggleSidebar, open, pathname }: PropsType) {
       sx={{
         position: "fixed",
         width: "100%",
+        zIndex: 10,
         bgcolor: (theme) => `${theme.palette.background.default}`,
       }}
     >
@@ -53,7 +54,14 @@ export function Header({ onToggleSidebar, open, pathname }: PropsType) {
             fontWeight="bold"
             sx={{ ml: 2, flexGrow: 1 }}
           >
-            {adminMenuItems.find((item) => item.href === pathname)?.title}
+            {
+              adminMenuItems.find(
+                (item) =>
+                  pathname === item.href ||
+                  (item.href !== navigation.admin.dashboard.href &&
+                    pathname.startsWith(item.href))
+              )?.title
+            }
           </Typography>
         </Stack>
       </Toolbar>

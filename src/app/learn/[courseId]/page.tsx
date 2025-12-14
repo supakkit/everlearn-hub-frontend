@@ -18,7 +18,7 @@ import MenuOpenRoundedIcon from "@mui/icons-material/MenuOpenRounded";
 import KeyboardArrowRightRoundedIcon from "@mui/icons-material/KeyboardArrowRightRounded";
 import ExpandLessOutlinedIcon from "@mui/icons-material/ExpandLessOutlined";
 import ExpandMoreOutlinedIcon from "@mui/icons-material/ExpandMoreOutlined";
-import { CourseResponse, LessonResponse } from "@/types/api/api-types";
+import { CourseWithLessonsResponse, LessonResponse } from "@/types/api/api-types";
 import { courseAPI } from "@/services/courses";
 import { lessonAPI } from "@/services/lessons";
 import { progressAPI } from "@/services/progresses";
@@ -32,7 +32,7 @@ export default function CourseLearningPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const [course, setCourse] = useState<CourseResponse | null>(null);
+  const [course, setCourse] = useState<CourseWithLessonsResponse | null>(null);
   const [selectedLesson, setSelectedLesson] = useState<LessonResponse | null>(
     null
   );
@@ -152,7 +152,7 @@ export default function CourseLearningPage() {
   }, [course]);
 
   const isLessonUnlocked = useCallback(
-    (lesson: CourseResponse["lessons"][number]) => {
+    (lesson: CourseWithLessonsResponse["lessons"][number]) => {
       if (lesson.isPreview) return true;
       if (!course) return false;
 
@@ -191,7 +191,7 @@ export default function CourseLearningPage() {
   }, []);
 
   const handleSelectLesson = useCallback(
-    (lesson: CourseResponse["lessons"][number]) => {
+    (lesson: CourseWithLessonsResponse["lessons"][number]) => {
       if (lesson.id === selectedLesson?.id) return;
 
       setError("");

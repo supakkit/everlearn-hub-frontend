@@ -19,7 +19,7 @@ const DynamicIcon = (name: IconName) => {
   return IconComponent;
 };
 
-const categoryAll: CategoryNamesResponse[number] = {
+const categoryAll: Omit<CategoryNamesResponse[number], "id"> = {
   name: "All",
   slug: "all",
   icon: "EmergencyRounded",

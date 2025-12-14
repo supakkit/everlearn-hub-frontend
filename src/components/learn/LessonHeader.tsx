@@ -1,8 +1,8 @@
-import { CourseResponse } from "@/types/api/api-types";
+import { CourseWithLessonsResponse } from "@/types/api/api-types";
 import { Box, LinearProgress, Typography } from "@mui/material";
 
 type PropType = {
-  course: CourseResponse;
+  course: CourseWithLessonsResponse;
   computeProgressValue: number;
 }
 

@@ -155,7 +155,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        get?: never;
+        get: operations["AdminCoursesController_findAllWithLessons"];
         put?: never;
         post: operations["AdminCoursesController_create"];
         delete?: never;
@@ -171,13 +171,77 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        get?: never;
+        get: operations["AdminCoursesController_findOne"];
         put?: never;
         post?: never;
         delete: operations["AdminCoursesController_remove"];
         options?: never;
         head?: never;
         patch: operations["AdminCoursesController_update"];
+        trace?: never;
+    };
+    "/api/lessons/preview/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["LessonsController_findLessonPreview"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/lessons/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["LessonsController_getLessonWithProgress"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/lessons": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["AdminLessonsController_findAll"];
+        put?: never;
+        post: operations["AdminLessonsController_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/lessons/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["AdminLessonsController_findOne"];
+        put?: never;
+        post?: never;
+        delete: operations["AdminLessonsController_remove"];
+        options?: never;
+        head?: never;
+        patch: operations["AdminLessonsController_update"];
         trace?: never;
     };
     "/api/enrollments/{id}": {
@@ -274,70 +338,6 @@ export interface paths {
         options?: never;
         head?: never;
         patch?: never;
-        trace?: never;
-    };
-    "/api/lessons/preview/{id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["LessonsController_findLessonPreview"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/lessons/{id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["LessonsController_getLessonWithProgress"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/lessons": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["AdminLessonsController_findAll"];
-        put?: never;
-        post: operations["AdminLessonsController_create"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/lessons/{id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["AdminLessonsController_findOne"];
-        put?: never;
-        post?: never;
-        delete: operations["AdminLessonsController_remove"];
-        options?: never;
-        head?: never;
-        patch: operations["AdminLessonsController_update"];
         trace?: never;
     };
     "/api/categories": {
@@ -479,8 +479,12 @@ export interface components {
             isFree: boolean;
             /** @default 0 */
             priceBaht: number;
+            isPublished: boolean;
             categoryName: string;
+            categoryId: string;
             imageUrl: string;
+            /** Format: date-time */
+            createdAt: string;
         };
         AllCoursesResponse: {
             courses: components["schemas"]["CourseResponse"][];
@@ -501,8 +505,12 @@ export interface components {
             isFree: boolean;
             /** @default 0 */
             priceBaht: number;
+            isPublished: boolean;
             categoryName: string;
+            categoryId: string;
             imageUrl: string;
+            /** Format: date-time */
+            createdAt: string;
             lessons: components["schemas"]["OverviewLesson"][];
         };
         CreateCourseDto: {
@@ -515,6 +523,10 @@ export interface components {
             isPublished: boolean;
             categoryId: string;
         };
+        AllCoursesWithLessonsResponse: {
+            courses: components["schemas"]["CourseWithLessonResponse"][];
+            total: number;
+        };
         UpdateCourseDto: {
             title?: string;
             description?: string;
@@ -524,26 +536,6 @@ export interface components {
             /** @default false */
             isPublished: boolean;
             categoryId?: string;
-        };
-        EnrollmentResponse: {
-            id: string;
-            paid: boolean;
-        };
-        EnrolledCourseResponse: {
-            courseId: string;
-            title: string;
-            totalLessons: number;
-            completedLessons: string[];
-            progressPercentage: number;
-        };
-        ProgressResponse: {
-            lessonId: string;
-            isCompleted: boolean;
-            completedAt: Record<string, never>;
-        };
-        CourseProgressResponse: {
-            courseId: string;
-            completedLessons: string[];
         };
         PdfResponse: {
             publicId: string;
@@ -585,7 +577,28 @@ export interface components {
             isPreview?: boolean;
             pdfs?: components["schemas"]["UpdatePdfDto"][];
         };
+        EnrollmentResponse: {
+            id: string;
+            paid: boolean;
+        };
+        EnrolledCourseResponse: {
+            courseId: string;
+            title: string;
+            totalLessons: number;
+            completedLessons: string[];
+            progressPercentage: number;
+        };
+        ProgressResponse: {
+            lessonId: string;
+            isCompleted: boolean;
+            completedAt: Record<string, never>;
+        };
+        CourseProgressResponse: {
+            courseId: string;
+            completedLessons: string[];
+        };
         CategoryNamesResponse: {
+            id: string;
             name: string;
             slug: string;
             icon: string;
@@ -878,6 +891,30 @@ export interface operations {
             };
         };
     };
+    AdminCoursesController_findAllWithLessons: {
+        parameters: {
+            query?: {
+                page?: string;
+                limit?: string;
+                category?: string;
+                search?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AllCoursesWithLessonsResponse"];
+                };
+            };
+        };
+    };
     AdminCoursesController_create: {
         parameters: {
             query?: never;
@@ -897,6 +934,27 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["CourseResponse"];
+                };
+            };
+        };
+    };
+    AdminCoursesController_findOne: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CourseWithLessonResponse"];
                 };
             };
         };
@@ -943,6 +1001,157 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["CourseResponse"];
+                };
+            };
+        };
+    };
+    LessonsController_findLessonPreview: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LessonResponse"];
+                };
+            };
+        };
+    };
+    LessonsController_getLessonWithProgress: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LessonResponse"];
+                };
+            };
+        };
+    };
+    AdminLessonsController_findAll: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LessonResponse"][];
+                };
+            };
+        };
+    };
+    AdminLessonsController_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateLessonDto"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LessonResponse"];
+                };
+            };
+        };
+    };
+    AdminLessonsController_findOne: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LessonResponse"];
+                };
+            };
+        };
+    };
+    AdminLessonsController_remove: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LessonResponse"];
+                };
+            };
+        };
+    };
+    AdminLessonsController_update: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateLessonDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LessonResponse"];
                 };
             };
         };
@@ -1130,157 +1339,6 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["CourseProgressResponse"];
-                };
-            };
-        };
-    };
-    LessonsController_findLessonPreview: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["LessonResponse"];
-                };
-            };
-        };
-    };
-    LessonsController_getLessonWithProgress: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["LessonResponse"];
-                };
-            };
-        };
-    };
-    AdminLessonsController_findAll: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["LessonResponse"][];
-                };
-            };
-        };
-    };
-    AdminLessonsController_create: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["CreateLessonDto"];
-            };
-        };
-        responses: {
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["LessonResponse"];
-                };
-            };
-        };
-    };
-    AdminLessonsController_findOne: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["LessonResponse"];
-                };
-            };
-        };
-    };
-    AdminLessonsController_remove: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["LessonResponse"];
-                };
-            };
-        };
-    };
-    AdminLessonsController_update: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["UpdateLessonDto"];
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["LessonResponse"];
                 };
             };
         };

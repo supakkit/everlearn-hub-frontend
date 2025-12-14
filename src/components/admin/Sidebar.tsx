@@ -13,11 +13,12 @@ import Link from "next/link";
 
 type PropsType = {
   open: boolean;
-  drawerWidth: number;
   pathname: string;
 };
 
-export function Sidebar({ open, drawerWidth, pathname }: PropsType) {
+const drawerWidth = 240;
+
+export function Sidebar({ open, pathname }: PropsType) {
   return (
     <Drawer
       variant="persistent"
@@ -29,7 +30,7 @@ export function Sidebar({ open, drawerWidth, pathname }: PropsType) {
         whiteSpace: "nowrap",
         overflowX: "hidden",
         transition: "width 0.3s ease",
-        zIndex: 0,
+        zIndex: 10,
         "& .MuiDrawer-paper": { boxSizing: "border-box", width: drawerWidth },
       }}
     >
