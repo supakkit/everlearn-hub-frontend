@@ -4,6 +4,7 @@ import ReactMarkdown from "react-markdown";
 import NavigateNextRoundedIcon from "@mui/icons-material/NavigateNextRounded";
 import CheckCircleRoundedIcon from "@mui/icons-material/CheckCircleRounded";
 import CheckCircleOutlinedIcon from "@mui/icons-material/CheckCircleOutlined";
+import SaveRoundedIcon from '@mui/icons-material/SaveRounded';
 import Link from "next/link";
 import { navigation } from "@/data/navigation";
 import { CourseWithLessonsResponse, LessonResponse } from "@/types/api/api-types";
@@ -78,20 +79,9 @@ export function LessonContent({
               onClick={() => markLessonCompleted(selectedLesson.id)}
               disabled={progressLoading || isCompletedLesson}
               size="large"
+              endIcon={isCompletedLesson ? <CheckCircleRoundedIcon /> : progressLoading ? <SaveRoundedIcon /> : <CheckCircleOutlinedIcon />}
             >
-              {isCompletedLesson ? (
-                <>
-                  Completed
-                  <CheckCircleRoundedIcon sx={{ fontSize: 20, ml: 1 }} />
-                </>
-              ) : progressLoading ? (
-                "Saving..."
-              ) : (
-                <>
-                  Mark Completed
-                  <CheckCircleOutlinedIcon sx={{ fontSize: 20, ml: 1 }} />
-                </>
-              )}
+              {isCompletedLesson ? "Completed" : progressLoading ? "Saving..." : "Mark Completed"}
             </Button>
 
             {!isLastLesson && (
@@ -100,9 +90,9 @@ export function LessonContent({
                 onClick={handleNextLesson}
                 disabled={!isCompletedLesson}
                 size="large"
+                endIcon={<NavigateNextRoundedIcon />}
               >
                 Next Lesson
-                <NavigateNextRoundedIcon sx={{ fontSize: 20 }} />
               </Button>
             )}
 

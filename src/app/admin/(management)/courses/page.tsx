@@ -18,14 +18,14 @@ import {
 } from "@mui/material";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import { CourseDetailDrawer } from "@/components/admin/courses/CourseDetailDrawer";
-import { CourseWithLessonsResponse } from "@/types/api/api-types";
-import AddCircleOutlineRoundedIcon from "@mui/icons-material/AddCircleOutlineRounded";
+import { CourseWithLessonsResponse, OverviewLessonResponse } from "@/types/api/api-types";
 import { courseAPI } from "@/services/courses";
 import { CourseOverviewSkeleton } from "@/components/admin/courses/CourseOverviewSkeleton";
 import { useToast } from "@/providers/ToastProvider";
 import { navigation } from "@/data/navigation";
 import EditNoteRoundedIcon from "@mui/icons-material/EditNoteRounded";
 import { useRouter } from "next/navigation";
+import AddIcon from "@mui/icons-material/Add";
 
 export default function CourseOverviewPage() {
   const [courses, setCourses] = useState<CourseWithLessonsResponse[]>([]);
@@ -62,10 +62,11 @@ export default function CourseOverviewPage() {
       setLoading(true);
       setError("");
       try {
-        const { courses, total } = await courseAPI.getAllCoursesWithLessonsByAdmin({
-          page: String(page),
-          limit: String(rowsPerPage),
-        });
+        const { courses, total } =
+          await courseAPI.getAllCoursesWithLessonsByAdmin({
+            page: String(page),
+            limit: String(rowsPerPage),
+          });
         setCourses(courses);
         setTotalItems(total);
       } catch (err) {
@@ -84,7 +85,7 @@ export default function CourseOverviewPage() {
     setDeleteCourseLoading(true);
     try {
       await courseAPI.deleteCourse(courseId);
-      setSelected(null)
+      setSelected(null);
       fetchCourses(1, rowsPerPage);
       showToast("Deleted course successfully", "success");
     } catch (err) {
@@ -118,11 +119,11 @@ export default function CourseOverviewPage() {
           Courses
         </Typography>
         <Button
+          startIcon={<AddIcon />}
           variant="contained"
           href={`${navigation.admin.courses.href}/create`}
         >
-          Create Course{" "}
-          <AddCircleOutlineRoundedIcon sx={{ fontSize: 18, ml: 1 }} />
+          Create Course
         </Button>
       </Box>
 
@@ -154,7 +155,13 @@ export default function CourseOverviewPage() {
           </TableHead>
           <TableBody sx={{ opacity: loading ? 0.5 : 1 }}>
             {courses.map((course, index) => (
-              <TableRow key={course.id} hover>
+              <TableRow
+                key={course.id}
+                hover
+                onClick={() => {
+                  setSelected(course);
+                }}
+              >
                 <TableCell>{index + 1}</TableCell>
                 <TableCell>{course.title}</TableCell>
                 <TableCell>{course.categoryName}</TableCell>
@@ -170,16 +177,25 @@ export default function CourseOverviewPage() {
                   )}
                 </TableCell>
                 <TableCell align="center">
-                  <IconButton onClick={() => setSelected(course)} title="view detail">
+                  <IconButton
+                    onClick={(e) => {
+                      router.push(
+                        `${navigation.admin.preview.courses.href}/${course.id}`
+                      );
+                      e.stopPropagation();
+                    }}
+                    title="preview"
+                  >
                     <VisibilityIcon />
                   </IconButton>
                   <IconButton
                     title="edit"
-                    onClick={() =>
+                    onClick={(e) => {
                       router.push(
                         `${navigation.admin.courses.href}/${course.id}/edit`
-                      )
-                    }
+                      );
+                      e.stopPropagation();
+                    }}
                   >
                     <EditNoteRoundedIcon />
                   </IconButton>
@@ -207,7 +223,6 @@ export default function CourseOverviewPage() {
           }}
           onPageChange={handleChangePage}
           onRowsPerPageChange={handleChangeRowsPerPage}
-          // ActionsComponent={TablePaginationActions}
         />
       </Box>
 
@@ -216,6 +231,15 @@ export default function CourseOverviewPage() {
         handleCloseDrawer={() => setSelected(null)}
         handleDeleteCourse={handleDeleteCourse}
         deleteCourseLoading={deleteCourseLoading}
+        onLessonsChange={(courseId: string, lessons: OverviewLessonResponse[]) =>
+          setCourses((prev) =>
+            prev.map((course) =>
+              course.id === courseId
+                ? { ...course, lessons }
+                : course
+            )
+          )
+        }
       />
     </Box>
   );

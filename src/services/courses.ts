@@ -4,6 +4,8 @@ import {
   CourseResponse,
   CourseWithLessonsResponse,
   GetCourseParams,
+  OverviewLessonResponse,
+  ReorderLessonsDto,
 } from "@/types/api/api-types";
 import fetchApi from "./fetch-api";
 import api from "./api";
@@ -46,6 +48,17 @@ export const courseAPI = {
 
   deleteCourse: async (courseId: string): Promise<CourseResponse> => {
     const res = await api.delete(`/admin/courses/${courseId}`);
+    return res.data;
+  },
+
+  reorderLessons: async (
+    courseId: string,
+    reorderLessonsDto: ReorderLessonsDto
+  ): Promise<OverviewLessonResponse[]> => {
+    const res = await api.patch(
+      `admin/courses/${courseId}/lessons/reorder`,
+      reorderLessonsDto
+    );
     return res.data;
   },
 };

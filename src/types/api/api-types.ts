@@ -19,6 +19,18 @@ export type AllCoursesResponse = paths["/api/courses"]["get"]["responses"]["200"
 export type CreateCourseDto = paths["/api/admin/courses"]["post"]["requestBody"]["content"]["application/json"];
 export type UpdateCourseDto = paths["/api/admin/courses/{id}"]["patch"]["requestBody"]["content"]["application/json"];
 export type CourseResponse = paths["/api/admin/courses"]["post"]["responses"]["201"]["content"]["application/json"];
+export type ReorderLessonsDto = paths["/api/admin/courses/{id}/lessons/reorder"]["patch"]["requestBody"]["content"]["application/json"];
+
+// Lesson
+export type LessonResponse = paths["/api/lessons/{id}"]["get"]["responses"]["200"]["content"]["application/json"];
+export type CreateLessonDto = paths["/api/admin/lessons"]["post"]["requestBody"]["content"]["application/json"];
+export type UpdateLessonDto = paths["/api/admin/lessons/{id}"]["patch"]["requestBody"]["content"]["application/json"];
+export type OverviewLessonResponse = paths["/api/admin/courses/{id}/lessons/reorder"]["patch"]["responses"]["200"]["content"]["application/json"][number];
+
+// PDF
+export type CreatePdfDto = NonNullable<paths["/api/admin/lessons"]["post"]["requestBody"]["content"]["application/json"]["createPdfs"]>[number];
+export type UpdatePdfDto = NonNullable<paths["/api/admin/lessons/{id}"]["patch"]["requestBody"]["content"]["application/json"]["updatePdfs"]>[number];
+export type RemovePdfDto = NonNullable<paths["/api/admin/lessons/{id}"]["patch"]["requestBody"]["content"]["application/json"]["removePdfs"]>[number];
 
 // Admin Course
 export type AllCoursesWithLessonsResponse = paths["/api/admin/courses"]["get"]["responses"]["200"]["content"]["application/json"];
@@ -28,9 +40,6 @@ export type CategoryNamesResponse = paths["/api/categories"]["get"]["responses"]
 
 // Dashboard
 export type DashboardResponse = paths["/api/dashboard/me"]["get"]["responses"]["200"]["content"]["application/json"];
-
-// Lesson
-export type LessonResponse = paths["/api/lessons/{id}"]["get"]["responses"]["200"]["content"]["application/json"];
 
 // Progress
 export type ProgressResponse = paths["/api/progress/lessons/{id}/me"]["get"]["responses"]["200"]["content"]["application/json"];

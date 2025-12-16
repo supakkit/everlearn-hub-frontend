@@ -180,6 +180,22 @@ export interface paths {
         patch: operations["AdminCoursesController_update"];
         trace?: never;
     };
+    "/api/admin/courses/{id}/lessons/reorder": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch: operations["AdminCoursesController_reorderLessons"];
+        trace?: never;
+    };
     "/api/lessons/preview/{id}": {
         parameters: {
             query?: never;
@@ -219,7 +235,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        get: operations["AdminLessonsController_findAll"];
+        get?: never;
         put?: never;
         post: operations["AdminLessonsController_create"];
         delete?: never;
@@ -527,6 +543,13 @@ export interface components {
             courses: components["schemas"]["CourseWithLessonResponse"][];
             total: number;
         };
+        LessonPositionDto: {
+            lessonId: string;
+            position: number;
+        };
+        ReorderLessonsDto: {
+            items: components["schemas"]["LessonPositionDto"][];
+        };
         UpdateCourseDto: {
             title?: string;
             description?: string;
@@ -538,6 +561,7 @@ export interface components {
             categoryId?: string;
         };
         PdfResponse: {
+            id: string;
             publicId: string;
             name: string;
             description: string | null;
@@ -562,20 +586,24 @@ export interface components {
             content: string;
             courseId: string;
             isPreview?: boolean;
-            pdfs?: components["schemas"]["CreatePdfDto"][];
+            createPdfs?: components["schemas"]["CreatePdfDto"][];
         };
         UpdatePdfDto: {
+            id: string;
             name?: string;
             description?: string;
-            fileName?: string;
-            removedPdfPublicId?: string;
+        };
+        RemovePdfDto: {
+            publicId: string;
         };
         UpdateLessonDto: {
             title?: string;
             content?: string;
             courseId?: string;
             isPreview?: boolean;
-            pdfs?: components["schemas"]["UpdatePdfDto"][];
+            createPdfs?: components["schemas"]["CreatePdfDto"][];
+            updatePdfs?: components["schemas"]["UpdatePdfDto"][];
+            removePdfs?: components["schemas"]["RemovePdfDto"][];
         };
         EnrollmentResponse: {
             id: string;
@@ -1005,6 +1033,31 @@ export interface operations {
             };
         };
     };
+    AdminCoursesController_reorderLessons: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ReorderLessonsDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OverviewLesson"][];
+                };
+            };
+        };
+    };
     LessonsController_findLessonPreview: {
         parameters: {
             query?: never;
@@ -1043,25 +1096,6 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["LessonResponse"];
-                };
-            };
-        };
-    };
-    AdminLessonsController_findAll: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["LessonResponse"][];
                 };
             };
         };

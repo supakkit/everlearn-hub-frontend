@@ -1,28 +1,32 @@
-import { CourseWithLessonsResponse } from "@/types/api/api-types";
+"use client";
+
+import {
+  CourseWithLessonsResponse,
+  OverviewLessonResponse,
+} from "@/types/api/api-types";
 import {
   Avatar,
   Box,
   Button,
   Divider,
   Drawer,
-  IconButton,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
-  Paper,
   Stack,
   Typography,
 } from "@mui/material";
 import Link from "next/link";
 import { navigation } from "@/data/navigation";
-import EditRoundedIcon from "@mui/icons-material/EditRounded";
+import { LessonManagement } from "./LessonManagement";
+import { useMemo, useState } from "react";
 
 type PropsType = {
   course: CourseWithLessonsResponse | null;
   handleCloseDrawer: () => void;
   handleDeleteCourse: (courseId: string) => void;
   deleteCourseLoading: boolean;
+  onLessonsChange: (
+    courseId: string,
+    lessons: OverviewLessonResponse[]
+  ) => void;
 };
 
 export function CourseDetailDrawer({
@@ -30,7 +34,14 @@ export function CourseDetailDrawer({
   handleCloseDrawer,
   handleDeleteCourse,
   deleteCourseLoading,
+  onLessonsChange,
 }: PropsType) {
+  const [interactionLocked, setInteractionLocked] = useState(false);
+  
+  const isLocked: boolean = useMemo(
+    () => deleteCourseLoading || interactionLocked,
+    [deleteCourseLoading, interactionLocked]
+  );
   return (
     <Drawer
       anchor="right"
@@ -80,35 +91,15 @@ export function CourseDetailDrawer({
           </Stack>
 
           <Divider sx={{ my: 3 }} />
-          <Stack>
-            <List disablePadding dense subheader="Lessons">
-              {course.lessons.map((lesson) => (
-                <ListItem
-                  key={lesson.id}
-                  component={Paper}
-                  elevation={0}
-                  sx={{
-                    justifyContent: "flex-start",
-                    my: 0.5,
-                    bgcolor: "background.default",
-                    borderRadius: 0.7,
-                  }}
-                  secondaryAction={
-                    <IconButton size="small" color="warning" title="Edit">
-                      <EditRoundedIcon sx={{ fontSize: 16 }} />
-                    </IconButton>
-                  }
-                >
-                  <ListItemIcon># {lesson.position}.</ListItemIcon>
-                  <ListItemText primary={lesson.title} />
-                </ListItem>
-              ))}
-            </List>
-          </Stack>
 
-          <Divider sx={{ my: 3 }} />
+          <LessonManagement
+            course={course}
+            onLessonsChange={onLessonsChange}
+            disabled={isLocked}
+            onLoadingChange={setInteractionLocked}
+          />
 
-          <Stack direction="row" spacing={2}>
+          <Stack direction="row" spacing={2} sx={{ mt: 3 }}>
             <Link
               href={`${navigation.admin.preview.courses.href}/${course.id}`}
               className="w-full"
@@ -118,7 +109,7 @@ export function CourseDetailDrawer({
                 variant="outlined"
                 color="success"
                 size="large"
-                disabled={deleteCourseLoading}
+                disabled={isLocked}
               >
                 Preview
               </Button>
@@ -131,7 +122,7 @@ export function CourseDetailDrawer({
                 fullWidth
                 variant="contained"
                 size="large"
-                disabled={deleteCourseLoading}
+                disabled={isLocked}
               >
                 Edit
               </Button>
@@ -140,7 +131,7 @@ export function CourseDetailDrawer({
               fullWidth
               variant="outlined"
               color="error"
-              disabled={deleteCourseLoading}
+              disabled={isLocked}
               onClick={() => handleDeleteCourse(course.id)}
             >
               Delete

@@ -59,11 +59,10 @@ export function CoursesSection() {
               Top Courses
             </Typography>
             <Link href={navigation.courses.href}>
-              <Button variant="text">
+              <Button variant="text" endIcon={<ArrowForwardIosRoundedIcon />}>
                 <Typography sx={{ display: { xs: "none", sm: "block" } }}>
                   Explore all courses
                 </Typography>
-                <ArrowForwardIosRoundedIcon sx={{ fontSize: 16 }} />
               </Button>
             </Link>
           </Grid>

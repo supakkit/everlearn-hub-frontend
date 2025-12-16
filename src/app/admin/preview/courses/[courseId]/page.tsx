@@ -45,11 +45,11 @@ export default function PreviewCourseDetail() {
     <Box>
       <Box sx={{ position: "absolute", p: 1 }}>
         <Button
+          startIcon={<ArrowBackIosNewRoundedIcon />}
           variant="link"
           sx={{ p: 1 }}
           onClick={() => router.push(navigation.admin.courses.href)}
         >
-          <ArrowBackIosNewRoundedIcon sx={{ fontSize: 16, mr: 1 }} />
           Back to course dashboard
         </Button>
       </Box>
