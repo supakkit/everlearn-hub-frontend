@@ -505,6 +505,25 @@ export interface components {
             role?: string;
             deleteAvatar?: boolean;
         };
+        FullDetailUserResponse: {
+            id: string;
+            email: string;
+            name: string;
+            /** @default STUDENT */
+            role: string;
+            avatarUrl?: string;
+            /** Format: date-time */
+            createdAt: string;
+            isDeleted: boolean;
+            stripeCustomerId: string | null;
+        };
+        GetFullDetailUsersResponse: {
+            users: components["schemas"]["FullDetailUserResponse"][];
+            total: number;
+        };
+        AdminUpdateUserDto: {
+            role: string;
+        };
         CreateUserDto: {
             name: string;
             email: string;
@@ -776,7 +795,10 @@ export interface operations {
     };
     AdminUsersController_findAll: {
         parameters: {
-            query?: never;
+            query?: {
+                page?: string;
+                limit?: string;
+            };
             header?: never;
             path?: never;
             cookie?: never;
@@ -788,7 +810,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["UserResponse"][];
+                    "application/json": components["schemas"]["GetFullDetailUsersResponse"];
                 };
             };
         };
@@ -809,7 +831,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["UserResponse"];
+                    "application/json": components["schemas"]["FullDetailUserResponse"];
                 };
             };
         };
@@ -825,7 +847,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["UpdateUserDto"];
+                "application/json": components["schemas"]["AdminUpdateUserDto"];
             };
         };
         responses: {
@@ -834,7 +856,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["UserResponse"];
+                    "application/json": components["schemas"]["FullDetailUserResponse"];
                 };
             };
         };

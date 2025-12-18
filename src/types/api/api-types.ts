@@ -11,6 +11,11 @@ export type RefreshTokenResponse = paths["/api/auth/refresh"]["post"]["responses
 export type User = paths["/api/users/me"]["get"]["responses"]["200"]["content"]["application/json"];
 export type UpdateUserDto = paths["/api/users/me"]["patch"]["requestBody"]["content"]["application/json"];
 export type UpdateProfileDto = Omit<UpdateUserDto, 'role'>;
+export type GetFullDetailUsersResponse = paths["/api/admin/users"]["get"]["responses"]["200"]["content"]["application/json"];
+export type GetFullDetailUsersParams = paths["/api/admin/users"]["get"]["parameters"]["query"];
+export type FullDetailUserResponse = paths["/api/admin/users/{id}"]["patch"]["responses"]["200"]["content"]["application/json"];
+export type AdminUpdateUserDto = paths["/api/admin/users/{id}"]["patch"]["requestBody"]["content"]["application/json"];
+export enum UserRole { STUDENT = "STUDENT", ADMIN = "ADMIN" };
 
 // Course
 export type GetCourseParams = paths["/api/courses"]["get"]["parameters"]["query"];
