@@ -314,7 +314,12 @@ export function LessonFormDialog({
         <Divider sx={{ my: 2 }} />
 
         <Stack direction="row" justifyContent="flex-end" spacing={2}>
-          <Button disabled={loading} onClick={onClose}>
+          <Button
+            disabled={loading}
+            onClick={onClose}
+            variant="outlined"
+            color="inherit"
+          >
             Cancel
           </Button>
           <Button variant="contained" disabled={loading} onClick={handleSubmit}>

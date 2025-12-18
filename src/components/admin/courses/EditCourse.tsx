@@ -1,20 +1,21 @@
 "use client";
 
-import { CourseForm } from "@/components/admin/courses/CourseForm";
-import { CourseFormSkeleton } from "@/components/admin/courses/CourseFormSkeleton";
 import { courseAPI } from "@/services/courses";
 import { CreateCourseDto, UpdateCourseDto } from "@/types/api/api-types";
-import { Alert, Box, Typography } from "@mui/material";
-import { useParams } from "next/navigation";
+import { Alert } from "@mui/material";
 import { useCallback, useEffect, useState } from "react";
+import { CourseFormDialog } from "./CourseFormDialog";
 
-export default function EditCoursePage() {
-  const params = useParams();
-  const { courseId } = params as { courseId: string };
+type PropsType = {
+  courseId: string;
+  open: boolean;
+  onClose: () => void;
+};
 
+export function EditCourse({ courseId, open, onClose }: PropsType) {
   const [course, setCourse] = useState<CreateCourseDto>();
   const [imageUrl, setImageUrl] = useState<string | undefined>();
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
   const fetchCourse = useCallback(async () => {
@@ -64,6 +65,8 @@ export default function EditCoursePage() {
     fetchCourse();
   }, [fetchCourse]);
 
+  if (loading && !course) return null;
+
   if (!course || error)
     return (
       <Alert
@@ -76,21 +79,14 @@ export default function EditCoursePage() {
     );
 
   return (
-    <Box maxWidth={900} mx="auto">
-      <Typography variant="h4" fontWeight={600} mb={3}>
-        Edit Course
-      </Typography>
-      {loading ? (
-        <CourseFormSkeleton />
-      ) : (
-        <CourseForm
-          mode="update"
-          initialData={course}
-          initialImage={imageUrl}
-          submitLabel="Save Changes"
-          onSubmit={handleUpdateCourse}
-        />
-      )}
-    </Box>
+    <CourseFormDialog
+      mode="update"
+      initialData={course}
+      initialImage={imageUrl}
+      submitLabel="Save Changes"
+      onSubmit={handleUpdateCourse}
+      open={open}
+      onClose={onClose}
+    />
   );
 }

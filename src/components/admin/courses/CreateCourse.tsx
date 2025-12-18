@@ -1,11 +1,13 @@
-"use client";
-
-import { CourseForm } from "@/components/admin/courses/CourseForm";
+import { CourseFormDialog } from "@/components/admin/courses/CourseFormDialog";
 import { courseAPI } from "@/services/courses";
 import { CreateCourseDto } from "@/types/api/api-types";
-import { Box, Typography } from "@mui/material";
 
-export default function CreateCoursePage() {
+type PropsType = {
+  open: boolean;
+  onClose: () => void;
+};
+
+export function CreateCourse({ open, onClose }: PropsType) {
   const initialData: CreateCourseDto = {
     title: "",
     description: "",
@@ -28,16 +30,13 @@ export default function CreateCoursePage() {
   };
 
   return (
-    <Box px={4} maxWidth={900} mx="auto">
-      <Typography variant="h4" textAlign="center" fontWeight={600} mb={2}>
-        Create Course
-      </Typography>
-      <CourseForm
-        mode="create"
-        initialData={initialData}
-        submitLabel="Create Course"
-        onSubmit={handleCreateCourse}
-      />
-    </Box>
+    <CourseFormDialog
+      mode="create"
+      initialData={initialData}
+      submitLabel="Create Course"
+      onSubmit={handleCreateCourse}
+      open={open}
+      onClose={onClose}
+    />
   );
 }

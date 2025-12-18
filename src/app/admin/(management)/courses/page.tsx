@@ -18,7 +18,10 @@ import {
 } from "@mui/material";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import { CourseDetailDrawer } from "@/components/admin/courses/CourseDetailDrawer";
-import { CourseWithLessonsResponse, OverviewLessonResponse } from "@/types/api/api-types";
+import {
+  CourseWithLessonsResponse,
+  OverviewLessonResponse,
+} from "@/types/api/api-types";
 import { courseAPI } from "@/services/courses";
 import { CourseOverviewSkeleton } from "@/components/admin/courses/CourseOverviewSkeleton";
 import { useToast } from "@/providers/ToastProvider";
@@ -26,6 +29,13 @@ import { navigation } from "@/data/navigation";
 import EditNoteRoundedIcon from "@mui/icons-material/EditNoteRounded";
 import { useRouter } from "next/navigation";
 import AddIcon from "@mui/icons-material/Add";
+import { CreateCourse } from "@/components/admin/courses/CreateCourse";
+import { EditCourse } from "@/components/admin/courses/EditCourse";
+
+type CourseFormState =
+  | { mode: "create" }
+  | { mode: "update"; courseId: string }
+  | null;
 
 export default function CourseOverviewPage() {
   const [courses, setCourses] = useState<CourseWithLessonsResponse[]>([]);
@@ -39,6 +49,8 @@ export default function CourseOverviewPage() {
 
   const [page, setPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(5);
+
+  const [courseFormState, setCourseFormState] = useState<CourseFormState>(null);
 
   const router = useRouter();
   const { showToast } = useToast();
@@ -121,7 +133,7 @@ export default function CourseOverviewPage() {
         <Button
           startIcon={<AddIcon />}
           variant="contained"
-          href={`${navigation.admin.courses.href}/create`}
+          onClick={() => setCourseFormState({ mode: "create" })}
         >
           Create Course
         </Button>
@@ -191,9 +203,10 @@ export default function CourseOverviewPage() {
                   <IconButton
                     title="edit"
                     onClick={(e) => {
-                      router.push(
-                        `${navigation.admin.courses.href}/${course.id}/edit`
-                      );
+                      setCourseFormState({
+                        mode: "update",
+                        courseId: course.id,
+                      });
                       e.stopPropagation();
                     }}
                   >
@@ -231,16 +244,28 @@ export default function CourseOverviewPage() {
         handleCloseDrawer={() => setSelected(null)}
         handleDeleteCourse={handleDeleteCourse}
         deleteCourseLoading={deleteCourseLoading}
-        onLessonsChange={(courseId: string, lessons: OverviewLessonResponse[]) =>
+        onLessonsChange={(
+          courseId: string,
+          lessons: OverviewLessonResponse[]
+        ) =>
           setCourses((prev) =>
             prev.map((course) =>
-              course.id === courseId
-                ? { ...course, lessons }
-                : course
+              course.id === courseId ? { ...course, lessons } : course
             )
           )
         }
       />
+
+      {courseFormState &&
+        (courseFormState.mode === "create" ? (
+          <CreateCourse open onClose={() => setCourseFormState(null)} />
+        ) : (
+          <EditCourse
+            courseId={courseFormState.courseId}
+            open
+            onClose={() => setCourseFormState(null)}
+          />
+        ))}
     </Box>
   );
 }

@@ -4,8 +4,6 @@ import { useEffect, useState } from "react";
 import {
   Box,
   Button,
-  Card,
-  CardContent,
   Grid,
   Switch,
   TextField,
@@ -14,6 +12,8 @@ import {
   MenuItem,
   Avatar,
   Alert,
+  Dialog,
+  DialogContent,
 } from "@mui/material";
 import {
   CourseResponse,
@@ -44,14 +44,18 @@ type PropsType<M extends CourseFormMode> = {
     form: FormByMode<M>,
     imageFile: ImageByMode<M>
   ) => Promise<CourseResponse>;
+  open: boolean;
+  onClose: () => void;
 };
 
-export function CourseForm<M extends CourseFormMode>({
+export function CourseFormDialog<M extends CourseFormMode>({
   mode,
   initialData,
   initialImage,
   submitLabel,
   onSubmit,
+  open,
+  onClose,
 }: PropsType<M>) {
   const router = useRouter();
   const { showToast } = useToast();
@@ -161,6 +165,7 @@ export function CourseForm<M extends CourseFormMode>({
         `${mode === "create" ? "Created" : "Updated"} course successfully`,
         "success"
       );
+      onClose();
       router.push(`${navigation.admin.preview.courses.href}/${course.id}`);
     } catch (err) {
       console.error(err);
@@ -171,19 +176,28 @@ export function CourseForm<M extends CourseFormMode>({
   };
 
   return (
-    <Card sx={{ borderRadius: 2, p: 1 }}>
+    <Dialog open={open} onClose={onClose} sx={{ borderRadius: 2, p: 1 }}>
       {!!error && (
         <Alert security="error" color="error" variant="filled" sx={{ m: 2 }}>
           {error}
         </Alert>
       )}
-      <CardContent>
+      <DialogContent>
+        <Typography
+          variant="h5"
+          fontWeight="bold"
+          textAlign="center"
+          sx={{ mb: 2 }}
+        >
+          {mode === "create" ? "Create Course" : "Edit Course"}
+        </Typography>
         <Grid container spacing={3}>
           <Grid size={{ xs: 12 }}>
             <TextField
               fullWidth
               label="Course Title"
               value={form.title}
+              disabled={loading}
               onChange={(e) => {
                 const title = e.target.value;
                 handleChange("title", title);
@@ -199,6 +213,7 @@ export function CourseForm<M extends CourseFormMode>({
               fullWidth
               label="Category"
               value={form.categoryId}
+              disabled={loading}
               onChange={(e) => handleChange("categoryId", e.target.value)}
               error={!!inputErrorMessages.categoryIdErrorMessage}
               helperText={inputErrorMessages.categoryIdErrorMessage}
@@ -218,6 +233,7 @@ export function CourseForm<M extends CourseFormMode>({
               rows={3}
               label="Description"
               value={form.description}
+              disabled={loading}
               onChange={(e) => handleChange("description", e.target.value)}
               error={!!inputErrorMessages.descriptionErrorMessage}
               helperText={inputErrorMessages.descriptionErrorMessage}
@@ -235,7 +251,11 @@ export function CourseForm<M extends CourseFormMode>({
                 src={preview ?? undefined}
                 sx={{ width: 96, height: 96 }}
               />
-              <Button component="label" variant="outlinedDarkMode">
+              <Button
+                disabled={loading}
+                component="label"
+                variant="outlinedDarkMode"
+              >
                 Select Image
                 <input
                   hidden
@@ -267,6 +287,7 @@ export function CourseForm<M extends CourseFormMode>({
               type="number"
               label="Price (Baht)"
               value={form.priceBaht}
+              disabled={loading}
               onChange={(e) =>
                 handleChange("priceBaht", Number(e.target.value))
               }
@@ -279,6 +300,7 @@ export function CourseForm<M extends CourseFormMode>({
               control={
                 <Switch
                   checked={form.isFree}
+                  disabled={loading}
                   onChange={(e) => handleChange("isFree", e.target.checked)}
                 />
               }
@@ -290,6 +312,7 @@ export function CourseForm<M extends CourseFormMode>({
               control={
                 <Switch
                   checked={form.isPublished}
+                  disabled={loading}
                   onChange={(e) =>
                     handleChange("isPublished", e.target.checked)
                   }
@@ -299,7 +322,16 @@ export function CourseForm<M extends CourseFormMode>({
             />
           </Grid>
 
-          <Grid size={{ xs: 12 }} display="flex" justifyContent="flex-end">
+          <Grid size={{ xs: 12 }} display="flex" justifyContent="flex-end" gap={2}>
+            <Button
+              variant="outlined"
+              color="inherit"
+              size="large"
+              disabled={loading}
+              onClick={onClose}
+            >
+              Cancel
+            </Button>
             <Button
               variant="contained"
               size="large"
@@ -310,7 +342,7 @@ export function CourseForm<M extends CourseFormMode>({
             </Button>
           </Grid>
         </Grid>
-      </CardContent>
-    </Card>
+      </DialogContent>
+    </Dialog>
   );
 }

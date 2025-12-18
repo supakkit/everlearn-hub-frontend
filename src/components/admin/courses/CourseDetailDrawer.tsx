@@ -17,6 +17,9 @@ import Link from "next/link";
 import { navigation } from "@/data/navigation";
 import { LessonManagement } from "./LessonManagement";
 import { useMemo, useState } from "react";
+import { EditCourse } from "./EditCourse";
+
+type EditCourseFormState = { courseId: string } | null;
 
 type PropsType = {
   course: CourseWithLessonsResponse | null;
@@ -37,7 +40,9 @@ export function CourseDetailDrawer({
   onLessonsChange,
 }: PropsType) {
   const [interactionLocked, setInteractionLocked] = useState(false);
-  
+  const [editCourseFromState, setEditCourseFormState] =
+    useState<EditCourseFormState>(null);
+
   const isLocked: boolean = useMemo(
     () => deleteCourseLoading || interactionLocked,
     [deleteCourseLoading, interactionLocked]
@@ -114,19 +119,16 @@ export function CourseDetailDrawer({
                 Preview
               </Button>
             </Link>
-            <Link
-              href={`${navigation.admin.courses.href}/${course.id}/edit`}
-              className="w-full"
+            <Button
+              fullWidth
+              variant="contained"
+              size="large"
+              disabled={isLocked}
+              onClick={() => setEditCourseFormState({ courseId: course.id })}
             >
-              <Button
-                fullWidth
-                variant="contained"
-                size="large"
-                disabled={isLocked}
-              >
-                Edit
-              </Button>
-            </Link>
+              Edit
+            </Button>
+            {/* </Link> */}
             <Button
               fullWidth
               variant="outlined"
@@ -138,6 +140,14 @@ export function CourseDetailDrawer({
             </Button>
           </Stack>
         </Box>
+      )}
+
+      {editCourseFromState && (
+        <EditCourse
+          courseId={editCourseFromState.courseId}
+          open
+          onClose={() => setEditCourseFormState(null)}
+        />
       )}
     </Drawer>
   );
