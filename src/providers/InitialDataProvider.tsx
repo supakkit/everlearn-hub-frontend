@@ -1,8 +1,6 @@
 "use client";
 
-import { mapCategoryNames } from "@/utils/mapCategoryNames";
 import { categoryAPI } from "@/services/categories";
-import { CategoryName } from "@/utils/mapCategoryNames"; 
 import {
   createContext,
   useContext,
@@ -10,14 +8,17 @@ import {
   useState,
   ReactNode,
 } from "react";
-import { CategoryNamesResponse } from "@/types/api/api-types";
+import { CategoryResponse } from "@/types/api/api-types";
 
 interface InitialData {
-  courseCategoryNames: CategoryName[];
-  courseCategories: CategoryNamesResponse;
+  categories: CategoryResponse[];
 }
 
-const InitialDataContext = createContext<InitialData | null>(null);
+interface InitialDataContextType extends InitialData {
+  onCategoryChange: (categories: CategoryResponse[]) => void;
+}
+
+const InitialDataContext = createContext<InitialDataContextType | null>(null);
 
 export function InitialDataProvider({ children }: { children: ReactNode }) {
   const [data, setData] = useState<InitialData | null>(null);
@@ -26,9 +27,7 @@ export function InitialDataProvider({ children }: { children: ReactNode }) {
     const loadData = async () => {
       try {
         const categories = await categoryAPI.getCategoryNames();
-        const courseCategories = categories;
-        const courseCategoryNames = mapCategoryNames(categories);
-        setData({ courseCategoryNames, courseCategories });
+        setData({ categories });
       } catch (err) {
         console.error("Failed to load initial data", err);
       }
@@ -37,10 +36,14 @@ export function InitialDataProvider({ children }: { children: ReactNode }) {
     loadData();
   }, []);
 
+  const onCategoryChange = (categories: CategoryResponse[]) => {
+    setData({ categories });
+  };
+
   if (!data) return null;
 
   return (
-    <InitialDataContext.Provider value={data}>
+    <InitialDataContext.Provider value={{ ...data, onCategoryChange }}>
       {children}
     </InitialDataContext.Provider>
   );

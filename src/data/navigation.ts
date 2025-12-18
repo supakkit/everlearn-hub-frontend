@@ -57,16 +57,16 @@ export const adminMenuItems = [
     href: adminNavigation.courses.href,
   },
   {
-    label: adminNavigation.enrollment.label,
-    title: "Enrollment Management",
-    icon: ViewListRoundedIcon,
-    href: adminNavigation.enrollment.href,
-  },
-  {
     label: adminNavigation.categories.label,
     title: "Category Management",
     icon: CategoryIcon,
     href: adminNavigation.categories.href,
+  },
+  {
+    label: adminNavigation.enrollment.label,
+    title: "Enrollment Management",
+    icon: ViewListRoundedIcon,
+    href: adminNavigation.enrollment.href,
   },
   {
     label: adminNavigation.payments.label,

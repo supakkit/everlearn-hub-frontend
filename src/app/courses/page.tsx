@@ -16,10 +16,11 @@ import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { CourseCard } from "@/components/courses/CourseCard";
 import { navigation } from "@/data/navigation";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useInitialData } from "@/providers/InitialDataProvider";
 import { courseAPI } from "@/services/courses";
 import { AllCoursesResponse, GetCourseParams } from "@/types/api/api-types";
+import { mapCategoryNames } from "@/utils/mapCategoryNames";
 
 type ParamsKeys = keyof NonNullable<GetCourseParams>;
 
@@ -33,7 +34,11 @@ export default function CoursesPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  const { courseCategoryNames } = useInitialData();
+  const { categories } = useInitialData();
+  const courseCategoryNames = useMemo(
+    () => mapCategoryNames(categories),
+    [categories]
+  );
 
   const page = Number(searchParams.get("page")) || 1;
   const category = searchParams.get("category") || "all";

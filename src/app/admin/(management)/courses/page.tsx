@@ -37,7 +37,7 @@ type CourseFormState =
   | { mode: "update"; courseId: string }
   | null;
 
-export default function CourseOverviewPage() {
+export default function CourseManagementPage() {
   const [courses, setCourses] = useState<CourseWithLessonsResponse[]>([]);
   const [selected, setSelected] = useState<CourseWithLessonsResponse | null>(
     null
@@ -156,9 +156,9 @@ export default function CourseOverviewPage() {
         >
           <TableHead>
             <TableRow>
-              <TableCell>#</TableCell>
-              <TableCell>Title</TableCell>
-              <TableCell>Category</TableCell>
+              <TableCell align="center">#</TableCell>
+              <TableCell align="center">Title</TableCell>
+              <TableCell align="center">Category</TableCell>
               <TableCell align="center">Price</TableCell>
               <TableCell align="center">Lessons</TableCell>
               <TableCell align="center">Status</TableCell>
@@ -174,9 +174,9 @@ export default function CourseOverviewPage() {
                   setSelected(course);
                 }}
               >
-                <TableCell>{index + 1}</TableCell>
+                <TableCell align="center">{index + 1}</TableCell>
                 <TableCell>{course.title}</TableCell>
-                <TableCell>{course.categoryName}</TableCell>
+                <TableCell align="center">{course.categoryName}</TableCell>
                 <TableCell align="center">
                   {course.isFree ? "Free" : `${course.priceBaht}฿`}
                 </TableCell>

@@ -36,7 +36,10 @@ export type RemovePdfDto = NonNullable<paths["/api/admin/lessons/{id}"]["patch"]
 export type AllCoursesWithLessonsResponse = paths["/api/admin/courses"]["get"]["responses"]["200"]["content"]["application/json"];
 
 // Category
-export type CategoryNamesResponse = paths["/api/categories"]["get"]["responses"]["200"]["content"]["application/json"];
+export type CategoryResponse = paths["/api/categories"]["get"]["responses"]["200"]["content"]["application/json"][number];
+export type CategoryWithCourseCountResponse = paths["/api/admin/categories"]["get"]["responses"]["200"]["content"]["application/json"][number];
+export type CreateCategoryDto = paths["/api/admin/categories"]["post"]["requestBody"]["content"]["application/json"];
+export type UpdateCategoryDto = paths["/api/admin/categories/{id}"]["patch"]["requestBody"]["content"]["application/json"];
 
 // Dashboard
 export type DashboardResponse = paths["/api/dashboard/me"]["get"]["responses"]["200"]["content"]["application/json"];

@@ -372,6 +372,38 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/admin/categories": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["AdminCategoriesController_getCategoriesWithCourseCount"];
+        put?: never;
+        post: operations["AdminCategoriesController_createCategory"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/categories/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete: operations["AdminCategoriesController_removeCategory"];
+        options?: never;
+        head?: never;
+        patch: operations["AdminCategoriesController_updateCategory"];
+        trace?: never;
+    };
     "/api/dashboard/me": {
         parameters: {
             query?: never;
@@ -625,11 +657,26 @@ export interface components {
             courseId: string;
             completedLessons: string[];
         };
-        CategoryNamesResponse: {
+        CategoryResponse: {
             id: string;
             name: string;
             slug: string;
             icon: string;
+        };
+        CreateCategoryDto: {
+            name: string;
+            icon: string;
+        };
+        CategoryWithCourseCountResponse: {
+            id: string;
+            name: string;
+            slug: string;
+            icon: string;
+            courseCount: number;
+        };
+        UpdateCategoryDto: {
+            name?: string;
+            icon?: string;
         };
         UserStatsResponse: {
             completedCourses: number;
@@ -1391,7 +1438,95 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["CategoryNamesResponse"][];
+                    "application/json": components["schemas"]["CategoryResponse"][];
+                };
+            };
+        };
+    };
+    AdminCategoriesController_getCategoriesWithCourseCount: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CategoryWithCourseCountResponse"][];
+                };
+            };
+        };
+    };
+    AdminCategoriesController_createCategory: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateCategoryDto"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CategoryWithCourseCountResponse"];
+                };
+            };
+        };
+    };
+    AdminCategoriesController_removeCategory: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CategoryWithCourseCountResponse"];
+                };
+            };
+        };
+    };
+    AdminCategoriesController_updateCategory: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateCategoryDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CategoryWithCourseCountResponse"];
                 };
             };
         };

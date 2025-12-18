@@ -60,7 +60,7 @@ export function CourseFormDialog<M extends CourseFormMode>({
   const router = useRouter();
   const { showToast } = useToast();
 
-  const { courseCategories } = useInitialData();
+  const { categories } = useInitialData();
   const [form, setForm] = useState<CreateCourseDto | UpdateCourseDto>(
     initialData
   );
@@ -218,7 +218,7 @@ export function CourseFormDialog<M extends CourseFormMode>({
               error={!!inputErrorMessages.categoryIdErrorMessage}
               helperText={inputErrorMessages.categoryIdErrorMessage}
             >
-              {courseCategories.map((category) => (
+              {categories.map((category) => (
                 <MenuItem key={category.id} value={category.id}>
                   {category.name}
                 </MenuItem>
