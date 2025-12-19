@@ -1,13 +1,16 @@
 import { Box, Button, CardContent, Paper, Typography } from "@mui/material";
 import { motion } from "framer-motion";
-import ReactMarkdown from "react-markdown";
 import NavigateNextRoundedIcon from "@mui/icons-material/NavigateNextRounded";
 import CheckCircleRoundedIcon from "@mui/icons-material/CheckCircleRounded";
 import CheckCircleOutlinedIcon from "@mui/icons-material/CheckCircleOutlined";
-import SaveRoundedIcon from '@mui/icons-material/SaveRounded';
+import SaveRoundedIcon from "@mui/icons-material/SaveRounded";
 import Link from "next/link";
 import { navigation } from "@/data/navigation";
-import { CourseWithLessonsResponse, LessonResponse } from "@/types/api/api-types";
+import {
+  CourseWithLessonsResponse,
+  LessonResponse,
+} from "@/types/api/api-types";
+import MarkdownView from "./MarkdownView";
 
 type PropType = {
   selectedLesson: LessonResponse;
@@ -32,7 +35,7 @@ export function LessonContent({
   progressLoading,
   handleNextLesson,
   course,
-  isAuthUser
+  isAuthUser,
 }: PropType) {
   const isCompletedLesson = completedLessons.includes(selectedLesson?.id || "");
   const isLastLesson = selectedLesson?.id === course.lessons.at(-1)?.id;
@@ -46,9 +49,14 @@ export function LessonContent({
           transition={{ duration: 0.25 }}
         >
           {!lessonLoading && (
-            <Paper sx={{ mb: 2 }} elevation={2}>
+            <Paper sx={{ mb: 2, p: 2 }} elevation={0}>
               <CardContent>
-                <Typography variant="h5" fontWeight="bold" mb={2}>
+                <Typography
+                  variant="h4"
+                  fontWeight="bold"
+                  textAlign="center"
+                  mb={2}
+                >
                   {selectedLesson.title}
                 </Typography>
 
@@ -62,52 +70,61 @@ export function LessonContent({
                     </Typography>
                   </Box>
                 ) : (
-                  <Box>
-                    {/* Render markdown content */}
-                    <Box sx={{ mb: 2 }}>
-                      <ReactMarkdown>{selectedLesson.content}</ReactMarkdown>
-                    </Box>
-                  </Box>
+                  <MarkdownView content={selectedLesson.content} />
                 )}
               </CardContent>
             </Paper>
           )}
 
-          {isAuthUser && <Box display="flex" justifySelf="end" gap={2} alignItems="center">
-            <Button
-              variant={isCompletedLesson ? "outlined" : "contained"}
-              onClick={() => markLessonCompleted(selectedLesson.id)}
-              disabled={progressLoading || isCompletedLesson}
-              size="large"
-              endIcon={isCompletedLesson ? <CheckCircleRoundedIcon /> : progressLoading ? <SaveRoundedIcon /> : <CheckCircleOutlinedIcon />}
-            >
-              {isCompletedLesson ? "Completed" : progressLoading ? "Saving..." : "Mark Completed"}
-            </Button>
-
-            {!isLastLesson && (
+          {isAuthUser && (
+            <Box display="flex" justifySelf="end" gap={2} alignItems="center">
               <Button
-                variant="text"
-                onClick={handleNextLesson}
-                disabled={!isCompletedLesson}
+                variant={isCompletedLesson ? "outlined" : "contained"}
+                onClick={() => markLessonCompleted(selectedLesson.id)}
+                disabled={progressLoading || isCompletedLesson}
                 size="large"
-                endIcon={<NavigateNextRoundedIcon />}
+                endIcon={
+                  isCompletedLesson ? (
+                    <CheckCircleRoundedIcon />
+                  ) : progressLoading ? (
+                    <SaveRoundedIcon />
+                  ) : (
+                    <CheckCircleOutlinedIcon />
+                  )
+                }
               >
-                Next Lesson
+                {isCompletedLesson
+                  ? "Completed"
+                  : progressLoading
+                  ? "Saving..."
+                  : "Mark Completed"}
               </Button>
-            )}
 
-            {isCompletedLesson && isLastLesson && (
-              <Link href={navigation.dashboard.href}>
+              {!isLastLesson && (
                 <Button
-                  variant="contained"
+                  variant="text"
+                  onClick={handleNextLesson}
                   disabled={!isCompletedLesson}
                   size="large"
+                  endIcon={<NavigateNextRoundedIcon />}
                 >
-                  Dashboard
+                  Next Lesson
                 </Button>
-              </Link>
-            )}
-          </Box>}
+              )}
+
+              {isCompletedLesson && isLastLesson && (
+                <Link href={navigation.dashboard.href}>
+                  <Button
+                    variant="contained"
+                    disabled={!isCompletedLesson}
+                    size="large"
+                  >
+                    Dashboard
+                  </Button>
+                </Link>
+              )}
+            </Box>
+          )}
         </motion.div>
       ) : (
         <Typography>No lesson selected.</Typography>
