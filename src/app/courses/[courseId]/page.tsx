@@ -11,12 +11,14 @@ import { useToast } from "@/providers/ToastProvider";
 import { useRouter } from "next/navigation";
 import { navigation } from "@/data/navigation";
 import { CourseDetail } from "@/components/courses/CourseDetail";
+import { useAuth } from "@/providers/AuthProvider";
 
 export default function CourseDetailPage() {
   const params = useParams();
   const { courseId } = params as { courseId: string };
   const { showToast } = useToast();
   const router = useRouter();
+  const { isAuthUser } = useAuth();
 
   const [course, setCourse] = useState<CourseWithLessonsResponse>();
   const [loading, setLoading] = useState(false);
@@ -39,6 +41,8 @@ export default function CourseDetailPage() {
 
   const handleBuy = useCallback(
     async (courseId: string, isFree: boolean) => {
+      if (!isAuthUser) router.push(navigation.login.href);
+
       setBuyLoading(true);
       try {
         if (isFree) {
@@ -63,7 +67,7 @@ export default function CourseDetailPage() {
         setBuyLoading(false);
       }
     },
-    [router, showToast]
+    [router, showToast, isAuthUser]
   );
 
   useEffect(() => {

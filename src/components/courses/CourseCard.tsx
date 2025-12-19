@@ -19,6 +19,7 @@ import SellRoundedIcon from "@mui/icons-material/SellRounded";
 import { useCallback, useState } from "react";
 import { paymentAPI } from "@/services/payment";
 import { useToast } from "@/providers/ToastProvider";
+import { useAuth } from "@/providers/AuthProvider";
 
 type PropsType = {
   course: AllCoursesResponse["courses"][number];
@@ -27,10 +28,13 @@ type PropsType = {
 export function CourseCard({ course }: PropsType) {
   const router = useRouter();
   const { showToast } = useToast();
+  const { isAuthUser } = useAuth();
   const [buyLoading, setBuyLoading] = useState(false);
 
   const handleBuy = useCallback(
     async (courseId: string, isFree: boolean) => {
+      if (!isAuthUser) router.push(navigation.login.href);
+
       setBuyLoading(true);
       try {
         if (isFree) {
@@ -54,7 +58,7 @@ export function CourseCard({ course }: PropsType) {
         setBuyLoading(false);
       }
     },
-    [router, showToast]
+    [router, showToast, isAuthUser]
   );
 
   return (
