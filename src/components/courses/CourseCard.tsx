@@ -84,6 +84,12 @@ export function CourseCard({ course }: PropsType) {
             src={course.imageUrl}
             alt={course.title}
             fill
+            sizes="
+                (max-width: 600px) 100vw,
+                (max-width: 900px) 50vw,
+                (max-width: 1200px) 33vw,
+                25vw
+              "
             style={{ objectFit: "cover" }}
           />
         </Box>
