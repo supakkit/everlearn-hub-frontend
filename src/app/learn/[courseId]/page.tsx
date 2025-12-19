@@ -25,6 +25,7 @@ import { progressAPI } from "@/services/progresses";
 import { useAuth } from "@/providers/AuthProvider";
 import { useRouter } from "next/navigation";
 import { navigation } from "@/data/navigation";
+import { CourseNotFound } from "@/components/courses/CourseNotFound";
 
 export default function CourseLearningPage() {
   const { courseId } = useParams() as { courseId: string };
@@ -229,7 +230,7 @@ export default function CourseLearningPage() {
   };
 
   if (courseLoading) return <CourseLearningSkeleton />;
-  if (!courseId || !course) return null;
+  if (!courseId || !course) return <CourseNotFound />;
 
   return (
     <Container maxWidth="lg" sx={{ py: 6 }}>

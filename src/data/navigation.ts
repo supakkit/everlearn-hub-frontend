@@ -3,7 +3,6 @@ import PeopleIcon from "@mui/icons-material/People";
 import BookIcon from "@mui/icons-material/Book";
 import CategoryIcon from "@mui/icons-material/Category";
 import PaymentIcon from "@mui/icons-material/Payment";
-import ReceiptIcon from "@mui/icons-material/Receipt";
 import ViewListRoundedIcon from "@mui/icons-material/ViewListRounded";
 import LocalLibraryRoundedIcon from '@mui/icons-material/LocalLibraryRounded';
 
@@ -15,10 +14,9 @@ const adminNavigation = {
   dashboard: { label: "Admin Dashboard", href: "/admin" },
   users: { label: "Users", href: "/admin/users" },
   courses: { label: "Courses", href: "/admin/courses" },
-  enrollment: { label: "Enrollment", href: "/admin/enrollment" },
+  enrollment: { label: "Enrollment", href: "/admin/enrollments" },
   categories: { label: "Categories", href: "/admin/categories" },
   payments: { label: "Payments", href: "/admin/payments" },
-  stripeEvents: { label: "Stripe Events", href: "/admin/stripe-events" },
   preview: adminPreview,
 }
 
@@ -73,12 +71,6 @@ export const adminMenuItems = [
     title: "Payment Management",
     icon: PaymentIcon,
     href: adminNavigation.payments.href,
-  },
-  {
-    label: adminNavigation.stripeEvents.label,
-    title: "Stripe Events",
-    icon: ReceiptIcon,
-    href: adminNavigation.stripeEvents.href,
   },
 ];
 
