@@ -33,7 +33,7 @@ export function TestimonialsSection() {
               >
                 <Typography>&quot;{item.quote}&quot;</Typography>
                 <Box sx={{ display: "flex", gap: 2, alignItems: "center" }}>
-                  <Avatar src={item.avatar} />
+                  <Avatar />
                   <Box>
                     <Typography fontWeight={700}>{item.name}</Typography>
                     <Typography variant="body2" color="text.secondary">
