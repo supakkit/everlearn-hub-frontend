@@ -40,7 +40,6 @@ This project represents an **MVP** and is designed with scalability, role-based 
 * Authentication (Sign up / Login / Refresh token)
 * Role-based access control (STUDENT / ADMIN)
 * User dashboard showing:
-
   * Enrolled courses
   * Completed courses
   * Number of active learning days (yearly)
