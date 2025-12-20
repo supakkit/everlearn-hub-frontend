@@ -10,6 +10,7 @@ import {
   Stack,
   TextField,
   Pagination,
+  CircularProgress,
 } from "@mui/material";
 import { motion } from "framer-motion";
 import { useSearchParams } from "next/navigation";
@@ -180,9 +181,18 @@ export default function CoursesPage() {
       </Grid>
 
       {loading && (
-        <Typography mt={4} textAlign="center">
-          Loading courses...
-        </Typography>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            gap: 2,
+            mt: 4,
+          }}
+        >
+          <CircularProgress size={20} />
+          <Typography>Loading courses...</Typography>
+        </Box>
       )}
 
       {!loading && error && (
@@ -191,7 +201,7 @@ export default function CoursesPage() {
         </Typography>
       )}
 
-      {loading && courses.length === 0 && (
+      {!loading && courses.length === 0 && (
         <Typography mt={4} textAlign="center" color="text.secondary">
           No courses found.
         </Typography>

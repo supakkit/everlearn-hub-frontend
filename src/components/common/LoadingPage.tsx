@@ -5,7 +5,7 @@ import { Typography } from '@mui/material';
 export function LoadingPage() {
   return (
     <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', gap: 2 }}>
-      <CircularProgress size={30} />
+      <CircularProgress size={25} />
       <Typography>Loading...</Typography>
     </Box>
   );

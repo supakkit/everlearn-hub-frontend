@@ -20,8 +20,8 @@ export function CourseHeroSection({
   const isAdminPreview = mode === "admin-preview";
 
   return (
-    <Container sx={{ py: 6 }}>
-      <Grid container spacing={4} alignItems="center">
+    <Container sx={{ py: 6, minHeight: "100vh" }}>
+      <Grid container spacing={6} alignItems="center">
         {/* Course thumbnail */}
         <Grid size={{ xs: 12, md: 6 }}>
           <Box
@@ -64,7 +64,15 @@ export function CourseHeroSection({
           <Typography
             variant="h6"
             color="text.secondary"
-            sx={{ mb: 3, lineHeight: 1.6 }}
+            sx={{
+              mb: 3,
+              lineHeight: 1.6,
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              display: "-webkit-box",
+              WebkitLineClamp: 6,
+              WebkitBoxOrient: "vertical",
+            }}
           >
             {course.description}
           </Typography>
@@ -80,7 +88,12 @@ export function CourseHeroSection({
             variant="contained"
             color="primary"
             size="large"
-            sx={{ px: 4, borderRadius: 2, fontSize: 20, fontWeight: "bold" }}
+            sx={{
+              width: 180,
+              borderRadius: 2,
+              fontSize: 20,
+              fontWeight: "bold",
+            }}
             disabled={buyLoading || isAdminPreview}
             onClick={() => handleBuy && handleBuy(course.id, course.isFree)}
           >

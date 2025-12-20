@@ -1,7 +1,6 @@
 "use client";
 
 import {
-  Box,
   Button,
   Card,
   CardActions,
@@ -68,7 +67,7 @@ export function CourseCard({ course }: PropsType) {
         router.push(`${navigation.courses.href}/${course.id}`);
       }}
       sx={{
-        height: 400,
+        height: 350,
         width: 250,
         minWidth: 250,
         display: "flex",
@@ -78,21 +77,19 @@ export function CourseCard({ course }: PropsType) {
       }}
       elevation={0}
     >
-      <CardMedia>
-        <Box sx={{ width: "100%", height: 180, position: "relative" }}>
-          <Image
-            src={course.imageUrl}
-            alt={course.title}
-            fill
-            sizes="
+      <CardMedia sx={{ width: "100%", height: 150, position: "relative" }}>
+        <Image
+          src={course.imageUrl}
+          alt={course.title}
+          fill
+          sizes="
                 (max-width: 600px) 100vw,
                 (max-width: 900px) 50vw,
                 (max-width: 1200px) 33vw,
                 25vw
               "
-            style={{ objectFit: "cover" }}
-          />
-        </Box>
+          style={{ objectFit: "cover" }}
+        />
       </CardMedia>
       <CardContent sx={{ flex: 1 }}>
         <Stack
@@ -103,16 +100,15 @@ export function CourseCard({ course }: PropsType) {
         >
           <Chip label={course.categoryName} size="small" />
           <Typography
-            variant="h6"
             fontWeight="medium"
+            fontSize={16}
             sx={{ textAlign: "right" }}
           >
-            <SellRoundedIcon sx={{ fontSize: 18 }} />{" "}
+            <SellRoundedIcon sx={{ fontSize: 16 }} />{" "}
             {course.isFree ? "Free" : `${course.priceBaht}฿`}
           </Typography>
         </Stack>
         <Typography
-          variant="h6"
           fontWeight="bold"
           gutterBottom
           sx={{
@@ -126,10 +122,9 @@ export function CourseCard({ course }: PropsType) {
           {course.title}
         </Typography>
         <Typography
-          variant="body2"
+          fontSize={12}
           color="text.secondary"
           sx={{
-            mb: 1,
             overflow: "hidden",
             textOverflow: "ellipsis",
             display: "-webkit-box",
