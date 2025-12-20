@@ -9,6 +9,7 @@ import {
   ReactNode,
 } from "react";
 import { CategoryResponse } from "@/types/api/api-types";
+import { LoadingPage } from "@/components/common/LoadingPage";
 
 interface InitialData {
   categories: CategoryResponse[];
@@ -40,7 +41,7 @@ export function InitialDataProvider({ children }: { children: ReactNode }) {
     setData({ categories });
   };
 
-  if (!data) return null;
+  if (!data) return <LoadingPage />
 
   return (
     <InitialDataContext.Provider value={{ ...data, onCategoryChange }}>
