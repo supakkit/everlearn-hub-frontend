@@ -26,6 +26,7 @@ import { useAuth } from "@/providers/AuthProvider";
 import { useRouter } from "next/navigation";
 import { navigation } from "@/data/navigation";
 import { CourseNotFound } from "@/components/courses/CourseNotFound";
+import { enrollmentAPI } from "@/services/enrollments";
 
 export default function CourseLearningPage() {
   const { courseId } = useParams() as { courseId: string };
@@ -37,6 +38,7 @@ export default function CourseLearningPage() {
   const [selectedLesson, setSelectedLesson] = useState<LessonResponse | null>(
     null
   );
+  const [isEnrolled, setIsEnrolled] = useState(false);
   const [completedLessons, setCompletedLessons] = useState<string[]>([]);
 
   const [courseLoading, setCourseLoading] = useState(false);
@@ -64,7 +66,7 @@ export default function CourseLearningPage() {
   const fetchLesson = useCallback(async (lessonId: string) => {
     setLessonLoading(true);
     try {
-      const lesson = isAuthUser
+      const lesson = isEnrolled
         ? await lessonAPI.getLesson(lessonId)
         : await lessonAPI.getPreviewLesson(lessonId);
       setSelectedLesson(lesson);
@@ -74,18 +76,20 @@ export default function CourseLearningPage() {
     } finally {
       setLessonLoading(false);
     }
-  }, [isAuthUser]);
+  }, [isEnrolled]);
 
   const fetchProgress = useCallback(async () => {
-    if (!isAuthUser) return;
+    if (!isAuthUser) {
+      setIsEnrolled(false);
+    }
     setProgressLoading(true);
 
     try {
-      const courseProgress = await progressAPI.getCourseProgress(courseId);
-      setCompletedLessons(courseProgress.completedLessons);
-    } catch (err) {
-      console.error(err);
-      setError("Error loading progress");
+      const enrollment = await enrollmentAPI.getUserEnrollment(courseId);
+      setCompletedLessons(enrollment.completedLessons);
+    } catch {
+      setIsEnrolled(false);
+      setCompletedLessons([]);
     } finally {
       setProgressLoading(false);
     }
@@ -100,7 +104,7 @@ export default function CourseLearningPage() {
   useEffect(() => {
     if (!course || progressLoading || courseLoading || !course.lessons) return;
 
-    if (!isAuthUser) {
+    if (!isEnrolled) {
       const lessonId = searchParams.get("lessonId");
       const previewLesson = course.lessons.find(
         (lesson) => lessonId === lesson.id && lesson.isPreview === true
@@ -140,7 +144,7 @@ export default function CourseLearningPage() {
     progressLoading,
     courseLoading,
     fetchLesson,
-    isAuthUser,
+    isEnrolled,
     router,
     searchParams
   ]);
@@ -313,7 +317,7 @@ export default function CourseLearningPage() {
             progressLoading={progressLoading}
             handleNextLesson={handleNextLesson}
             course={course}
-            isAuthUser={isAuthUser}
+            isEnrolled={isEnrolled}
           />
         )}
       </Box>

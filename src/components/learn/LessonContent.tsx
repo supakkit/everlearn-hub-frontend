@@ -23,7 +23,7 @@ type PropType = {
   progressLoading: boolean;
   handleNextLesson: (e: React.MouseEvent<HTMLElement>) => void;
   course: CourseWithLessonsResponse;
-  isAuthUser: boolean;
+  isEnrolled: boolean;
 };
 
 export function LessonContent({
@@ -35,7 +35,7 @@ export function LessonContent({
   progressLoading,
   handleNextLesson,
   course,
-  isAuthUser,
+  isEnrolled,
 }: PropType) {
   const isCompletedLesson = completedLessons.includes(selectedLesson?.id || "");
   const isLastLesson = selectedLesson?.id === course.lessons.at(-1)?.id;
@@ -76,7 +76,7 @@ export function LessonContent({
             </Paper>
           )}
 
-          {isAuthUser && (
+          {isEnrolled && (
             <Box display="flex" justifySelf="end" gap={2} alignItems="center">
               <Button
                 variant={isCompletedLesson ? "outlined" : "contained"}
